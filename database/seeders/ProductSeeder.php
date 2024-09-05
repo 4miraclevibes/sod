@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\ProductImage;
+use App\Models\VariantStock;
 use Illuminate\Database\Seeder;
 
 class ProductSeeder extends Seeder
@@ -75,33 +76,45 @@ class ProductSeeder extends Seeder
     {
         $variants = [
             [
-                ['name' => '10 gram', 'price' => 10000, 'is_visible' => 1, 'capital_price' => 5000],
-                ['name' => '20 gram', 'price' => 20000, 'is_visible' => 1, 'capital_price' => 10000],
+                ['name' => '10 gram', 'price' => 10000, 'is_visible' => 1],
+                ['name' => '20 gram', 'price' => 20000, 'is_visible' => 1],
             ],
             [
-                ['name' => '100 Gram', 'price' => 30000, 'is_visible' => 1, 'capital_price' => 15000],
-                ['name' => '200 Gram', 'price' => 40000, 'is_visible' => 1, 'capital_price' => 20000],
+                ['name' => '100 Gram', 'price' => 10000, 'is_visible' => 1],
+                ['name' => '200 Gram', 'price' => 20000, 'is_visible' => 1],
             ],
             [
-                ['name' => '100 Gram', 'price' => 50000, 'is_visible' => 1, 'capital_price' => 25000],
-                ['name' => '200 Gram', 'price' => 60000, 'is_visible' => 1, 'capital_price' => 30000],
+                ['name' => '100 Gram', 'price' => 10000, 'is_visible' => 1],
+                ['name' => '200 Gram', 'price' => 20000, 'is_visible' => 1],
             ],
             [
-                ['name' => '1 kg', 'price' => 70000, 'is_visible' => 1, 'capital_price' => 35000],
-                ['name' => '1.5 kg', 'price' => 80000, 'is_visible' => 1, 'capital_price' => 40000],
+                ['name' => '1 kg', 'price' => 10000, 'is_visible' => 1],
+                ['name' => '1.5 kg', 'price' => 20000, 'is_visible' => 1],
             ],
             [
-                ['name' => '1 kg', 'price' => 90000, 'is_visible' => 1, 'capital_price' => 45000],
-                ['name' => '1.5 kg', 'price' => 100000, 'is_visible' => 1, 'capital_price' => 50000],
+                ['name' => '1 kg', 'price' => 10000, 'is_visible' => 1],
+                ['name' => '1.5 kg', 'price' => 20000, 'is_visible' => 1],
             ],
             [
-                ['name' => '2 kg', 'price' => 110000, 'is_visible' => 1, 'capital_price' => 55000],
-                ['name' => '2 kg', 'price' => 120000, 'is_visible' => 1, 'capital_price' => 60000],
+                ['name' => '2 kg', 'price' => 10000, 'is_visible' => 1],
+                ['name' => '2 kg', 'price' => 20000, 'is_visible' => 1],
             ],
         ][$productId - 1];
 
         foreach ($variants as $variant) {
-            ProductVariant::create(array_merge(['product_id' => $productId], $variant));
+            $createdVariant = ProductVariant::create(array_merge(['product_id' => $productId], $variant));
+            $variantStock = VariantStock::create([
+                'product_variant_id' => $createdVariant->id,
+                'quantity' => mt_rand(5, 10),
+            ]);
+            for ($i = 0; $i < $variantStock->quantity; $i++) {
+                $variantStock->stockDetails()->create([
+                    'variant_stock_id' => $variantStock->id,
+                    'capital_price' => $variant['price'] - ($variant['price'] * 0.2),
+                    'price' => 0,
+                    'status' => 'ready',
+                ]);
+            }
         }
     }
 

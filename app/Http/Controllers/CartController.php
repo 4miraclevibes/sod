@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -30,6 +31,12 @@ class CartController extends Controller
         ]);
 
         $userId = Auth::user()->id;
+
+        //Apabila quantity melebihi stok yang tersedia
+        $variant = ProductVariant::find($request->variant_id);
+        if ($request->quantity > $variant->getAvailableStockCount()) {
+            return back()->with('error', 'Jumlah yang dipilih melebihi stok yang tersedia');
+        }
 
         // Cek apakah item dengan variant_id yang sama sudah ada di keranjang
         $existingCart = Cart::where('user_id', $userId)

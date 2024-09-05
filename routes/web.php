@@ -78,6 +78,12 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => 'au
     Route::get('product/variant/edit/{variant}', [ProductController::class, 'productVariantEdit'])->name('product.variant.edit');
     Route::put('product/variant/update/{variant}', [ProductController::class, 'productVariantUpdate'])->name('product.variant.update');
     Route::delete('product/variant/destroy/{variant}', [ProductController::class, 'productVariantDestroy'])->name('product.variant.destroy');
+    // Product Variant Stock
+    Route::get('product/variant/stock/index/{variant}', [ProductController::class, 'productVariantStock'])->name('product.variant.stock.index');
+    Route::post('product/variant/stock/store/{variant}', [ProductController::class, 'productVariantStockStore'])->name('product.variant.stock.store');
+    Route::delete('product/variant/stock/destroy/{variantStock}', [ProductController::class, 'productVariantStockDestroy'])->name('product.variant.stock.destroy');
+    // Product Variant Stock Detail
+    Route::get('product/variant/stock/detail/{variantStock}', [ProductController::class, 'productVariantStockDetail'])->name('product.variant.stock.detail');
     // Product Image
     Route::get('product/image/index/{product}', [ProductController::class, 'productImage'])->name('product.image.index');
     Route::post('product/image/store/{product}', [ProductController::class, 'productImageStore'])->name('product.image.store');

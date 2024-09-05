@@ -219,8 +219,14 @@
                                    data-product-id="{{ $product->id }}"
                                    data-product-name="{{ $product->name }}"
                                    data-product-price="{{ number_format($product->variants->first()->price ?? 0, 0, ',', '.') }}"
-                                   data-product-stock="{{ $product->stock }}"
-                                   data-variants="{{ json_encode($product->variants) }}">+</a>
+                                   data-variants="{{ json_encode($product->variants->map(function($variant) {
+                                       return [
+                                           'id' => $variant->id,
+                                           'name' => $variant->name,
+                                           'price' => $variant->price,
+                                           'stock' => $variant->getAvailableStockCount()
+                                       ];
+                                   })) }}">+</a>
                             </div>
                         </div>
                     </div>
@@ -284,21 +290,19 @@
         const decreaseBtn = document.getElementById('decreaseQuantity');
         const increaseBtn = document.getElementById('increaseQuantity');
         let currentVariants = [];
+        let selectedVariant = null;
 
         addToCartButtons.forEach(button => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
                 const productId = this.dataset.productId;
                 const productName = this.dataset.productName;
-                const productPrice = this.dataset.productPrice;
                 const productImage = this.closest('.card').querySelector('.product-thumbnail').src;
                 currentVariants = JSON.parse(this.dataset.variants);
 
                 document.getElementById('productName').textContent = productName;
                 document.getElementById('productImage').src = productImage;
                 document.getElementById('productVariants').textContent = currentVariants.map(v => v.name).join(', ');
-                document.getElementById('productPrice').textContent = `Rp ${productPrice}`;
-                document.getElementById('productStock').textContent = '{{ $stock }}';
 
                 // Reset quantity
                 quantityInput.value = 1;
@@ -312,48 +316,60 @@
                     button.classList.add('variant-button');
                     button.onclick = (e) => {
                         e.preventDefault();
-                        selectVariant(variant.id, variant.price, variant.name);
+                        selectVariant(variant);
                     };
                     variantButtons.appendChild(button);
                 });
 
                 // Pilih varian pertama secara default
                 if (currentVariants.length > 0) {
-                    selectVariant(currentVariants[0].id, currentVariants[0].price, currentVariants[0].name);
+                    selectVariant(currentVariants[0]);
                 }
 
                 modal.show();
             });
         });
 
-        function selectVariant(variantId, price, name) {
-            document.getElementById('variantId').value = variantId;
-            document.getElementById('productPrice').textContent = `Rp ${price.toLocaleString('id-ID')}`;
+        function selectVariant(variant) {
+            selectedVariant = variant;
+            document.getElementById('variantId').value = variant.id;
+            document.getElementById('productPrice').textContent = `Rp ${variant.price.toLocaleString('id-ID')}`;
+            document.getElementById('productStock').textContent = variant.stock;
             document.querySelectorAll('.variant-button').forEach(btn => {
                 btn.classList.remove('active');
-                if (btn.textContent === name) {
+                if (btn.textContent === variant.name) {
                     btn.classList.add('active');
                 }
             });
+            updateQuantityControls();
+        }
+
+        function updateQuantityControls() {
+            const stock = selectedVariant ? selectedVariant.stock : 0;
+            const currentQuantity = parseInt(quantityInput.value);
+            decreaseBtn.disabled = currentQuantity <= 1;
+            increaseBtn.disabled = currentQuantity >= stock;
         }
 
         decreaseBtn.addEventListener('click', () => {
             if (quantityInput.value > 1) {
                 quantityInput.value = parseInt(quantityInput.value) - 1;
+                updateQuantityControls();
             }
         });
 
         increaseBtn.addEventListener('click', () => {
-            const stock = parseInt('{{ $stock }}');
+            const stock = selectedVariant ? selectedVariant.stock : 0;
             if (parseInt(quantityInput.value) < stock) {
                 quantityInput.value = parseInt(quantityInput.value) + 1;
+                updateQuantityControls();
             }
         });
 
         document.getElementById('addToCartForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const quantity = parseInt(quantityInput.value);
-            const stock = parseInt('{{ $stock }}');
+            const stock = selectedVariant ? selectedVariant.stock : 0;
             if (quantity > stock) {
                 alert('Jumlah yang dipilih melebihi stok yang tersedia.');
             } else {

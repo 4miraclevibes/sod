@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductVariant extends Model
 {
     use HasFactory;
-    protected $fillable = ['product_id', 'name', 'price', 'is_visible', 'capital_price'];
+    protected $fillable = ['product_id', 'name', 'price', 'is_visible'];
 
     public function product()
     {
@@ -17,5 +17,15 @@ class ProductVariant extends Model
     public function variantStocks()
     {
         return $this->hasMany(VariantStock::class);
+    }
+
+    public function getAvailableStockCount()
+    {
+        return $this->variantStocks()
+            ->withCount(['stockDetails' => function ($query) {
+                $query->where('status', 'ready');
+            }])
+            ->get()
+            ->sum('stock_details_count');
     }
 }

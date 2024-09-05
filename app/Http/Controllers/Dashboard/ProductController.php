@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\ProductImage;
 use App\Models\ProductVariant;
+use App\Models\VariantStock;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -85,7 +86,6 @@ class ProductController extends Controller
             'name' => $request->name,
             'price' => $request->price,
             'is_visible' => 0,
-            'capital_price' => $request->capital_price,
         ]);
         return redirect()->route('dashboard.product.variant.index', $product->id);
     }
@@ -105,5 +105,38 @@ class ProductController extends Controller
     {
         $variant->delete();
         return redirect()->route('dashboard.product.variant.index', $variant->product_id);
+    }
+
+    public function productVariantStock(ProductVariant $variant)
+    {
+        return view('pages.dashboard.products.variants.stock.index', compact('variant'));
+    }
+
+    public function productVariantStockStore(ProductVariant $variant, Request $request)
+    {
+        $capitalPrice = $request->capital_price;
+        $variantStocks = $variant->variantStocks()->create([
+            'quantity' => $request->quantity,
+        ]);
+        foreach ($variantStocks->quantity as $quantity) {
+            $variantStocks->stockDetails()->create([
+                'variant_stock_id' => $variantStocks->id,
+                'capital_price' => $capitalPrice,
+                'price' => 0,
+                'status' => 'ready',
+            ]);
+        }
+        return redirect()->route('dashboard.product.variant.stock.index', $variant->id);
+    }
+
+    public function productVariantStockDestroy(VariantStock $variantStock)
+    {
+        $variantStock->delete();
+        return redirect()->route('dashboard.product.variant.stock.index', $variantStock->variant_id);
+    }
+
+    public function productVariantStockDetail(VariantStock $variantStock)
+    {
+        return view('pages.dashboard.products.variants.stock.detail', compact('variantStock'));
     }
 }

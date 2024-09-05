@@ -19,6 +19,7 @@
             <th class="text-white">Nama Varian</th>
             <th class="text-white">Harga</th>
             <th class="text-white">Status</th>
+            <th class="text-white">Stok</th>
             <th class="text-white">Aksi</th>
           </tr>
         </thead>
@@ -35,8 +36,10 @@
                 <span class="badge bg-danger">Tidak Aktif</span>
               @endif
             </td>
+            <td>{{ $variant->getAvailableStockCount() }}</td>
             <td>
               <a href="{{ route('dashboard.product.variant.edit', $variant->id) }}" class="btn btn-warning btn-sm">Edit</a>
+              <a href="{{ route('dashboard.product.variant.stock.index', $variant->id) }}" class="btn btn-info btn-sm">Stok</a>
               <form action="{{ route('dashboard.product.variant.destroy', $variant->id) }}" method="POST" style="display:inline-block;">
                 @csrf
                 @method('DELETE')

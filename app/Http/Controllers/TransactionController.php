@@ -75,6 +75,13 @@ class TransactionController extends Controller
         $checkedCarts = Cart::whereIn('id', $request->checked_items)
                             ->where('user_id', Auth::user()->id)
                             ->get();
+
+        //Cek apakah stok produk mencukupi
+        foreach($checkedCarts as $cart) {
+            if($cart->variant->getAvailableStockCount() < $request->quantities[$cart->id]) {
+                return back()->with('error', 'Stok produk tidak mencukupi');
+            }
+        }
                             
         $transaction = Transaction::create([
             'total_price' => $request->total_price,

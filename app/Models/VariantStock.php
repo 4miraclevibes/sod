@@ -8,10 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class VariantStock extends Model
 {
     use HasFactory;
-    protected $fillable = ['variant_id', 'stock', 'capital_price', 'price'];
+    protected $fillable = ['product_variant_id', 'quantity'];
 
-    public function variant()
+    public function productVariant()
     {
         return $this->belongsTo(ProductVariant::class);
+    }
+
+    public function stockDetails()
+    {
+        return $this->hasMany(StockDetail::class);
     }
 }

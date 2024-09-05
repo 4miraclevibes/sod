@@ -51,7 +51,7 @@
     @csrf
     <input type="hidden" name="total_price" id="hiddenTotal">
     <input type="hidden" name="shipping_price" id="hiddenShippingPrice">
-    <input type="hidden" name="app_fee" id="hiddenAppFee"> <!-- Tambahkan ini -->
+    <input type="hidden" name="app_fee" id="hiddenAppFee">
     <div class="container mt-3">
         <div class="d-flex justify-content-between mb-3">
             <div class="form-check">
@@ -72,7 +72,8 @@
                         <img src="{{ $cart->variant->product->thumbnail }}" alt="{{ $cart->variant->product->name }}" class="img-fluid ms-2" style="width: 60px; height: 60px; object-fit: cover;">
                         <div class="ms-3 flex-grow-1">
                             <h6 class="mb-0">{{ $cart->variant->product->name }}</h6>
-                            <small class="text-muted">{{ $cart->variant->name }}</small>
+                            <small class="text-muted">{{ $cart->variant->name }}</small> <br>
+                            <small class="text-muted">Stok: {{ $cart->variant->getAvailableStockCount() }}</small>
                             <p class="mb-0 fw-bold">Rp {{ number_format($cart->variant->price, 0, ',', '.') }}</p>
                         </div>
                         <div class="quantity-control">
@@ -113,65 +114,72 @@
     </div>
 </form>
 
+@section('script')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    let items = @json($carts);
-    let shippingCost = @json($shipping_price); // Anda bisa mengubah ini sesuai kebutuhan
-    let appFee = @json($app_fee); // Anda bisa mengubah ini sesuai kebutuhan
+    let items = {!! json_encode($carts->map(function($cart) {
+        return [
+            'id' => $cart->id,
+            'quantity' => $cart->quantity,
+            'variant' => [
+                'id' => $cart->variant->id,
+                'price' => $cart->variant->price,
+                'stock' => $cart->variant->getAvailableStockCount()
+            ]
+        ];
+    })) !!};
+    let shippingCost = {!! json_encode($shipping_price) !!};
+    let appFee = {!! json_encode($app_fee) !!};
     const orderButton = document.getElementById('orderButton');
+
+    console.log('Items:', items);
+    console.log('Shipping Cost:', shippingCost);
+    console.log('App Fee:', appFee);
+
+    // Fungsi untuk memperbarui kuantitas
     function updateQuantity(index, change) {
         if (items[index] && items[index].quantity !== undefined) {
-            items[index].quantity = Math.max(1, items[index].quantity + change);
-            let quantityInput = document.querySelectorAll('.quantity-input')[index];
-            if (quantityInput) {
-                quantityInput.value = items[index].quantity;
+            let newQuantity = Math.max(1, items[index].quantity + change);
+            let availableStock = items[index].variant.stock;
+            
+            if (newQuantity <= availableStock) {
+                items[index].quantity = newQuantity;
+                let quantityInput = document.querySelectorAll('.quantity-input')[index];
+                if (quantityInput) {
+                    quantityInput.value = items[index].quantity;
+                }
+                updateTotal();
+            } else {
+                alert('Jumlah melebihi stok yang tersedia');
             }
-            updateTotal();
         }
     }
 
+    // Fungsi untuk memperbarui total
     function updateTotal() {
-        console.log('Items:', items);
         let subtotal = 0;
         let anyItemChecked = false;
         items.forEach((item, index) => {
             let checkbox = document.querySelectorAll('.item-checkbox')[index];
             if (checkbox && checkbox.checked) {
                 anyItemChecked = true;
-                if (item && item.variant && item.variant.price) {
-                    subtotal += item.variant.price * item.quantity;
-                } else {
-                    console.error('Item tidak memiliki properti variant.price:', item);
-                }
+                subtotal += item.variant.price * item.quantity;
             }
         });
         let total = subtotal + shippingCost + appFee;
-        console.log('Subtotal:', subtotal);
-        console.log('Total:', total);
 
-        let subtotalElement = document.getElementById('subtotal');
-        let shippingCostElement = document.getElementById('shippingCost');
-        let appFeeElement = document.getElementById('appFee');
-        let totalElement = document.getElementById('total');
-        let hiddenTotalElement = document.getElementById('hiddenTotal');
-        let hiddenShippingPriceElement = document.getElementById('hiddenShippingPrice');
-        let hiddenAppFeeElement = document.getElementById('hiddenAppFee');
+        document.getElementById('subtotal').textContent = `Rp${subtotal.toLocaleString('id-ID')}`;
+        document.getElementById('shippingCost').textContent = `Rp${shippingCost.toLocaleString('id-ID')}`;
+        document.getElementById('appFee').textContent = `Rp${appFee.toLocaleString('id-ID')}`;
+        document.getElementById('total').textContent = `Rp${total.toLocaleString('id-ID')}`;
+        document.getElementById('hiddenTotal').value = total;
+        document.getElementById('hiddenShippingPrice').value = shippingCost;
+        document.getElementById('hiddenAppFee').value = appFee;
 
-        if (subtotalElement) subtotalElement.textContent = `Rp${subtotal.toLocaleString('id-ID')}`;
-        if (shippingCostElement) shippingCostElement.textContent = `Rp${shippingCost.toLocaleString('id-ID')}`;
-        if (appFeeElement) appFeeElement.textContent = `Rp${appFee.toLocaleString('id-ID')}`;
-        if (totalElement) totalElement.textContent = `Rp${total.toLocaleString('id-ID')}`;
-        if (hiddenTotalElement) hiddenTotalElement.value = total;
-        if (hiddenShippingPriceElement) hiddenShippingPriceElement.value = shippingCost;
-        if (hiddenAppFeeElement) hiddenAppFeeElement.value = appFee; // Pastikan ini diisi
-
-        // Aktifkan atau nonaktifkan tombol berdasarkan apakah ada item yang dipilih
-        if (orderButton) {
-            orderButton.disabled = !anyItemChecked;
-        }
+        orderButton.disabled = !anyItemChecked;
     }
 
-    // Tangani klik tombol minus
+    // Event listeners
     document.querySelectorAll('.minus').forEach((btn, index) => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -179,7 +187,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Tangani klik tombol plus
     document.querySelectorAll('.plus').forEach((btn, index) => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -187,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    document.querySelectorAll('.item-checkbox').forEach((checkbox, index) => {
+    document.querySelectorAll('.item-checkbox').forEach((checkbox) => {
         checkbox.addEventListener('change', updateTotal);
     });
 
@@ -197,19 +204,9 @@ document.addEventListener('DOMContentLoaded', function() {
         updateTotal();
     });
 
-    // Panggil updateTotal saat halaman dimuat
+    // Inisialisasi
     updateTotal();
 
-    // Tambahkan event listener untuk form submission
-    document.getElementById('orderForm').addEventListener('submit', function(e) {
-        let checkedItems = document.querySelectorAll('.item-checkbox:checked');
-        if (checkedItems.length === 0) {
-            e.preventDefault();
-            alert('Pilih setidaknya satu item untuk dipesan');
-        }
-    });
-
-    // Tambahkan event listener untuk tombol hapus
     document.getElementById('deleteButton').addEventListener('click', function(e) {
         e.preventDefault();
         let checkedItems = document.querySelectorAll('.item-checkbox:checked');
@@ -235,4 +232,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+@endsection
+
 @endsection
