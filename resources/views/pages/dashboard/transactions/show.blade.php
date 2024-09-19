@@ -34,6 +34,7 @@
               <th>Produk</th>
               <th>Harga</th>
               <th>Jumlah</th>
+              <th>Harga Modal</th>
               <th>Subtotal</th>
             </tr>
           </thead>
@@ -43,25 +44,26 @@
               <td>{{ $detail->variant->product->name }}</td>
               <td>Rp {{ number_format($detail->price, 0, ',', '.') }}</td>
               <td>{{ $detail->quantity }}</td>
+              <td>Rp {{ number_format($detail->capital_price, 0, ',', '.') }}</td>
               <td>Rp {{ number_format($detail->price * $detail->quantity, 0, ',', '.') }}</td>
             </tr>
             @endforeach
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="3" class="text-end"><strong>Total</strong></td>
-              <td><strong>Rp {{ number_format($transaction->total_price - $transaction->shipping_price, 0, ',', '.') }}</strong></td>
-            </tr>
-            <tr>
-              <td colspan="3" class="text-end"><strong>Ongkos Kirim</strong></td>
-              <td><strong>Rp {{ number_format($transaction->shipping_price, 0, ',', '.') }}</strong></td>
-            </tr>
-            <tr>
-              <td colspan="3" class="text-end"><strong>Biaya Layanan</strong></td>
+              <td colspan="4" class="text-end"><strong>Biaya Layanan</strong></td>
               <td><strong>Rp {{ number_format($transaction->app_fee, 0, ',', '.') }}</strong></td>
             </tr>
             <tr>
-              <td colspan="3" class="text-end"><strong>Total Keseluruhan</strong></td>
+              <td colspan="4" class="text-end"><strong>Total</strong></td>
+              <td><strong>Rp {{ number_format($transaction->total_price - $transaction->shipping_price, 0, ',', '.') }}</strong></td>
+            </tr>
+            <tr>
+              <td colspan="4" class="text-end"><strong>Ongkos Kirim</strong></td>
+              <td><strong>Rp {{ number_format($transaction->shipping_price, 0, ',', '.') }}</strong></td>
+            </tr>
+            <tr>
+              <td colspan="4" class="text-end"><strong>Total Keseluruhan</strong></td>
               <td><strong>Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</strong></td>
             </tr>
           </tfoot>
@@ -77,7 +79,7 @@
             <option value="pending" {{ $transaction->status == 'pending' ? 'selected' : '' }}>Pending</option>
             <option value="processing" {{ $transaction->status == 'processing' ? 'selected' : '' }}>Processing</option>
             <option value="shipped" {{ $transaction->status == 'shipped' ? 'selected' : '' }}>Shipped</option>
-            <option value="delivered" {{ $transaction->status == 'delivered' ? 'selected' : '' }}>Delivered</option>
+            {{-- <option value="delivered" {{ $transaction->status == 'delivered' ? 'selected' : '' }}>Delivered</option> --}}
             <option value="cancelled" {{ $transaction->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
           </select>
           <button type="submit" class="btn btn-primary">Update Status</button>

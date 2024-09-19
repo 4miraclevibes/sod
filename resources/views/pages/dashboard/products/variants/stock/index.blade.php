@@ -16,7 +16,14 @@
         <thead>
           <tr class="text-nowrap table-dark">
             <th class="text-white">No</th>
-            <th class="text-white">Stok</th>
+            <th class="text-white">Nama Produk</th>
+            <th class="text-white">Stok Masuk</th>
+            <th class="text-white">Stok Keluar</th>
+            <th class="text-white">Sisa Stok</th>
+            <th class="text-white">Uang Keluar</th>
+            <th class="text-white">Uang Masuk</th>
+            <th class="text-white">Modal / Item</th>
+            <th class="text-white">Profit</th>
             <th class="text-white">Aksi</th>
           </tr>
         </thead>
@@ -24,7 +31,22 @@
           @foreach ($variant->variantStocks as $stock)
           <tr>
             <th scope="row">{{ $loop->iteration }}</th>
+            <td>{{ $variant->product->name }} - {{ $variant->name }}</td>
             <td>{{ $stock->stockDetails->count() }}</td>
+            <td>{{ $stock->stockDetails->where('status', 'sold')->count() }}</td>
+            <td>{{ $stock->stockDetails->where('status', 'ready')->count() }}</td>
+            <td>
+              Rp {{ number_format($stock->stockDetails->sum('capital_price'), 0, ',', '.') }}
+            </td>
+            <td>
+              Rp {{ number_format($stock->stockDetails->where('status', 'sold')->sum('price'), 0, ',', '.') }}
+            </td>
+            <td>
+              Rp {{ number_format($stock->stockDetails->first()->capital_price, 0, ',', '.') }}
+            </td>
+            <td>
+              Rp {{ number_format($stock->stockDetails->where('status', 'sold')->sum('price') - $stock->stockDetails->sum('capital_price'), 0, ',', '.') }}
+            </td>
             <td>
               <a href="{{ route('dashboard.product.variant.stock.detail', $stock->id) }}" class="btn btn-warning btn-sm">Detail</a>
               <form action="{{ route('dashboard.product.variant.stock.destroy', $stock->id) }}" method="POST" style="display:inline-block;">
@@ -54,8 +76,14 @@
         @csrf
         <div class="modal-body">
           <div class="mb-3">
-            <label for="stock" class="form-label">Jumlah Stok</label>
-            <input type="number" class="form-control" id="stock" name="stock" required>
+            <label for="quantity" class="form-label">Jumlah Stok</label>
+            <input type="number" class="form-control" id="quantity" name="quantity" required>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="capital_price" class="form-label">Harga Modal</label>
+            <input type="number" class="form-control" id="capital_price" name="capital_price" required>
           </div>
         </div>
         <div class="modal-footer">

@@ -215,7 +215,7 @@
                         <div class="mt-auto">
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="fw-bold">Rp {{ number_format($product->variants->first()->price ?? 0, 0, ',', '.') }}</span>
-                                <a href="#" class="btn-add text-decoration-none" 
+                                <a href="#" class="btn-add text-decoration-none no-loading @auth {{ Auth::user()->role->name == 'user' ? '' : 'disabled' }} @endauth" 
                                    data-product-id="{{ $product->id }}"
                                    data-product-name="{{ $product->name }}"
                                    data-product-price="{{ number_format($product->variants->first()->price ?? 0, 0, ',', '.') }}"
@@ -300,6 +300,9 @@
                 const productImage = this.closest('.card').querySelector('.product-thumbnail').src;
                 currentVariants = JSON.parse(this.dataset.variants);
 
+                // Filter varian dengan stok > 0
+                currentVariants = currentVariants.filter(variant => variant.stock > 0);
+
                 document.getElementById('productName').textContent = productName;
                 document.getElementById('productImage').src = productImage;
                 document.getElementById('productVariants').textContent = currentVariants.map(v => v.name).join(', ');
@@ -321,12 +324,13 @@
                     variantButtons.appendChild(button);
                 });
 
-                // Pilih varian pertama secara default
+                // Pilih varian pertama secara default (jika ada)
                 if (currentVariants.length > 0) {
                     selectVariant(currentVariants[0]);
+                    modal.show();
+                } else {
+                    alert('Maaf, produk ini sedang tidak tersedia.');
                 }
-
-                modal.show();
             });
         });
 

@@ -117,8 +117,10 @@ class ProductController extends Controller
         $capitalPrice = $request->capital_price;
         $variantStocks = $variant->variantStocks()->create([
             'quantity' => $request->quantity,
+            'capital_price' => $capitalPrice,
         ]);
-        foreach ($variantStocks->quantity as $quantity) {
+
+        for ($i = 0; $i < $variantStocks->quantity; $i++) {
             $variantStocks->stockDetails()->create([
                 'variant_stock_id' => $variantStocks->id,
                 'capital_price' => $capitalPrice,
@@ -126,13 +128,14 @@ class ProductController extends Controller
                 'status' => 'ready',
             ]);
         }
-        return redirect()->route('dashboard.product.variant.stock.index', $variant->id);
+
+        return redirect()->route('dashboard.product.variant.stock.index', $variant->id)->with('success', 'Stok berhasil ditambahkan');
     }
 
     public function productVariantStockDestroy(VariantStock $variantStock)
     {
         $variantStock->delete();
-        return redirect()->route('dashboard.product.variant.stock.index', $variantStock->variant_id);
+        return back()->with('success', 'Stok berhasil dihapus');
     }
 
     public function productVariantStockDetail(VariantStock $variantStock)

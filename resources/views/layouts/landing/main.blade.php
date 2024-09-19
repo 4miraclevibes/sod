@@ -179,7 +179,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-    @yield('scripts')
     <script>
       // Otomatis menghilangkan alert setelah 5 detik
       setTimeout(function() {
@@ -194,28 +193,38 @@
       (function() {
         let isLoading = false;
         const loadingElement = document.getElementById('loading');
-        
+        const loadingTimeout = 10000; // Maksimum waktu loading (10 detik)
+        let loadingTimer;
+        const noLoadingClass = 'no-loading'; // Class untuk elemen yang tidak akan dikenai loading
+
         function showLoading() {
-            if (loadingElement) {
+            if (loadingElement && !isLoading) {
                 loadingElement.style.display = 'flex';
                 document.body.classList.add('disabled');
                 isLoading = true;
+                
+                // Set timer untuk force hide loading jika terlalu lama
+                loadingTimer = setTimeout(forceHideLoading, loadingTimeout);
             }
         }
 
         function hideLoading() {
-            if (loadingElement) {
+            if (loadingElement && isLoading) {
                 loadingElement.style.display = 'none';
                 document.body.classList.remove('disabled');
                 isLoading = false;
+                
+                if (loadingTimer) {
+                    clearTimeout(loadingTimer);
+                }
             }
         }
 
         function forceHideLoading() {
             hideLoading();
+            // Tambahan: coba hide lagi setelah beberapa milidetik
             setTimeout(hideLoading, 100);
             setTimeout(hideLoading, 500);
-            setTimeout(hideLoading, 1000);
         }
 
         // Tangani navigasi kembali
@@ -223,7 +232,7 @@
 
         // Tangani semua form submit
         document.addEventListener('submit', function(e) {
-            if (!isLoading) {
+            if (!e.target.closest('.' + noLoadingClass)) {
                 showLoading();
             }
         });
@@ -231,10 +240,8 @@
         // Tangani klik pada tag <a>
         document.addEventListener('click', function(e) {
             const target = e.target.closest('a');
-            if (target && target.href && !target.hasAttribute('data-no-loading')) {
-                if (!isLoading) {
-                    showLoading();
-                }
+            if (target && target.href && !target.hasAttribute('data-no-loading') && !target.target && !target.closest('.' + noLoadingClass)) {
+                showLoading();
             }
         });
 
@@ -242,13 +249,29 @@
         window.addEventListener('load', forceHideLoading);
 
         // Tangani kasus ketika halaman di-refresh atau navigasi kembali
-        if (performance.navigation.type === performance.navigation.TYPE_RELOAD || 
-            performance.navigation.type === performance.navigation.TYPE_BACK_FORWARD) {
+        if (performance.navigation && (performance.navigation.type === performance.navigation.TYPE_RELOAD || 
+            performance.navigation.type === performance.navigation.TYPE_BACK_FORWARD)) {
             forceHideLoading();
         }
 
-        // Tambahan: Coba hentikan loading setiap beberapa detik
-        setInterval(forceHideLoading, 2000);
+        // Tambahkan event listener untuk AJAX requests jika menggunakan jQuery
+        if (typeof jQuery !== 'undefined') {
+            $(document).ajaxStart(function(event, xhr, settings) {
+                if (!$(event.target).closest('.' + noLoadingClass).length) {
+                    showLoading();
+                }
+            });
+            $(document).ajaxStop(hideLoading);
+        }
+
+        // Tangani fetch API requests
+        const originalFetch = window.fetch;
+        window.fetch = function() {
+            if (!document.querySelector(':hover').closest('.' + noLoadingClass)) {
+                showLoading();
+            }
+            return originalFetch.apply(this, arguments).finally(hideLoading);
+        };
 
         // Ekspos fungsi ke objek window untuk debugging
         window.debugLoading = {

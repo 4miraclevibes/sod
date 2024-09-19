@@ -18,6 +18,7 @@
             <th class="text-white">No</th>
             <th class="text-white">Nama Varian</th>
             <th class="text-white">Harga</th>
+            <th class="text-white">Harga Modal</th>
             <th class="text-white">Status</th>
             <th class="text-white">Stok</th>
             <th class="text-white">Aksi</th>
@@ -29,6 +30,13 @@
             <th scope="row">{{ $loop->iteration }}</th>
             <td>{{ $variant->name }}</td>
             <td>Rp {{ number_format($variant->price, 0, ',', '.') }}</td>
+            <td>
+              @if($variant->variantStocks->first() && $variant->variantStocks->first()->stockDetails->first())
+                Rp {{ number_format($variant->variantStocks->first()->stockDetails->first()->capital_price, 0, ',', '.') }}
+              @else
+                -
+              @endif
+            </td>
             <td>
               @if($variant->is_visible)
                 <span class="badge bg-success">Aktif</span>

@@ -5,12 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
-
 class LandingController extends Controller
 {
     public function home(Request $request)
     {
-        $stock = 30;
         $categorySlug = $request->query('category');
         $categories = Category::all();
 
@@ -23,7 +21,7 @@ class LandingController extends Controller
             $activeCategory = null;
         }
 
-        return view('pages.landing.home', compact('products', 'categories', 'activeCategory', 'stock'));
+        return view('pages.landing.home', compact('products', 'categories', 'activeCategory'));
     }
 
     public function productDetail($slug)

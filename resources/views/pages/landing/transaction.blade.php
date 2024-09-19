@@ -124,7 +124,13 @@
         @foreach($transactions as $transaction)
         <div class="order-card p-3">
             <div class="d-flex justify-content-between mb-2">
-                <span><span class="fw-bold text-dark">Kode Transaksi: </span>{{ $transaction->code }}</span>
+                <span>
+                    <span class="fw-bold text-dark">Kode Transaksi: </span>
+                    <span id="transactionCode{{ $transaction->id }}">{{ $transaction->code }}</span>
+                </span>
+                <span>
+                    <i class="bi bi-clipboard copy-icon" onclick="copyTransactionCode('{{ $transaction->id }}')"></i>
+                </span>
                 <span>{{ $transaction->created_at->format('d M Y') }}</span>
             </div>
             <div class="d-flex justify-content-between align-items-center">
@@ -166,7 +172,7 @@
                     <div>Total Bill: Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</div>
                 </div>
             </div>
-            <div class="product-list">
+            <div class="product-list border-top pt-2">
                 @foreach($transaction->details as $detail)
                 <div class="product-item">
                     <img src="{{ $detail->variant->product->thumbnail }}" alt="{{ $detail->variant->product->name }}" class="product-image">
@@ -202,4 +208,18 @@
         @endforeach
     </div>
 </div>
+
+<script>
+function copyTransactionCode(transactionId) {
+    var codeElement = document.getElementById('transactionCode' + transactionId);
+    var code = codeElement.innerText;
+    
+    navigator.clipboard.writeText(code).then(function() {
+        // Opsional: Tambahkan feedback visual bahwa kode telah disalin
+        alert('Kode transaksi berhasil disalin!');
+    }).catch(function(err) {
+        console.error('Gagal menyalin teks: ', err);
+    });
+}
+</script>
 @endsection

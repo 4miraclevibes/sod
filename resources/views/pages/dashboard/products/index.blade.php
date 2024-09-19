@@ -29,7 +29,14 @@
             <th scope="row">{{ $loop->iteration }}</th>
             <td>{{ $product->name }}</td>
             <td>{{ $product->category->name }}</td>
-            <td>{{ $product->stock }}</td>
+            <td>
+              @php
+                  $totalStock = $product->variants->sum(function ($variant) {
+                      return $variant->getTotalAvailableStockAttribute();
+                  });
+              @endphp
+              {{ $totalStock }}
+            </td>
             <td>
               @foreach($product->variants as $variant)
                 {{ $variant->name }} / Rp {{ number_format($variant->price, 0, ',', '.') }}

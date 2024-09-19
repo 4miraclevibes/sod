@@ -34,7 +34,7 @@
             <td>{{ $transaction->payment->status ?? '***' }}</td>
             <td>{{ $transaction->created_at->format('d M Y H:i') }}</td>
             <td>
-              <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#updateStatusModal{{ $transaction->id }}">
+              <button type="button" class="btn btn-primary btn-sm" {{ $transaction->status == 'delivered' ? 'disabled' : '' }} data-bs-toggle="modal" data-bs-target="#updateStatusModal{{ $transaction->id }}">
                 Update Status
               </button>
               <a href="{{ route('dashboard.transaction.show', $transaction->id) }}" class="btn btn-info btn-sm">Detail</a>
@@ -59,7 +59,7 @@
                         <option value="pending" {{ $transaction->status == 'pending' ? 'selected' : '' }}>Pending</option>
                         <option value="processing" {{ $transaction->status == 'processing' ? 'selected' : '' }}>Processing</option>
                         <option value="shipped" {{ $transaction->status == 'shipped' ? 'selected' : '' }}>Shipped</option>
-                        <option value="delivered" {{ $transaction->status == 'delivered' ? 'selected' : '' }}>Delivered</option>
+                        {{-- <option value="delivered" {{ $transaction->status == 'delivered' ? 'selected' : '' }}>Delivered</option> --}}
                         <option value="cancelled" {{ $transaction->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                       </select>
                     </div>

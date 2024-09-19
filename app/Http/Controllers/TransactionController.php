@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Payment;
+use App\Models\StockDetail;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
+use App\Models\VariantStock;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -69,42 +71,62 @@ class TransactionController extends Controller
             'quantities' => 'required|array',
             'quantities.*' => 'integer|min:1',
             'shipping_price' => 'required|numeric|min:0',
-            'app_fee' => 'required|numeric|min:0', // Tambahkan validasi untuk app_fee
+            'app_fee' => 'required|numeric|min:0',
         ]);
 
         $checkedCarts = Cart::whereIn('id', $request->checked_items)
                             ->where('user_id', Auth::user()->id)
                             ->get();
 
-        //Cek apakah stok produk mencukupi
-        foreach($checkedCarts as $cart) {
-            if($cart->variant->getAvailableStockCount() < $request->quantities[$cart->id]) {
-                return back()->with('error', 'Stok produk tidak mencukupi');
+        DB::beginTransaction();
+        try {
+            foreach($checkedCarts as $cart) {
+                $productVariant = $cart->variant;
+                $quantityToUpdate = $request->quantities[$cart->id];
+                $availableStockDetails = $productVariant->getAvailableStockDetails();
+                
+                if ($availableStockDetails->count() < $quantityToUpdate) {
+                    throw new \Exception("Stok tidak cukup untuk produk {$productVariant->product->name} - {$productVariant->name}");
+                }
             }
-        }
-                            
-        $transaction = Transaction::create([
-            'total_price' => $request->total_price,
-            'code' => $this->generateTransactionCode(),
-            'user_id' => Auth::user()->id,
-            'status' => 'pending',
-            'shipping_price' => $request->shipping_price,
-            'app_fee' => $request->app_fee, // Pastikan app_fee diisi
-        ]);
-
-        foreach($checkedCarts as $cart) {
-            TransactionDetail::create([
-                'transaction_id' => $transaction->id,
-                'variant_id' => $cart->variant_id,
-                'quantity' => $request->quantities[$cart->id],
-                'price' => $cart->variant->price,
-                'capital_price' => $cart->variant->capital_price,
+            $transaction = Transaction::create([
+                'total_price' => $request->total_price,
+                'code' => $this->generateTransactionCode(),
+                'user_id' => Auth::user()->id,
+                'status' => 'pending',
+                'shipping_price' => $request->shipping_price,
+                'app_fee' => $request->app_fee,
             ]);
+    
+            foreach($checkedCarts as $cart) {
+                $transactionDetail = TransactionDetail::create([
+                    'transaction_id' => $transaction->id,
+                    'variant_id' => $cart->variant_id,
+                    'quantity' => $request->quantities[$cart->id],
+                    'price' => $cart->variant->price,
+                    'capital_price' => $cart->variant->getCapitalPriceForQuantity($request->quantities[$cart->id]),
+                ]);
+            }
+            $updateIds = $availableStockDetails->take($quantityToUpdate)->pluck('id')->toArray();
+                
+            $updatedCount = StockDetail::whereIn('id', $updateIds)
+                ->where('status', 'ready')
+                ->update([
+                    'status' => 'sold',
+                    'price' => $transactionDetail->price,
+                ]);
+            
+            if ($updatedCount != $quantityToUpdate) {
+                throw new \Exception("Terjadi perubahan stok untuk produk {$productVariant->product->name} - {$productVariant->name}");
+            }
+            $checkedCarts->each->delete();
+            DB::commit();
+            return redirect()->route('cart.success')->with('success', 'Transaksi berhasil dibuat');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // Log error dan kembalikan respons error yang sesuai
+            return back()->with('error', $e->getMessage());
         }
-
-        $checkedCarts->each->delete();
-
-        return redirect()->route('cart.success')->with('success', 'Transaksi berhasil dibuat');
     }
 
     private function generateTransactionCode()

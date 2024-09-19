@@ -25,6 +25,9 @@ class CartController extends Controller
 
     public function store(Request $request)
     {
+        if (Auth::user()->role->name == 'driver') {
+            return back()->with('error', 'Driver tidak dapat menambahkan produk ke keranjang');
+        }
         $request->validate([
             'variant_id' => 'required',
             'quantity' => 'required|numeric|min:1',

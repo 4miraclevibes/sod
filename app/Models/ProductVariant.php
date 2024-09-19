@@ -28,4 +28,50 @@ class ProductVariant extends Model
             ->get()
             ->sum('stock_details_count');
     }
+
+    public function getAvailableStockDetails()
+    {
+        return StockDetail::whereHas('variantStock', function ($query) {
+            $query->where('product_variant_id', $this->id);
+        })->where('status', 'ready')
+          ->orderBy('created_at', 'asc')
+          ->get();
+    }
+
+    public function getTotalAvailableStockAttribute()
+    {
+        return $this->variantStocks()
+            ->withCount(['stockDetails' => function ($query) {
+                $query->where('status', 'ready');
+            }])
+            ->get()
+            ->sum('stock_details_count');
+    }
+
+    public function getCapitalPriceForQuantity($quantity)
+    {
+        $availableStockDetails = $this->getAvailableStockDetails()
+            ->take($quantity);
+        
+        if ($availableStockDetails->count() < $quantity) {
+            throw new \Exception("Stok tidak cukup untuk produk {$this->product->name} - {$this->name}");
+        }
+        
+        return $availableStockDetails->sum('capital_price');
+    }
+
+    public function getTotalCapitalPrice()
+    {
+        return $this->variantStocks()
+            ->with('stockDetails')
+            ->get()
+            ->sum(function ($variantStock) {
+                return $variantStock->stockDetails->sum('capital_price');
+            });
+    }
+
+    public function transactionDetails()
+    {
+        return $this->hasMany(TransactionDetail::class, 'variant_id');
+    }
 }
