@@ -74,7 +74,19 @@ class LandingController extends Controller
     public function productDetail($slug)
     {
         try {
-            $product = Product::where('slug', $slug)->with('variants')->firstOrFail();
+            $product = Product::where('slug', $slug)->with([
+                'variants' => function($query) {
+                    $query->where('is_visible', true);
+                },
+                'variants.variantStocks' => function($query) {
+                    $query->select('id', 'product_variant_id', 'quantity')
+                          ->withCount(['stockDetails as available_stock' => function($q) {
+                              $q->where('status', 'ready');
+                          }]);
+                },
+                'category',
+                'images'
+            ])->firstOrFail();
             
             return response()->json([
                 'code' => 200,
