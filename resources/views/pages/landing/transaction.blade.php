@@ -131,7 +131,6 @@
                 <span>
                     <i class="bi bi-clipboard copy-icon" onclick="copyTransactionCode('{{ $transaction->id }}')"></i>
                 </span>
-                <span>{{ $transaction->created_at->format('d M Y') }}</span>
             </div>
             <div class="d-flex justify-content-between align-items-center">
                 <div>
