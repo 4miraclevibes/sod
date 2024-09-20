@@ -174,31 +174,19 @@ class TransactionController extends Controller
 
         DB::beginTransaction();
         try {
-            $response = Http::get("{$this->ssoUrl}/payment/show/{$transaction->payment->code}");
-            if ($response->successful()) {
-                $status = $response->json('data.status');
                 $payment = Payment::where('code', $transaction->payment->code)->first();
-                if ($payment && $status == 'success') {
+                if ($payment && $payment->status == 'success') {
                     $transaction->update(['status' => 'done']);
-                    $payment->update(['status' => $status]);
                 } else {
                     DB::rollBack();
                     return back()->with('error', 'Payment not found');
                 }
                 DB::commit();
-                if($status == 'success') {
-                    return back()->with('success', 'Transaksi berhasil ditandai selesai.');
-                } else {
-                    return back()->with('error', 'Transaksi Belum Lunas');
-                }
-            } else {
+                return back()->with('success', 'Transaksi berhasil ditandai selesai.');
+                } catch (Exception $e) {
+                Log::error('Error updating payment: ' . $e->getMessage());
                 DB::rollBack();
                 return back()->with('error', 'Something went wrong, please try again later');
-            }
-        } catch (Exception $e) {
-            Log::error('Error updating payment: ' . $e->getMessage());
-            DB::rollBack();
-            return back()->with('error', 'Something went wrong, please try again later');
         }
     }
 
@@ -211,29 +199,6 @@ class TransactionController extends Controller
         if ($transaction->status !== 'delivered') {
             return back()->with('error', 'Hanya transaksi dengan status "Diterima" yang dapat ditandai selesai.');
         }
-
-        DB::beginTransaction();
-        try {
-            $response = Http::get("{$this->ssoUrl}/payment/show/{$transaction->payment->code}");
-            if ($response->successful()) {
-                $status = $response->json('data.status');
-                $payment = Payment::where('code', $transaction->payment->code)->first();
-                if ($payment && $status == 'success') {
-                    $payment->update(['status' => $status]);
-                    DB::commit();
-                    return back()->with('success', 'Pembayaran Berhasil');
-                } else {
-                    DB::rollBack();
-                    return redirect()->away('https://m.edupay.cloud/dashboard');
-                }
-            } else {
-                DB::rollBack();
-                return back()->with('error', 'Something went wrong, please try again later');
-            }
-        } catch (Exception $e) {
-            Log::error('Error updating payment: ' . $e->getMessage());
-            DB::rollBack();
-            return back()->with('error', 'Something went wrong, please try again later');
-        }
+        return redirect()->away('https://m.edupay.cloud/dashboard');
     }
 }

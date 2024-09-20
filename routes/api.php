@@ -34,7 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [TransactionController::class, 'store']);
         Route::put('/{transaction}/status', [TransactionController::class, 'updateStatus']);
         Route::post('/{transaction}/mark-as-done', [TransactionController::class, 'markAsDone']);
-        Route::post('/{transaction}/pay', [TransactionController::class, 'pay']);
+        Route::get('/{transaction}/pay', [TransactionController::class, 'pay']);
     });
 });
 

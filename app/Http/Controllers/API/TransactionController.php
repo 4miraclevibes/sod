@@ -218,34 +218,22 @@ class TransactionController extends Controller
 
             DB::beginTransaction();
 
-            $response = Http::get("{$this->ssoUrl}/payment/show/{$transaction->payment->code}");
-            if ($response->successful()) {
-                $status = $response->json('data.status');
-                $payment = Payment::where('code', $transaction->payment->code)->first();
-                if ($payment && $status == 'success') {
-                    $transaction->update(['status' => 'done']);
-                    $payment->update(['status' => $status]);
-                    DB::commit();
-                    return response()->json([
+            $payment = Payment::where('code', $transaction->payment->code)->first();
+            if ($payment && $payment->status == 'success') {
+                $transaction->update(['status' => 'done']);
+                DB::commit();
+                return response()->json([
                         'code' => 200,
                         'status' => 'success',
                         'message' => 'Transaction marked as done successfully'
-                    ], 200);
-                } else {
-                    DB::rollBack();
-                    return response()->json([
-                        'code' => 404,
-                        'status' => 'error',
-                        'message' => 'Payment not found'
-                    ], 404);
-                }
+                ], 200);
             } else {
                 DB::rollBack();
                 return response()->json([
-                    'code' => 500,
-                    'status' => 'error',
-                    'message' => 'An error occurred while checking the payment status'
-                ], 500);
+                        'code' => 404,
+                        'status' => 'error',
+                        'message' => 'Payment not found'
+                ], 404);
             }
         } catch (\Exception $e) {
             DB::rollBack();
@@ -263,7 +251,7 @@ class TransactionController extends Controller
         try {
             if ($transaction->user_id !== Auth::id() && $transaction->payment->user_id !== Auth::id()) {
                 return response()->json([
-                    'code' => 403,
+                'code' => 403,
                     'status' => 'error',
                     'message' => 'You do not have permission to pay for this transaction'
                 ], 403);
@@ -277,43 +265,12 @@ class TransactionController extends Controller
                 ], 400);
             }
 
-            DB::beginTransaction();
-
-            $response = Http::get("{$this->ssoUrl}/payment/show/{$transaction->payment->code}");
-            if ($response->successful()) {
-                $status = $response->json('data.status');
-                $payment = Payment::where('code', $transaction->payment->code)->first();
-                if ($payment && $status == 'success') {
-                    $payment->update(['status' => $status]);
-                    DB::commit();
-                    return response()->json([
-                        'code' => 200,
-                        'status' => 'success',
-                        'message' => 'Payment successful'
-                    ], 200);
-                } else {
-                    DB::rollBack();
-                    return response()->json([
-                        'code' => 400,
-                        'status' => 'error',
-                        'message' => 'Payment not completed',
-                        'redirect_url' => 'https://m.edupay.cloud/dashboard'
-                    ], 400);
-                }
-            } else {
-                DB::rollBack();
-                return response()->json([
-                    'code' => 500,
-                    'status' => 'error',
-                    'message' => 'An error occurred while checking the payment status'
-                ], 500);
-            }
+            return redirect()->away('https://m.edupay.cloud/dashboard');
         } catch (\Exception $e) {
-            DB::rollBack();
             return response()->json([
                 'code' => 500,
                 'status' => 'error',
-                'message' => 'An error occurred while processing the payment',
+                'message' => 'An error occurred while paying for the transaction',
                 'error' => $e->getMessage()
             ], 500);
         }

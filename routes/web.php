@@ -22,7 +22,7 @@ Route::delete('/cart/destroy', [CartController::class, 'destroy'])->middleware('
 Route::get('/transaction', [TransactionController::class, 'index'])->middleware('auth')->name('transaction');
 Route::post('/transaction/store', [TransactionController::class, 'store'])->middleware('auth')->name('transaction.store');
 Route::patch('/transaction/{transaction}/mark-as-done', [TransactionController::class, 'markAsDone'])->middleware('auth')->name('transaction.markAsDone');
-Route::patch('/transaction/{transaction}/pay', [TransactionController::class, 'pay'])->middleware('auth')->name('transaction.pay');
+Route::get('/transaction/{transaction}/pay', [TransactionController::class, 'pay'])->middleware('auth')->name('transaction.pay');
 
 Route::get('/checkout', function () {
     return view('pages.landing.checkout');
