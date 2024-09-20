@@ -22,9 +22,11 @@ class LandingController extends Controller
                         'variants' => function($query) {
                             $query->where('is_visible', true);
                         },
-                        'variants.variantStocks',
-                        'variants.variantStocks.stockDetails' => function($query) {
-                            $query->where('status', 'ready');
+                        'variants.variantStocks' => function($query) {
+                            $query->select('id', 'product_variant_id', 'quantity')
+                                  ->withCount(['stockDetails as available_stock' => function($q) {
+                                      $q->where('status', 'ready');
+                                  }]);
                         },
                         'category',
                         'images'
@@ -36,13 +38,16 @@ class LandingController extends Controller
                     'variants' => function($query) {
                         $query->where('is_visible', true);
                     },
-                    'variants.variantStocks',
-                    'variants.variantStocks.stockDetails' => function($query) {
-                        $query->where('status', 'ready');
+                    'variants.variantStocks' => function($query) {
+                        $query->select('id', 'product_variant_id', 'quantity')
+                              ->withCount(['stockDetails as available_stock' => function($q) {
+                                  $q->where('status', 'ready');
+                              }]);
                     },
                     'category',
                     'images'
-                ])->get();
+                ])
+                ->get();
                 $activeCategory = null;
             }
 
