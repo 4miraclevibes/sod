@@ -20,12 +20,11 @@ class LandingController extends Controller
                 $products = Product::where('category_id', $category->id)
                     ->with([
                         'variants' => function($query) {
-                            $query->where('is_visible', true)
-                                  ->withCount(['variantStocks as total_stock' => function($query) {
-                                      $query->whereHas('stockDetails', function($q) {
-                                          $q->where('status', 'ready');
-                                      });
-                                  }]);
+                            $query->where('is_visible', true);
+                        },
+                        'variants.variantStocks',
+                        'variants.variantStocks.stockDetails' => function($query) {
+                            $query->where('status', 'ready');
                         },
                         'category',
                         'images'
@@ -35,17 +34,15 @@ class LandingController extends Controller
             } else {
                 $products = Product::with([
                     'variants' => function($query) {
-                        $query->where('is_visible', true)
-                              ->withCount(['variantStocks as total_stock' => function($query) {
-                                  $query->whereHas('stockDetails', function($q) {
-                                      $q->where('status', 'ready');
-                                  });
-                              }]);
+                        $query->where('is_visible', true);
+                    },
+                    'variants.variantStocks',
+                    'variants.variantStocks.stockDetails' => function($query) {
+                        $query->where('status', 'ready');
                     },
                     'category',
                     'images'
-                ])
-                ->get();
+                ])->get();
                 $activeCategory = null;
             }
 
