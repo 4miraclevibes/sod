@@ -6,7 +6,7 @@ use App\Http\Controllers\API\LandingController;
 use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\TransactionController;
-
+use App\Http\Controllers\API\PaymentController;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
@@ -16,6 +16,7 @@ Route::get('/product-detail/{slug}', [LandingController::class, 'productDetail']
 
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
+Route::post('/payment/{code}', [PaymentController::class, 'updatePayment']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cart', [CartController::class, 'index']);
