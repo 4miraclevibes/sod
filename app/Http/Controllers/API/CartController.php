@@ -42,7 +42,7 @@ class CartController extends Controller
     public function store(Request $request)
     {
         try {
-            \Log::info('Received cart data:', $request->all());
+            Log::info('Received cart data:', $request->all());
             
             $validator = Validator::make($request->all(), [
                 'variant_id' => 'required',
@@ -97,7 +97,7 @@ class CartController extends Controller
                 'message' => 'Produk berhasil ditambahkan ke keranjang'
             ], 200);
         } catch (\Exception $e) {
-            \Log::error('Error in CartController@store: ' . $e->getMessage(), [
+            Log::error('Error in CartController@store: ' . $e->getMessage(), [
                 'request' => $request->all(),
                 'trace' => $e->getTraceAsString()
             ]);
