@@ -131,7 +131,7 @@
 <div class="empty box" style="height: 50px;"></div>
 @endsection
 
-@section('scripts')
+@section('script')
 <script>
 function changeMainImage(thumbnail) {
     // Ubah gambar utama
