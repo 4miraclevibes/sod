@@ -88,7 +88,7 @@ class CartController extends Controller
                 'code' => 500,
                 'status' => 'error',
                 'message' => 'An error occurred while adding product to cart',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage() . ' (File: ' . $e->getFile() . ', Baris: ' . $e->getLine() . ')'
             ], 500);
         }
     }
