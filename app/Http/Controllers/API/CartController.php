@@ -55,7 +55,7 @@ class CartController extends Controller
 
             $userId = Auth::user()->id;
             $variant = ProductVariant::findOrFail($request->variant_id);
-
+            return response()->json($variant->getAvailableStockCount());
             if ($request->quantity > $variant->getAvailableStockCount()) {
                 return response()->json([
                     'code' => 400,
