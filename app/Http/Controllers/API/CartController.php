@@ -45,7 +45,7 @@ class CartController extends Controller
             Log::info('Received cart data:', $request->all());
             
             $validator = Validator::make($request->all(), [
-                'variant_id' => 'required',
+                'variant_id' => 'required|exists:product_variants,id',
                 'quantity' => 'required|numeric|min:1',
             ]);
 
