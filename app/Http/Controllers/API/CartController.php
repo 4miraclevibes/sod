@@ -42,8 +42,22 @@ class CartController extends Controller
     public function store(Request $request)
     {
         try {
-            Log::info('Received cart data:', $request->all());
+            \Log::info('Received cart data:', $request->all());
             
+            $validator = Validator::make($request->all(), [
+                'variant_id' => 'required',
+                'quantity' => 'required|numeric|min:1',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'code' => 422,
+                    'status' => 'error',
+                    'message' => 'Validasi gagal',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
             if (Auth::user()->role->name == 'driver') {
                 return response()->json([
                     'code' => 403,
@@ -51,11 +65,6 @@ class CartController extends Controller
                     'message' => 'Driver tidak dapat menambahkan produk ke keranjang'
                 ], 403);
             }
-
-            $request->validate([
-                'variant_id' => 'required',
-                'quantity' => 'required|numeric|min:1',
-            ]);
 
             $userId = Auth::user()->id;
             $variant = ProductVariant::findOrFail($request->variant_id);
@@ -88,7 +97,7 @@ class CartController extends Controller
                 'message' => 'Produk berhasil ditambahkan ke keranjang'
             ], 200);
         } catch (\Exception $e) {
-            Log::error('Error in CartController@store: ' . $e->getMessage(), [
+            \Log::error('Error in CartController@store: ' . $e->getMessage(), [
                 'request' => $request->all(),
                 'trace' => $e->getTraceAsString()
             ]);
