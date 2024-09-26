@@ -7,6 +7,8 @@ use App\Models\Cart;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
 {
@@ -40,6 +42,8 @@ class CartController extends Controller
     public function store(Request $request)
     {
         try {
+            Log::info('Received cart data:', $request->all());
+            
             if (Auth::user()->role->name == 'driver') {
                 return response()->json([
                     'code' => 403,
@@ -84,10 +88,15 @@ class CartController extends Controller
                 'message' => 'Produk berhasil ditambahkan ke keranjang'
             ], 200);
         } catch (\Exception $e) {
+            Log::error('Error in CartController@store: ' . $e->getMessage(), [
+                'request' => $request->all(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
             return response()->json([
                 'code' => 500,
                 'status' => 'error',
-                'message' => 'An error occurred while adding product to cart',
+                'message' => 'Terjadi kesalahan saat menambahkan produk ke keranjang',
                 'error' => $e->getMessage() . ' (File: ' . $e->getFile() . ', Baris: ' . $e->getLine() . ')'
             ], 500);
         }
