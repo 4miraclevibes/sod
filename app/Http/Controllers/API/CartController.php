@@ -32,7 +32,7 @@ class CartController extends Controller
                 'code' => 500,
                 'status' => 'error',
                 'message' => 'An error occurred while retrieving cart data',
-                'error' => $e->getMessage()
+                'error' => 'Error pada CartController: ' . $e->getMessage() . ' (File: ' . $e->getFile() . ', Baris: ' . $e->getLine() . ')'
             ], 500);
         }
     }
