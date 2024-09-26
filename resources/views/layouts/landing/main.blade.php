@@ -304,36 +304,6 @@
             }
         }
     </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-    (function() {
-        var preventNavigation = true;
-        var navigationPreventionMessage = "Mohon gunakan navigasi yang tersedia di dalam aplikasi untuk pengalaman terbaik. Apakah Anda yakin ingin meninggalkan halaman ini?";
-
-        history.pushState(null, null, location.href);
-        window.onpopstate = function () {
-            if (preventNavigation) {
-                history.go(1);
-                if (confirm(navigationPreventionMessage)) {
-                    preventNavigation = false;
-                    window.history.back();
-                }
-            }
-        };
-
-        // Nonaktifkan pencegahan navigasi untuk link internal
-        document.addEventListener('click', function(e) {
-            if (e.target.tagName === 'A' && e.target.href) {
-                preventNavigation = false;
-            }
-        });
-
-        // Nonaktifkan pencegahan navigasi untuk form submissions
-        document.addEventListener('submit', function() {
-            preventNavigation = false;
-        });
-    })();
-    </script>
     @yield('script')
   </body>
 </html>
