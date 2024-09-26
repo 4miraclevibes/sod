@@ -304,6 +304,58 @@
             }
         }
     </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    (function() {
+        var preventNavigation = true;
+        var lastPushState = new Date();
+        var navigationPreventionMessage = "Mohon gunakan navigasi yang tersedia di dalam aplikasi untuk pengalaman terbaik. Apakah Anda yakin ingin meninggalkan halaman ini?";
+
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            if (preventNavigation && (new Date() - lastPushState) > 200) {
+                history.go(1);
+                showWarningModal();
+            }
+        };
+
+        function showWarningModal() {
+            if (confirm(navigationPreventionMessage)) {
+                preventNavigation = false;
+                window.history.back();
+            } else {
+                history.pushState(null, null, location.href);
+            }
+        }
+
+        var links = document.getElementsByTagName("a");
+        for (var i = 0; i < links.length; i++) {
+            links[i].addEventListener("click", function() {
+                preventNavigation = false;
+            });
+        }
+
+        // Untuk form submissions
+        var forms = document.getElementsByTagName("form");
+        for (var i = 0; i < forms.length; i++) {
+            forms[i].addEventListener("submit", function() {
+                preventNavigation = false;
+            });
+        }
+
+        // Refresh CSRF token setiap 2 jam
+        setInterval(function() {
+            $.get('/refresh-csrf').done(function(data) {
+                $('meta[name="csrf-token"]').attr('content', data);
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+            });
+        }, 7200000); // 2 jam dalam milidetik
+    })();
+    </script>
     @yield('script')
   </body>
 </html>

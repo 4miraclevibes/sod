@@ -106,4 +106,8 @@ Route::get('/user', [SSOController::class, 'getUser'])->name('user');
 // Route untuk melakukan logout dengan SSO
 Route::post('/logout/sso', [SSOController::class, 'logout'])->name('logout.sso');
 
+Route::get('/refresh-csrf', function() {
+    return csrf_token();
+});
+
 require __DIR__.'/auth.php';
