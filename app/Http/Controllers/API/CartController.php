@@ -17,7 +17,7 @@ class CartController extends Controller
         try {
             $shipping_price = 10000;
             $app_fee = 1000;
-            $carts = Cart::with('variant.product', 'variant.getAvailableStockCount')->where('user_id', Auth::user()->id)->get();
+            $carts = Cart::with('variant.product')->where('user_id', Auth::user()->id)->get();
             
             return response()->json([
                 'code' => 200,

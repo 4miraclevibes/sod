@@ -4,16 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class ProductVariant extends Model
 {
     use HasFactory;
     protected $fillable = ['product_id', 'name', 'price', 'is_visible'];
+    protected $appends = ['available_stock_count'];
 
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
+
     public function variantStocks()
     {
         return $this->hasMany(VariantStock::class);
@@ -27,6 +30,16 @@ class ProductVariant extends Model
             }])
             ->get()
             ->sum('stock_details_count');
+    }
+
+    // Atribut baru
+    public function availableStockCount(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->getAvailableStockCount();
+            }
+        );
     }
 
     public function getAvailableStockDetails()
