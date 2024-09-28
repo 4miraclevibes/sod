@@ -12,6 +12,7 @@
             <th class="text-white">No</th>
             <th class="text-white">Kode Transaksi</th>
             <th class="text-white">Nama Pengguna</th>
+            <th class="text-white">Alamat</th>
             <th class="text-white">Total Harga</th>
             <th class="text-white">Ongkos Kirim</th>
             <th class="text-white">Biaya Layanan</th>
@@ -27,6 +28,7 @@
             <th scope="row">{{ $loop->iteration }}</th>
             <td>{{ $transaction->code }}</td>
             <td>{{ $transaction->user->name }}</td>
+            <td>{{ $transaction->user->userAddress->subDistrict->name }}, {{ $transaction->user->userAddress->subDistrict->district->name }}, {{ $transaction->user->userAddress->address }}</td>
             <td>Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</td>
             <td>Rp {{ number_format($transaction->shipping_price, 0, ',', '.') }}</td>
             <td>Rp {{ number_format($transaction->app_fee, 0, ',', '.') }}</td>

@@ -14,6 +14,7 @@
             <th class="text-white">Operator</th>
             <th class="text-white">Driver</th>
             <th class="text-white">Nama Pengguna</th>
+            <th class="text-white">Alamat</th>
             <th class="text-white">Total Harga</th>
             <th class="text-white">Ongkos Kirim</th>
             <th class="text-white">Status</th>
@@ -30,6 +31,7 @@
             <td>{{ $transaction->payment->operator ?? '***' }}</td>
             <td>{{ $transaction->payment->user->name ?? '***' }}</td>
             <td>{{ $transaction->user->name }}</td>
+            <td>{{ $transaction->user->userAddress->subDistrict->name }}, {{ $transaction->user->userAddress->subDistrict->district->name }}, {{ $transaction->user->userAddress->address }}</td>
             <td>Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</td>
             <td>Rp {{ number_format($transaction->shipping_price, 0, ',', '.') }}</td>
             <td>{{ $transaction->status }}</td>

@@ -22,6 +22,7 @@
           <h6>Informasi Pelanggan</h6>
           <p><strong>Nama:</strong> {{ $transaction->user->name }}</p>
           <p><strong>Email:</strong> {{ $transaction->user->email }}</p>
+          <p><strong>Alamat:</strong> {{ $transaction->user->userAddress->subDistrict->name }}, {{ $transaction->user->userAddress->subDistrict->district->name }}, {{ $transaction->user->userAddress->address }}</p>
           <!-- Tambahkan informasi pelanggan lainnya jika ada -->
         </div>
       </div>
