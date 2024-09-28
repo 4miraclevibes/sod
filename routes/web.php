@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\TransactionController as DashboardTransactionController;
 use App\Http\Controllers\Dashboard\PaymentController as DashboardPaymentController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\UserAddressController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SSOController;
 use App\Http\Controllers\TransactionController;
@@ -23,6 +24,12 @@ Route::get('/transaction', [TransactionController::class, 'index'])->middleware(
 Route::post('/transaction/store', [TransactionController::class, 'store'])->middleware('auth')->name('transaction.store');
 Route::patch('/transaction/{transaction}/mark-as-done', [TransactionController::class, 'markAsDone'])->middleware('auth')->name('transaction.markAsDone');
 Route::get('/transaction/{transaction}/pay', [TransactionController::class, 'pay'])->middleware('auth')->name('transaction.pay');
+Route::get('/user/addresses', [UserAddressController::class, 'index'])->middleware('auth')->name('user.addresses');
+Route::get('/user/addresses/add', [UserAddressController::class, 'create'])->middleware('auth')->name('user.addresses.add');
+Route::post('/user/addresses/store', [UserAddressController::class, 'store'])->middleware('auth')->name('user.addresses.store');
+Route::get('/user/addresses/{id}/edit', [UserAddressController::class, 'edit'])->middleware('auth')->name('user.addresses.edit');
+Route::put('/user/addresses/{id}', [UserAddressController::class, 'update'])->middleware('auth')->name('user.addresses.update');
+Route::delete('/user/addresses/destroy/{id}', [UserAddressController::class, 'destroy'])->middleware('auth')->name('user.addresses.destroy');
 
 Route::get('/checkout', function () {
     return view('pages.landing.checkout');

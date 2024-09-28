@@ -72,7 +72,7 @@
             <i class="bi bi-person"></i>
             <span>Detail Profil</span>
         </a>
-        <a href="#" class="profile-menu-item text-decoration-none text-dark">
+        <a href="{{ route('user.addresses') }}" class="profile-menu-item text-decoration-none text-dark">
             <i class="bi bi-geo-alt"></i>
             <span>Alamat Saya</span>
         </a>

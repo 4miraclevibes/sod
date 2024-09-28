@@ -60,4 +60,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserDetail::class);
     }
+
+    public function userAddress()
+    {
+        return $this->hasMany(UserAddress::class);
+    }
 }

@@ -29,9 +29,9 @@
             </div>
             @endauth
             <div class="col-3 text-center">
-                <a href="{{ route('user.details') }}" class="text-decoration-none {{ Route::is('user.details') ? 'active' : '' }}">
-                    <i class="bi bi-person{{ Route::is('user.details') ? '-fill' : '' }} fs-5 {{ Route::is('user.details') ? 'text-success' : 'text-secondary' }}"></i>
-                    <p class="mb-0 small {{ Route::is('user.details') ? 'text-success' : 'text-secondary' }}">Profile</p>
+                <a href="{{ route('user.details') }}" class="text-decoration-none {{ Route::is(['user.details', 'user.addresses', 'user.addresses.edit', 'user.addresses.add']) ? 'active' : '' }}">
+                    <i class="bi bi-person{{ Route::is(['user.details', 'user.addresses', 'user.addresses.edit', 'user.addresses.add']) ? '-fill' : '' }} fs-5 {{ Route::is(['user.details', 'user.addresses', 'user.addresses.edit', 'user.addresses.add']) ? 'text-success' : 'text-secondary' }}"></i>
+                    <p class="mb-0 small {{ Route::is(['user.details', 'user.addresses', 'user.addresses.edit', 'user.addresses.add']) ? 'text-success' : 'text-secondary' }}">Profile</p>
                 </a>
             </div>
         </div>

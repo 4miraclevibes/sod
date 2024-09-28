@@ -107,10 +107,15 @@
                 <span id="total">Rp0</span>
             </div>
         </div>
-
+        @if(Auth::user()->userAddress->where('status', 'active')->count() > 0)
         <button type="submit" class="order-button mb-5" id="orderButton" disabled>
             Pesan Sekarang <i class="bi bi-arrow-right"></i>
         </button>
+        @else
+        <a href="{{ route('user.addresses') }}" class="btn btn-success w-100 mb-5">
+            Belanja Sekarang <i class="bi bi-arrow-right"></i>
+        </a>
+        @endif
     </div>
 </form>
 

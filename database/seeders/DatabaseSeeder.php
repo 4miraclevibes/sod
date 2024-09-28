@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
     {
         Artisan::call('migrate:fresh');
         $this->call([
+            DistrictSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
             CategorySeeder::class,

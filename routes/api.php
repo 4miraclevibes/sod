@@ -7,13 +7,18 @@ use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\TransactionController;
 use App\Http\Controllers\API\PaymentController;
+use App\Http\Controllers\API\UserAddressController;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
 Route::get('/home', [LandingController::class, 'home']);
 Route::get('/product-detail/{slug}', [LandingController::class, 'productDetail']);
-
+Route::get('/user-address', [UserAddressController::class, 'index']);
+Route::get('/user-address/{id}', [UserAddressController::class, 'show']);
+Route::post('/user-address', [UserAddressController::class, 'store']);
+Route::put('/user-address/{id}', [UserAddressController::class, 'update']);
+Route::delete('/user-address/{id}', [UserAddressController::class, 'destroy']);
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/payment/{code}', [PaymentController::class, 'updatePayment']);

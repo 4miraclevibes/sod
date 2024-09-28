@@ -15,7 +15,7 @@ class CartController extends Controller
     public function index()
     {
         try {
-            $shipping_price = 10000;
+            $shipping_price = Auth::user()->userAddress->where('status', 'active')->first()->subDistrict->fee;
             $app_fee = 1000;
             $carts = Cart::with('variant.product')->where('user_id', Auth::user()->id)->get();
             

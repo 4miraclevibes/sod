@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\ProductVariant;
+use App\Models\SubDistrict;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,7 +12,7 @@ class CartController extends Controller
 {
     public function index()
     {
-        $shipping_price = 10000;
+        $shipping_price = Auth::user()->userAddress->where('status', 'active')->first()->subDistrict->fee;
         $app_fee = 1000;
         $carts = Cart::with('variant.product')->where('user_id', Auth::user()->id)->get();
         if ($carts->isEmpty()) {
