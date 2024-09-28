@@ -31,9 +31,9 @@ class TransactionController extends Controller
 
             if (Auth::user()->role->name == 'user') {
                 $query = Transaction::where('user_id', Auth::user()->id)
-                    ->with('details.variant.product', 'payment');
+                    ->with('details.variant.product', 'payment', 'user');
             } else {
-                $query = Transaction::with('details.variant.product', 'payment')
+                $query = Transaction::with('details.variant.product', 'payment', 'user')
                     ->whereHas('payment', function($q) {
                         $q->where('user_id', Auth::user()->id);
                     });
