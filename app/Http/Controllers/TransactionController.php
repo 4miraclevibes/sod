@@ -92,8 +92,8 @@ class TransactionController extends Controller
             $transactionAddress = Auth::user()->userAddress->where('status', 'active')->first();
             $longitude = $transactionAddress->longitude;
             $latitude = $transactionAddress->latitude;
-            $phone = $transactionAddress->phone;
-            $receiver = $transactionAddress->receiver;
+            $phone = $transactionAddress->receiver_phone;
+            $receiver = $transactionAddress->receiver_name;
             $transaction = Transaction::create([
                 'total_price' => $request->total_price,
                 'code' => $this->generateTransactionCode(),
