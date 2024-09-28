@@ -38,13 +38,13 @@ class UserAddressController extends Controller
                 'status' => 'required|in:active,inactive',
             ]);
 
-            DB::transaction(function () use ($validatedData) {
+            $address = DB::transaction(function () use ($validatedData) {
                 if ($validatedData['status'] == 'active') {
                     UserAddress::where('user_id', Auth::id())->update(['status' => 'inactive']);
                 }
 
                 $validatedData['user_id'] = Auth::id();
-                $address = UserAddress::create($validatedData);
+                return UserAddress::create($validatedData);
             });
 
             return response()->json(['message' => 'Address added successfully', 'data' => $address], 201);
