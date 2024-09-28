@@ -28,7 +28,7 @@
             <th scope="row">{{ $loop->iteration }}</th>
             <td>{{ $transaction->code }}</td>
             <td>{{ $transaction->user->name }}</td>
-            <td>{{ $transaction->user->userAddress->subDistrict->name }}, {{ $transaction->user->userAddress->subDistrict->district->name }}, {{ $transaction->user->userAddress->address }}</td>
+            <td>{{ $transaction->address ?? '***' }}</td>
             <td>Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</td>
             <td>Rp {{ number_format($transaction->shipping_price, 0, ',', '.') }}</td>
             <td>Rp {{ number_format($transaction->app_fee, 0, ',', '.') }}</td>

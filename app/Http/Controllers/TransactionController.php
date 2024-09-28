@@ -89,6 +89,9 @@ class TransactionController extends Controller
                     throw new \Exception("Stok tidak cukup untuk produk {$productVariant->product->name} - {$productVariant->name}");
                 }
             }
+            $transactionAddress = Auth::user()->userAddress->where('status', 'active')->first();
+            $longitude = $transactionAddress->longitude;
+            $latitude = $transactionAddress->latitude;
             $transaction = Transaction::create([
                 'total_price' => $request->total_price,
                 'code' => $this->generateTransactionCode(),
@@ -96,6 +99,7 @@ class TransactionController extends Controller
                 'status' => 'pending',
                 'shipping_price' => $request->shipping_price,
                 'app_fee' => $request->app_fee,
+                'address' => $transactionAddress->subDistrict->name . ', ' . $transactionAddress->address. ',' . $longitude . ',' . $latitude
             ]);
     
             foreach($checkedCarts as $cart) {

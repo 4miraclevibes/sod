@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('app_fee')->default(0);
             $table->string('status')->default('pending');
             $table->string('code')->unique();
+            $table->text('address')->nullable();
             $table->timestamps();
         });
     }
