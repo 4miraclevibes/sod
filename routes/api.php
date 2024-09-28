@@ -14,11 +14,6 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/home', [LandingController::class, 'home']);
 Route::get('/product-detail/{slug}', [LandingController::class, 'productDetail']);
-Route::get('/user-address', [UserAddressController::class, 'index']);
-Route::get('/user-address/{id}', [UserAddressController::class, 'show']);
-Route::post('/user-address', [UserAddressController::class, 'store']);
-Route::put('/user-address/{id}', [UserAddressController::class, 'update']);
-Route::delete('/user-address/{id}', [UserAddressController::class, 'destroy']);
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/payment/{code}', [PaymentController::class, 'updatePayment']);
@@ -30,6 +25,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [UserController::class, 'userDetail']);
     Route::put('/user', [UserController::class, 'update']);
     Route::post('/logout', [UserController::class, 'logout']);
+    Route::get('/user-address', [UserAddressController::class, 'index']);
+    Route::get('/user-address/{id}', [UserAddressController::class, 'show']);
+    Route::post('/user-address', [UserAddressController::class, 'store']);
+    Route::put('/user-address/{id}', [UserAddressController::class, 'update']);
+    Route::delete('/user-address/{id}', [UserAddressController::class, 'destroy']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
