@@ -92,6 +92,8 @@ class TransactionController extends Controller
             $transactionAddress = Auth::user()->userAddress->where('status', 'active')->first();
             $longitude = $transactionAddress->longitude;
             $latitude = $transactionAddress->latitude;
+            $phone = $transactionAddress->phone;
+            $receiver = $transactionAddress->receiver;
             $transaction = Transaction::create([
                 'total_price' => $request->total_price,
                 'code' => $this->generateTransactionCode(),
@@ -99,7 +101,7 @@ class TransactionController extends Controller
                 'status' => 'pending',
                 'shipping_price' => $request->shipping_price,
                 'app_fee' => $request->app_fee,
-                'address' => $transactionAddress->subDistrict->name . ', ' . $transactionAddress->address. ',' . $longitude . ',' . $latitude
+                'address' => $transactionAddress->subDistrict->name . ' | ' . $transactionAddress->address. ' | ' . $receiver . ' | ' . $phone . ' | ' . $longitude . ' | ' . $latitude
             ]);
     
             foreach($checkedCarts as $cart) {
