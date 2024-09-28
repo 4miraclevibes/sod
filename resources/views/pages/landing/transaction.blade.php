@@ -137,6 +137,8 @@
                     <div class="order-status">
                         <span class="fw-bold text-dark">Pemesan: </span>
                         <span>{{ $transaction->user->name }}</span> <br>
+                        <span class="fw-bold text-dark">Alamat: </span>
+                        <span>{{ $transaction->address ?? '***' }}</span> <br>
                         @if($transaction->payment)
                             <span class="fw-bold text-dark">Driver: </span>
                             <span>{{ $transaction->payment->user->name }}</span>
