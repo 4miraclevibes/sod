@@ -29,7 +29,6 @@ class LandingController extends Controller
                                   }]);
                         },
                         'category',
-                        'images'
                     ])
                     ->get();
                 $activeCategory = $category;
@@ -45,7 +44,6 @@ class LandingController extends Controller
                               }]);
                     },
                     'category',
-                    'images'
                 ])
                 ->get();
                 $activeCategory = null;
