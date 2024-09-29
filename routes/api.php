@@ -30,6 +30,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/user-address', [UserAddressController::class, 'store']);
     Route::put('/user-address/{id}', [UserAddressController::class, 'update']);
     Route::delete('/user-address/{id}', [UserAddressController::class, 'destroy']);
+    //Get Districts
+    Route::get('/districts', [UserAddressController::class, 'getDistricts']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
