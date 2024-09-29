@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Sayur On Delivery</title>
     <meta name="theme-color" content="#4caf50">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Sayur On Delivery">
-    <link rel="apple-touch-icon" href="{{ asset('assets/landing/images/LogoSod-192x192.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/landing/images/LogoSod.png') }}">
     <link rel="icon" href="{{ asset('assets/landing/images/LogoSod.png') }}" type="image/x-icon">
     <link rel="manifest" href="{{ asset('manifest.json') }}">
     <link rel="service-worker" href="{{ asset('service-worker.js') }}">
