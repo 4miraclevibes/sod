@@ -173,7 +173,9 @@
 @section('content')
 <div class="container">
     <section class="banner mb-3">
-        <img src="https://filemanager.layananberhentikuliah.com/storage/files/3QRbmUXtT8qvsBjD1ctUYFQT3H2iCzK1xKUVSv32.png" alt="Banner" class="w-100 rounded">
+        @foreach($banners->where('is_active', true)->first() as $banner)
+        <img src="{{ $banner->image }}" alt="Banner" class="w-100 rounded">
+        @endforeach
     </section>
 
     <section class="categories mb-4">

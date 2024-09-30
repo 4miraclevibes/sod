@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Banner;
+
 class LandingController extends Controller
 {
     public function home(Request $request)
     {
         $categorySlug = $request->query('category');
         $categories = Category::all();
+        $banners = Banner::where('is_active', true)->get();
 
         if ($categorySlug) {
             $category = Category::where('slug', $categorySlug)->firstOrFail();
@@ -21,7 +24,7 @@ class LandingController extends Controller
             $activeCategory = null;
         }
 
-        return view('pages.landing.home', compact('products', 'categories', 'activeCategory'));
+        return view('pages.landing.home', compact('products', 'categories', 'activeCategory', 'banners'));
     }
 
     public function productDetail($slug)
