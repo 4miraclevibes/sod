@@ -40,7 +40,7 @@ class UserController extends Controller
             ]);
 
             if (Auth::attempt($credentials)) {
-                $user = Auth::user()->load('role', 'userDetail', 'userAddress');
+                $user = Auth::user()->load('role', 'userDetail', 'userAddress', 'userAddress.subDistrict', 'userAddress.subDistrict.district');
                 $token = $user->createToken('authToken')->plainTextToken;
 
                 return response()->json([
