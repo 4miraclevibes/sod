@@ -173,9 +173,7 @@
 @section('content')
 <div class="container">
     <section class="banner mb-3">
-        @foreach($banners->where('is_active', true)->first() as $banner)
-        <img src="{{ $banner->image }}" alt="Banner" class="w-100 rounded">
-        @endforeach
+        <img src="{{ $banners->first()->image }}" alt="Banner" class="w-100 rounded">
     </section>
 
     <section class="categories mb-4">
