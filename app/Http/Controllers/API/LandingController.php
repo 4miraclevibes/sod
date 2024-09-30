@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Banner;
 use Illuminate\Http\Request;
 
 class LandingController extends Controller
@@ -14,6 +15,7 @@ class LandingController extends Controller
         try {
             $categorySlug = $request->query('category');
             $categories = Category::all();
+            $banners = Banner::where('is_active', true)->get();
 
             if ($categorySlug) {
                 $category = Category::where('slug', $categorySlug)->firstOrFail();
@@ -54,6 +56,7 @@ class LandingController extends Controller
                 'status' => 'success',
                 'message' => 'Data retrieved successfully',
                 'data' => [
+                    'banners' => $banners,
                     'categories' => $categories,
                     'products' => $products,
                     'activeCategory' => $activeCategory
