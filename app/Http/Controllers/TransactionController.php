@@ -161,9 +161,26 @@ class TransactionController extends Controller
             'status' => 'required|in:pending,processing,shipped,delivered,done,cancelled',
         ]);
 
-        $transaction->update([
-            'status' => $request->status,
-        ]);
+        if($request->status == 'cancelled'){
+            foreach ($transaction->details as $detail) {
+                $quantity = $detail->quantity;
+
+                $stockDetails = StockDetail::whereHas('variantStock', function ($query) use ($detail) {
+                    $query->where('product_variant_id', $detail->variant_id);
+                })
+                ->where('status', 'sold')
+                ->orderBy('created_at', 'desc')
+                ->take($quantity)
+                ->get();
+
+                foreach ($stockDetails as $stockDetail) {
+                    $stockDetail->update(['status' => 'ready']);
+                }
+            }
+            $transaction->update([
+                'status' => $request->status,
+            ]);
+        }
 
         return redirect()->route('transaction')->with('success', 'Status transaksi berhasil diperbarui.');
     }

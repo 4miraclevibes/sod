@@ -180,6 +180,24 @@ class TransactionController extends Controller
                 'status' => $validatedData['status'],
             ]);
 
+            if($validatedData['status'] == 'cancelled'){
+                foreach ($transaction->details as $detail) {
+                    $quantity = $detail->quantity;
+
+                    $stockDetails = StockDetail::whereHas('variantStock', function ($query) use ($detail) {
+                        $query->where('product_variant_id', $detail->variant_id);
+                    })
+                    ->where('status', 'sold')
+                    ->orderBy('created_at', 'desc')
+                    ->take($quantity)
+                    ->get();
+
+                    foreach ($stockDetails as $stockDetail) {
+                        $stockDetail->update(['status' => 'ready']);
+                    }
+                }
+            }
+
             return response()->json([
                 'code' => 200,
                 'status' => 'success',

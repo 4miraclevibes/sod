@@ -190,8 +190,16 @@
                 @endforeach
             </div>
             <div class="d-flex justify-content-between">
+                @if(Auth::user()->role->name == 'user' && $transaction->status != 'cancelled' && $transaction->status == 'pending')
+                <form action="{{ route('transaction.updateStatus', $transaction->id) }}" method="POST" class="" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan transaksi ini?')">
+                    @csrf
+                    @method('PATCH')
+                    <input type="hidden" name="status" value="cancelled">
+                    <button type="submit" class="btn btn-danger btn-sm mt-2">Cancel</button>
+                </form>
+                @endif
                 @if($transaction->status == 'delivered' && $transaction->payment->status == 'success')
-                <form action="{{ route('transaction.markAsDone', $transaction->id) }}" method="POST" class="">
+                <form action="{{ route('transaction.markAsDone', $transaction->id) }}" method="POST" class="" onsubmit="return confirm('Apakah Anda yakin ingin menandai transaksi ini selesai?')">
                     @csrf
                     @method('PATCH')
                     <button type="submit" class="btn btn-success btn-sm mt-2">Tandai Selesai</button>
