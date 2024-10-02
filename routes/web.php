@@ -24,6 +24,7 @@ Route::get('/transaction', [TransactionController::class, 'index'])->middleware(
 Route::post('/transaction/store', [TransactionController::class, 'store'])->middleware('auth')->name('transaction.store');
 Route::patch('/transaction/{transaction}/mark-as-done', [TransactionController::class, 'markAsDone'])->middleware('auth')->name('transaction.markAsDone');
 Route::get('/transaction/{transaction}/pay', [TransactionController::class, 'pay'])->middleware('auth')->name('transaction.pay');
+Route::patch('/transaction/{transaction}/updateStatus', [TransactionController::class, 'updateStatus'])->middleware('auth')->name('transaction.updateStatus');
 Route::get('/user/addresses', [UserAddressController::class, 'index'])->middleware('auth')->name('user.addresses');
 Route::get('/user/addresses/add', [UserAddressController::class, 'create'])->middleware('auth')->name('user.addresses.add');
 Route::post('/user/addresses/store', [UserAddressController::class, 'store'])->middleware('auth')->name('user.addresses.store');
