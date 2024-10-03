@@ -38,7 +38,7 @@ Route::get('/checkout', function () {
 
 Route::get('/login/sso', function () {
     return view('pages.dashboard.auth.login');
-})->middleware('notLogin')->name('login.sso');
+})->middleware('notLogin', 'auth')->name('login.sso');
 
 Route::get('/user/details', function () {
     return view('pages.landing.userDetails');
