@@ -12,9 +12,14 @@ class CartController extends Controller
 {
     public function index()
     {
-        $shipping_price = Auth::user()->userAddress->where('status', 'active')->first()->subDistrict->fee;
-        $app_fee = 1000;
         $carts = Cart::with('variant.product')->where('user_id', Auth::user()->id)->get();
+        if($carts->isEmpty()){
+            $shipping_price = 0;
+            $app_fee = 0;
+        }else{
+            $shipping_price = Auth::user()->userAddress->where('status', 'active')->first()->subDistrict->fee;
+            $app_fee = 1000;
+        }
         if ($carts->isEmpty()) {
             return view('pages.landing.cartEmpty');
         }
