@@ -15,9 +15,16 @@ class CartController extends Controller
     public function index()
     {
         try {
+            $carts = Cart::with('variant.product')->where('user_id', Auth::user()->id)->get();
+            if($carts->isEmpty()){
+                return response()->json([
+                    'code' => 404,
+                    'status' => 'error',
+                    'message' => 'Keranjang kosong'
+                ], 404);
+            }
             $shipping_price = Auth::user()->userAddress->where('status', 'active')->first()->subDistrict->fee;
             $app_fee = 1000;
-            $carts = Cart::with('variant.product')->where('user_id', Auth::user()->id)->get();
             
             return response()->json([
                 'code' => 200,
