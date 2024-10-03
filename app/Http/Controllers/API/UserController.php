@@ -82,6 +82,7 @@ class UserController extends Controller
                 'name' => $validatedData['name'],
                 'email' => $validatedData['email'],
                 'password' => Hash::make($validatedData['password']),
+                'role_id' => 2
             ]);
 
             $token = $user->createToken('authToken')->plainTextToken;
