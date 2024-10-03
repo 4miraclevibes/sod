@@ -43,7 +43,13 @@ class CartController extends Controller
     {
         try {
             Log::info('Received cart data:', $request->all());
-            
+            if(Auth::user()->userAddress->where('status', 'active')->first() == null){
+                return response()->json([
+                    'code' => 400,
+                    'status' => 'error',
+                    'message' => 'User tidak memiliki alamat'
+                ], 400);
+            }
             $validator = Validator::make($request->all(), [
                 'variant_id' => 'required|exists:product_variants,id',
                 'quantity' => 'required|numeric|min:1',
