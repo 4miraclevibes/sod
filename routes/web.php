@@ -36,10 +36,6 @@ Route::get('/checkout', function () {
     return view('pages.landing.checkout');
 })->name('checkout');
 
-Route::get('/login/sso', function () {
-    return view('pages.dashboard.auth.login');
-})->middleware('notLogin', 'auth')->name('login.sso');
-
 Route::get('/user/details', function () {
     return view('pages.landing.userDetails');
 })->middleware('auth')->name('user.details');
@@ -108,7 +104,7 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => 'au
 
 // Route untuk melakukan login dengan SSO
 Route::post('/login/sso', [SSOController::class, 'login'])->name('login.sso');
-Route::get('/dashboard', [SSOController::class, 'dashboard'])->middleware('login')->name('dashboard');
+Route::get('/dashboard', [SSOController::class, 'dashboard'])->middleware('login', 'auth')->name('dashboard');
 // Route untuk mendapatkan data pengguna dari SSO
 Route::get('/user', [SSOController::class, 'getUser'])->name('user');
 // Route untuk melakukan logout dengan SSO
