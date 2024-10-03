@@ -16,12 +16,12 @@ class CartController extends Controller
     {
         try {
             $carts = Cart::with('variant.product')->where('user_id', Auth::user()->id)->get();
-            if($carts->isNotEmpty()){
-                $shipping_price = Auth::user()->userAddress->where('status', 'active')->first()->subDistrict->fee;
-                $app_fee = 1000;
-            }else{
+            if($carts->isEmpty()){
                 $shipping_price = 0;
                 $app_fee = 0;
+            }else{
+                $shipping_price = Auth::user()->userAddress->where('status', 'active')->first()->subDistrict->fee;
+                $app_fee = 1000;
             }
             
             return response()->json([
