@@ -34,6 +34,9 @@ class CartController extends Controller
         if (Auth::user()->role->name == 'driver') {
             return back()->with('error', 'Driver tidak dapat menambahkan produk ke keranjang');
         }
+        if(Auth::user()->userAddress->where('status', 'active')->first() == null){
+            return back()->with('error', 'User tidak memiliki alamat');
+        }
         $request->validate([
             'variant_id' => 'required',
             'quantity' => 'required|numeric|min:1',
