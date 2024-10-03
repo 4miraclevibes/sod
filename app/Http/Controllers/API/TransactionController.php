@@ -85,6 +85,14 @@ class TransactionController extends Controller
                 'app_fee' => 'required|numeric|min:0',
             ]);
 
+            if(Auth::user()->userAddress->where('status', 'active')->first() == null){
+                return response()->json([
+                    'code' => 400,
+                    'status' => 'error',
+                    'message' => 'User tidak memiliki alamat'
+                ], 400);
+            }
+
             $checkedCarts = Cart::whereIn('id', $validatedData['checked_items'])
                                 ->where('user_id', Auth::user()->id)
                                 ->get();
