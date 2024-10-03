@@ -14,8 +14,14 @@ use App\Http\Controllers\SSOController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
+
+Route::get('/privacy-policy', function () {
+    return view('privacyPolicy');
+})->name('privacy.policy');
+
 Route::get('/', [LandingController::class, 'home'])->name('home');
 Route::get('/product/{slug}', [LandingController::class, 'productDetail'])->name('product.detail');
+
 
 Route::get('/cart', [CartController::class, 'index'])->middleware('auth')->name('cart');
 Route::post('/cart/store', [CartController::class, 'store'])->middleware('auth')->name('cart.store');
