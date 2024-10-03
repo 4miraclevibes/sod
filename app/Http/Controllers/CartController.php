@@ -13,7 +13,7 @@ class CartController extends Controller
     public function index()
     {
         $carts = Cart::with('variant.product')->where('user_id', Auth::user()->id)->get();
-        if($carts->isEmpty()){
+        if($carts->isEmpty() || Auth::user()->userAddress->where('status', 'active')->first() == null){
             $shipping_price = 0;
             $app_fee = 0;
         }else{
