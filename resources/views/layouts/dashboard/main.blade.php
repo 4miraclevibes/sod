@@ -60,10 +60,6 @@
         .dt-input{
           margin-right: 15px !important;
         }
-      .description-container {
-          max-width: 100%;
-      }
-
     .custom-alert {
         position: fixed;
         top: 20px;
