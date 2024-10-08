@@ -64,44 +64,6 @@
           max-width: 100%;
       }
 
-      .description-container .description {
-          width: 100%;
-          word-wrap: break-word;
-          overflow-wrap: break-word;
-      }
-
-      .description-container img {
-        max-width: 100%;
-      }
-
-      .description-container figcaption{
-        text-align: center;
-      }
-
-      .description-container figure .media{
-        border: 1px solid #000;
-        width: 100px;
-      }
-      
-    .ck-editor__editable[role="textbox"] {
-      /* editing area */
-      min-height: 200px;
-    }
-
-    .ck-content .image {
-      /* block images */
-      max-width: 80%;
-      margin: 20px auto;
-    }
-
-    .bg-menu-theme .menu-inner > .menu-item.active > .menu-link{
-      background-color: #29A867 !important;
-      color: #fff !important;
-    }
-
-    .bg-menu-theme .menu-inner > .menu-item.active:before{
-      background-color: #29A867 !important;
-    }
     .custom-alert {
         position: fixed;
         top: 20px;
