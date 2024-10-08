@@ -60,6 +60,14 @@
         .dt-input{
           margin-right: 15px !important;
         }
+      .bg-menu-theme .menu-inner > .menu-item.active > .menu-link{
+        background-color: #29A867 !important;
+        color: #fff !important;
+      }
+
+      .bg-menu-theme .menu-inner > .menu-item.active:before{
+        background-color: #29A867 !important;
+      }
     .custom-alert {
         position: fixed;
         top: 20px;
