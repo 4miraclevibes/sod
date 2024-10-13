@@ -58,6 +58,13 @@
                   <div data-i18n="Analytics">Deliveries</div>
                 </a>
               </li>
+              {{-- Districts --}}
+              <li class="menu-item {{ Route::is('dashboard.district*') ? 'active' : '' }}">
+                <a href="{{ route('dashboard.district.index') }}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bxs-map"></i>
+                  <div data-i18n="Analytics">Districts</div>
+                </a>
+              </li>
             </ul>
           </aside>
           <!-- / Menu -->

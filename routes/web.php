@@ -13,6 +13,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SSOController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Dashboard\DistrictController;
 
 
 Route::get('/privacy-policy', function () {
@@ -106,6 +107,15 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => 'au
     Route::get('transaction/deliveries', [DashboardTransactionController::class, 'deliveries'])->name('transaction.deliveries');
     // Payment
     Route::post('payment/store/{transaction}', [DashboardPaymentController::class, 'store'])->name('payment.store');
+    // District dan SubDistrict
+    Route::get('/districts', [DistrictController::class, 'index'])->name('district.index');
+    Route::post('/districts', [DistrictController::class, 'store'])->name('district.store');
+    Route::delete('/districts/{district}', [DistrictController::class, 'destroy'])->name('district.destroy');
+    Route::post('/subdistricts', [DistrictController::class, 'storeSubDistrict'])->name('subdistrict.store');
+    Route::delete('/subdistricts/{subdistrict}', [DistrictController::class, 'destroySubDistrict'])->name('subdistrict.destroy');
+    Route::post('/districts/update-fee-all', [DistrictController::class, 'updateFeeAll'])->name('district.updateFeeAll');
+    Route::put('/districts/{district}', [DistrictController::class, 'update'])->name('district.update');
+    Route::put('/subdistricts/{subdistrict}', [DistrictController::class, 'updateSubDistrict'])->name('subdistrict.update');
 });
 
 // Route untuk melakukan login dengan SSO

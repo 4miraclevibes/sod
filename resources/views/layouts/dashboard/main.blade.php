@@ -200,6 +200,14 @@
           });
       });
     </script>
+    @if(Route::is('dashboard.district*')) 
+    <script>
+      $(document).ready(function () {
+          $('#example1').DataTable({
+          });
+      });
+    </script>
+    @endif
     <script>
       $(document).ready(function() {
         $('#select1').select2();

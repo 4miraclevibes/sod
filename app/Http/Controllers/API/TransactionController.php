@@ -85,6 +85,14 @@ class TransactionController extends Controller
                 'app_fee' => 'required|numeric|min:0',
             ]);
 
+            if($validatedData['total_price'] <= 25000){
+                return response()->json([
+                    'code' => 400,
+                    'status' => 'error',
+                    'message' => 'Minimal pembelian Rp. 25.000'
+                ], 400);
+            }
+
             if(Auth::user()->userAddress->where('status', 'active')->first() == null){
                 return response()->json([
                     'code' => 400,

@@ -64,8 +64,16 @@ class TransactionController extends Controller
 
     public function store(Request $request)
     {
+        if(Auth::user()->userAddress->where('status', 'active')->first() == null){
+            return back()->with('error', 'User tidak memiliki alamat');
+        }
+
+        if($request->total_price < 25000){
+            return back()->with('error', 'Minimal pembelian Rp. 25.000');
+        }
+        
         $request->validate([
-            'total_price' => 'required|numeric|min:0',
+            'total_price' => 'required|numeric|min:25000',
             'checked_items' => 'required|array',
             'checked_items.*' => 'exists:carts,id',
             'quantities' => 'required|array',
