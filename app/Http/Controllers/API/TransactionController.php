@@ -85,14 +85,12 @@ class TransactionController extends Controller
                 'app_fee' => 'required|numeric|min:0',
             ]);
 
-            if($validatedData['total_price'] <= 25000){
-                return response()->json([
-                    'code' => 400,
-                    'status' => 'error',
-                    'message' => 'Minimal pembelian Rp. 25.000'
-                ], 400);
-            }
-
+            
+            $checkedCarts = Cart::whereIn('id', $validatedData['checked_items'])
+            ->where('user_id', Auth::user()->id)
+            ->get();
+            
+            
             if(Auth::user()->userAddress->where('status', 'active')->first() == null){
                 return response()->json([
                     'code' => 400,
@@ -100,10 +98,29 @@ class TransactionController extends Controller
                     'message' => 'User tidak memiliki alamat'
                 ], 400);
             }
+            
+            $total = 0;
+            foreach ($checkedCarts as $cart) {
+                $quantity = $validatedData['quantities'][$cart->id];
+                $price = $cart->variant->price;
+                $total += $quantity * $price;
+            }
+            
+            if($total <= 25000){
+                return response()->json([
+                    'code' => 400,
+                    'status' => 'error',
+                    'message' => 'Minimal pembelian Rp. 25.000'
+                ], 400);
+            }
 
-            $checkedCarts = Cart::whereIn('id', $validatedData['checked_items'])
-                                ->where('user_id', Auth::user()->id)
-                                ->get();
+            if($total !== $validatedData['total_price']){
+                return response()->json([
+                    'code' => 400,
+                    'status' => 'error',
+                    'message' => 'Ada update harga'
+                ], 400);
+            }
 
             DB::beginTransaction();
 

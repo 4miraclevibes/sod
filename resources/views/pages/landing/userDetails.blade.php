@@ -45,6 +45,35 @@
         content: '>';
         color: #888;
     }
+    .early-access-link {
+        word-break: break-all;
+        font-size: 0.9rem;
+        color: #4caf50;
+    }
+    .copy-button {
+        padding: 5px 10px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.8rem;
+    }
+    .copy-button:hover {
+        background-color: #45a049;
+    }
+    .modal-body {
+        font-size: 0.9rem;
+    }
+    .modal-body ol {
+        padding-left: 20px;
+    }
+    .modal-body img {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 15px;
+        width: 300px; /* Atur ukuran sesuai kebutuhan */
+    }
 </style>
 @endsection
 
@@ -88,15 +117,53 @@
             <i class="bi bi-file-text"></i>
             <span>Syarat dan Ketentuan</span>
         </a>
+        <button class="profile-menu-item text-decoration-none text-dark border-0 bg-transparent w-100 text-start" data-bs-toggle="modal" data-bs-target="#earlyAccessModal">
+            <i class="bi bi-google-play"></i>
+            <span>Early Access PlayStore</span>
+        </button>
         <a href="#" class="profile-menu-item text-decoration-none text-dark" id="logoutLink">
             <i class="bi bi-box-arrow-right"></i>
             <span>Keluar</span>
         </a>
     </div>
 </div>
+
+<!-- Modal Early Access -->
+<div class="modal fade" id="earlyAccessModal" tabindex="-1" aria-labelledby="earlyAccessModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="earlyAccessModalLabel">Panduan Early Access PlayStore</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Untuk mengakses versi early access aplikasi SOD di PlayStore, ikuti langkah-langkah berikut:</p>
+        <ol>
+          <li>Pastikan Anda menggunakan akun Google yang terdaftar: <strong>{{ Auth::user()->email }}</strong></li>
+          <li>Klik link berikut untuk mengakses halaman early access: 
+            <a href="https://play.google.com/apps/internaltest/4701084007459227187" target="_blank">Early Access SOD</a>
+          </li>
+          <li>Anda akan melihat halaman seperti gambar di bawah ini:</li>
+          <div class="text-center">
+            <img src="https://filemanager.layananberhentikuliah.com/storage/files/AB4Xv2EaEKJodmKn5jWxTrFXfluC9JdZucxAI0fu.jpg" alt="Early Access Screenshot" class="img-fluid">
+          </div>
+          <li>Jika Anda belum menginstal aplikasi, klik "download it on Google Play" untuk mengunduh dan menginstal.</li>
+          <li>Jika Anda sudah menginstal aplikasi sebelumnya, Anda akan menerima pembaruan ke versi internal test secara otomatis.</li>
+          <li>Tunggu beberapa saat hingga pembaruan tersedia di PlayStore Anda.</li>
+          <li>Buka aplikasi SOD dan nikmati fitur-fitur terbaru!</li>
+        </ol>
+        <p><strong>Catatan:</strong> Pastikan untuk menggunakan email yang terdaftar ({{ Auth::user()->email }}) saat membuka link early access di browser Anda. Jika Anda mengalami kesulitan, coba logout dari akun Google lain dan gunakan hanya akun ini.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-primary" onclick="copyLink()">Salin Link</button>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
-@section('scripts')
+@section('script')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const logoutLink = document.getElementById('logoutLink');
@@ -123,5 +190,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+function copyLink() {
+    var linkText = "https://play.google.com/apps/internaltest/4701084007459227187";
+    navigator.clipboard.writeText(linkText).then(function() {
+        alert("Link early access berhasil disalin!");
+    }, function(err) {
+        console.error('Gagal menyalin link: ', err);
+    });
+}
 </script>
 @endsection

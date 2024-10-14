@@ -68,12 +68,7 @@ class TransactionController extends Controller
             return back()->with('error', 'User tidak memiliki alamat');
         }
 
-        if($request->total_price < 25000){
-            return back()->with('error', 'Minimal pembelian Rp. 25.000');
-        }
-        
         $request->validate([
-            'total_price' => 'required|numeric|min:25000',
             'checked_items' => 'required|array',
             'checked_items.*' => 'exists:carts,id',
             'quantities' => 'required|array',
@@ -84,8 +79,26 @@ class TransactionController extends Controller
 
         $checkedCarts = Cart::whereIn('id', $request->checked_items)
                             ->where('user_id', Auth::user()->id)
+                            ->with('variant.product')
                             ->get();
 
+        $total = 0;
+        foreach ($checkedCarts as $cart) {
+            $quantity = $request->quantities[$cart->id];
+            $price = $cart->variant->price;
+            $total += $quantity * $price;
+        }
+
+        if($total < 25000){
+            return back()->with('error', 'Minimal pembelian Rp. 25.000');
+        }
+        
+        $totalWithFees = $total + $request->shipping_price;
+        if($totalWithFees !== (int)$request->total_price){
+            return back()->with('error', 'Ada update harga');
+        }
+        
+        
         DB::beginTransaction();
         try {
             foreach($checkedCarts as $cart) {
@@ -98,18 +111,14 @@ class TransactionController extends Controller
                 }
             }
             $transactionAddress = Auth::user()->userAddress->where('status', 'active')->first();
-            $longitude = $transactionAddress->longitude;
-            $latitude = $transactionAddress->latitude;
-            $phone = $transactionAddress->receiver_phone;
-            $receiver = $transactionAddress->receiver_name;
             $transaction = Transaction::create([
-                'total_price' => $request->total_price,
+                'total_price' => $totalWithFees,
                 'code' => $this->generateTransactionCode(),
                 'user_id' => Auth::user()->id,
                 'status' => 'pending',
                 'shipping_price' => $request->shipping_price,
                 'app_fee' => $request->app_fee,
-                'address' => $transactionAddress->subDistrict->name . ' | ' . $transactionAddress->address. ' | ' . $receiver . ' | ' . $phone . ' | ' . $longitude . ' | ' . $latitude
+                'address' => $transactionAddress->subDistrict->name . ' | ' . $transactionAddress->address. ' | ' . $transactionAddress->receiver_name . ' | ' . $transactionAddress->receiver_phone . ' | ' . $transactionAddress->longitude . ' | ' . $transactionAddress->latitude
             ]);
     
             foreach($checkedCarts as $cart) {
