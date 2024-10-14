@@ -95,12 +95,9 @@
             </div>
             <div class="d-flex justify-content-between mb-2">
                 <span>Ongkos Kirim</span>
-                <span id="shippingCost">Rp0</span>
+                <span id="totalShipping">Rp0</span>
             </div>
-            <div class="d-flex justify-content-between mb-2">
-                <span>Biaya Layanan</span>
-                <span id="appFee">Rp0</span>
-            </div>
+            <input type="hidden" id="appFee" value="0">
             <hr>
             <div class="d-flex justify-content-between fw-bold">
                 <span>Total</span>
@@ -171,14 +168,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 subtotal += item.variant.price * item.quantity;
             }
         });
-        let total = subtotal + shippingCost + appFee;
+        let totalShipping = shippingCost + appFee;
+        let total = subtotal + totalShipping;
 
         document.getElementById('subtotal').textContent = `Rp${subtotal.toLocaleString('id-ID')}`;
-        document.getElementById('shippingCost').textContent = `Rp${shippingCost.toLocaleString('id-ID')}`;
-        document.getElementById('appFee').textContent = `Rp${appFee.toLocaleString('id-ID')}`;
+        document.getElementById('totalShipping').textContent = `Rp${totalShipping.toLocaleString('id-ID')}`;
         document.getElementById('total').textContent = `Rp${total.toLocaleString('id-ID')}`;
         document.getElementById('hiddenTotal').value = total;
-        document.getElementById('hiddenShippingPrice').value = shippingCost;
+        document.getElementById('hiddenShippingPrice').value = totalShipping;
         document.getElementById('hiddenAppFee').value = appFee;
 
         orderButton.disabled = !anyItemChecked;

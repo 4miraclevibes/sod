@@ -169,7 +169,6 @@
                         @endif
                     </div>
                     <div><span></span>Ongkir: Rp {{ number_format($transaction->shipping_price, 0, ',', '.') }}</div>
-                    <div>Biaya Layanan: Rp {{ number_format($transaction->app_fee, 0, ',', '.') }}</div>
                     <div>Total Bill: Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</div>
                 </div>
             </div>
