@@ -103,7 +103,10 @@ class TransactionController extends Controller
 
     public function fresh()
     {
-        Transaction::all()->delete();
+        $transactions = Transaction::all();
+        foreach ($transactions as $transaction) {
+            $transaction->delete();
+        }
         return 'success';
     }
 }
