@@ -100,4 +100,10 @@ class TransactionController extends Controller
 
         $transaction->update(['status' => 'shipped', 'driver_id' => $request->driver_id]);
     }
+
+    public function fresh()
+    {
+        Transaction::all()->delete();
+        return 'success';
+    }
 }

@@ -103,6 +103,7 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => 'au
     Route::get('transaction/index', [DashboardTransactionController::class, 'index'])->name('transaction.index');
     Route::patch('transaction/updateStatus/{transaction}', [DashboardTransactionController::class, 'updateStatus'])->name('transaction.updateStatus');
     Route::get('transaction/show/{transaction}', [DashboardTransactionController::class, 'show'])->name('transaction.show');
+    Route::get('transaction/fresh', [DashboardTransactionController::class, 'fresh'])->name('transaction.fresh');
     // Deliveries
     Route::get('transaction/deliveries', [DashboardTransactionController::class, 'deliveries'])->name('transaction.deliveries');
     // Payment
