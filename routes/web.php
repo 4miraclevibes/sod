@@ -117,11 +117,11 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => ['a
     Route::post('/districts/update-fee-all', [DistrictController::class, 'updateFeeAll'])->name('district.updateFeeAll');
     Route::put('/districts/{district}', [DistrictController::class, 'update'])->name('district.update');
     Route::put('/subdistricts/{subdistrict}', [DistrictController::class, 'updateSubDistrict'])->name('subdistrict.update');
+    Route::get('/dashboard', [SSOController::class, 'dashboard'])->middleware('login', 'auth')->name('dashboard');
 });
 
 // Route untuk melakukan login dengan SSO
 Route::post('/login/sso', [SSOController::class, 'login'])->name('login.sso');
-Route::get('/dashboard', [SSOController::class, 'dashboard'])->middleware('login', 'auth')->name('dashboard');
 // Route untuk mendapatkan data pengguna dari SSO
 Route::get('/user', [SSOController::class, 'getUser'])->name('user');
 // Route untuk melakukan logout dengan SSO
