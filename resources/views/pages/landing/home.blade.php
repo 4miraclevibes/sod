@@ -211,7 +211,7 @@
                     </a>
                     <div class="card-body p-2 d-flex flex-column">
                         <p class="card-title mb-0 fw-bold" style="font-size: 0.9rem">{{ $product->name }}</p>
-                        <p class="card-text text-muted small mb-2" style="font-size: 0.8rem">{{ $product->category->name }}</p>
+                        <p class="card-text text-muted small mb-2" style="font-size: 0.8rem">{{ $product->description }}</p>
                         <div class="mt-auto">
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="fw-bold">Rp {{ number_format($product->variants->first()->price ?? 0, 0, ',', '.') }}</span>
