@@ -20,6 +20,6 @@ class IsAdminMiddleware
             return $next($request);
         }
         
-        abort(403, 'Akses ditolak. Anda tidak memiliki izin admin.');
+        return redirect()->back()->with('error', 'Akses ditolak. Anda tidak memiliki izin admin.');
     }
 }
