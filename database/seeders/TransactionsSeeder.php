@@ -13,8 +13,9 @@ class TransactionsSeeder extends Seeder
      */
     public function run(): void
     {
-        Artisan::call('migrate:refresh --path=/database/migrations/2024_08_24_123020_create_payments_table.php');
-        Artisan::call('migrate:refresh --path=/database/migrations/2024_08_20_161429_create_transaction_details_table.php');
         Artisan::call('migrate:refresh --path=/database/migrations/2024_08_20_161425_create_transactions_table.php');
+        Artisan::call('migrate:refresh --path=/database/migrations/2024_08_20_161429_create_transaction_details_table.php');
+        Artisan::call('migrate:refresh --path=/database/migrations/2024_08_24_123020_create_payments_table.php');
+        Artisan::call('db:seed --class=TransactionsSeeder');
     }
 }
