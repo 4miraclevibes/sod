@@ -60,7 +60,7 @@ Route::middleware('auth')->group(function () {
 
 // Dashboard
 // Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
-Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => ['auth', 'admin']], function () {
     // User
     Route::get('user/index', [UserController::class, 'index'])->name('user.index');
     Route::get('user/create', [UserController::class, 'create'])->name('user.create');
