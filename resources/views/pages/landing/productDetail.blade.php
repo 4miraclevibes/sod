@@ -98,6 +98,7 @@
     <div class="product-info mb-3">
         <h1 class="product-title">{{ $product->name }}</h1>
         <p class="product-price">Rp <span id="selectedPrice">{{ number_format($product->variants->where('is_visible', 1)->first()->price, 0, ',', '.') }}</span></p>
+        <p class="text-muted">{{ $product->description }}</p>
         <p class="text-muted">{{ $product->category->name }}</p>
         
         <h6 class="mb-2">Pilih Varian</h6>
