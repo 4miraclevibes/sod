@@ -202,7 +202,7 @@
       (function() {
         let isLoading = false;
         const loadingElement = document.getElementById('loading');
-        const loadingTimeout = 10000; // Maksimum waktu loading (10 detik)
+        const loadingTimeout = 2000; // Maksimum waktu loading (3 detik)
         let loadingTimer;
         const noLoadingClass = 'no-loading'; // Class untuk elemen yang tidak akan dikenai loading
 
