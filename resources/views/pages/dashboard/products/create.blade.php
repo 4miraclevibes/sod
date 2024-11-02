@@ -3,7 +3,7 @@
 @section('content')
 <div class="card container p-3">
     <h3 class="mb-3 text-center">Buat Produk Baru</h3>
-    <form action="{{ route('dashboard.product.store') }}" method="POST">
+    <form action="{{ route('dashboard.product.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="row mb-3">
             <div class="col-md-6">
@@ -32,8 +32,8 @@
                 <input type="number" class="form-control form-control-sm" id="stock" name="stock" required>
             </div>
             <div class="col-md-6 mt-3">
-                <label for="thumbnail" class="form-label">URL Thumbnail</label>
-                <input type="url" class="form-control form-control-sm" id="thumbnail" name="thumbnail">
+                <label for="thumbnail" class="form-label">Thumbnail</label>
+                <input type="file" class="form-control form-control-sm" id="thumbnail" name="thumbnail" accept="image/*">
             </div>
             <div class="col-md-12 mt-3">
                 <label for="description" class="form-label">Deskripsi</label>
