@@ -35,9 +35,10 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $packingPrice = 500;
-        $appFee = $request->price * 0.2;
-        $profit = $request->price * 0.3;
-        $price = $request->price + $packingPrice + $appFee + $profit;
+        $appFee = 0.2;
+        $profit = 0.3;
+        $total = $appFee + $profit;
+        $price = $request->price + ($total * $request->price) + $packingPrice;
         if ($request->hasFile('thumbnail')) {
             $thumbnailUrl = $this->serviceController->uploadImage($request->file('thumbnail'));
             
@@ -116,10 +117,11 @@ class ProductController extends Controller
 
     public function productVariantStore(Product $product, Request $request)
     {
-        $appFee = $request->price * 0.2;
-        $profit = $request->price * 0.3;
+        $appFee = 0.2;
+        $profit = 0.3;
+        $total = $appFee + $profit;
         $packingPrice = 500;
-        $price = $request->price + $appFee + $profit + $packingPrice;
+        $price = $request->price + ($total * $request->price) + $packingPrice;
         $product->variants()->create([
             'name' => $request->name,
             'price' => $price,
@@ -130,19 +132,19 @@ class ProductController extends Controller
 
     public function productVariantEdit(ProductVariant $variant)
     {
-        $appFee = $variant->price * 0.2;
-        $profit = $variant->price * 0.3;
+        $appFee = 0.2;
+        $profit = 0.3;
         $packingPrice = 500;
-        $price = $variant->price - $appFee - $profit - $packingPrice;
+        $price = $variant->price - ($appFee + $profit) - $packingPrice;
         return view('pages.dashboard.products.variants.edit', compact('variant', 'price'));
     }
 
     public function productVariantUpdate(Request $request, ProductVariant $variant)
     {
-        $appFee = $request->price * 0.2;
-        $profit = $request->price * 0.3;
+        $appFee = 0.2;
+        $profit = 0.3;
         $packingPrice = 500;
-        $price = $request->price + $appFee + $profit + $packingPrice;
+        $price = $request->price + ($appFee + $profit) + $packingPrice;
         $variant->update([
             ...$request->except('price'),
             'price' => $price,
