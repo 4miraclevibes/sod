@@ -138,7 +138,7 @@ class ProductController extends Controller
         $profit = 0.3;
         $packingPrice = 500;
         $total = $appFee + $profit;
-        $adjustment = $variant->price / (1 + $total);
+        $adjustment = $variant->price / (1 + $total) - $packingPrice;
         $price = $variant->price - $adjustment - $packingPrice;
         dd(
             $variant->price,
