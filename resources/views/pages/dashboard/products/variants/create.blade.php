@@ -15,10 +15,6 @@
                 <label for="price" class="form-label">Harga</label>
                 <input type="number" class="form-control form-control-sm" id="price" name="price" required>
             </div>
-            <div class="col-md-6">
-                <label for="capital_price" class="form-label">Harga Modal</label>
-                <input type="number" class="form-control form-control-sm" id="capital_price" name="capital_price">
-            </div> 
         </div>
         <button type="submit" class="btn btn-sm btn-primary">Tambah Varian</button>
         <a href="{{ route('dashboard.product.variant.index', $product->id) }}" class="btn btn-sm btn-secondary">Batal</a>

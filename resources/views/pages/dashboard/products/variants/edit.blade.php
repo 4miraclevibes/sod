@@ -16,10 +16,6 @@
                 <label for="price" class="form-label">Harga</label>
                 <input type="number" class="form-control form-control-sm" id="price" name="price" value="{{ $variant->price }}" required>
             </div>
-            <div class="col-md-6">
-                <label for="capital_price" class="form-label">Harga Modal</label>
-                <input type="number" class="form-control form-control-sm" id="capital_price" name="capital_price" value="{{ $variant->capital_price }}">
-            </div>
             <div class="col-md-6 mt-3">
                 <label class="form-label">Status</label>
                 <div class="d-flex">
