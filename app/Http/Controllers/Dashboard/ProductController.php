@@ -137,15 +137,22 @@ class ProductController extends Controller
         $appFee = 0.2;
         $profit = 0.3;
         $packingPrice = 500;
-        $total = $appFee + $profit;
-        $adjustment = ($variant->price - $packingPrice) / (1 + $total);
-        $price = $variant->price - $adjustment;
+        $totalPercentage = $appFee + $profit;
+        
+        // Hitung modal setelah mengurangi biaya packing dan persentase total keuntungan
+        $priceWithoutPacking = $variant->price - $packingPrice;
+        $modal = $priceWithoutPacking / (1 + $totalPercentage);
+        
+        // Harga setelah pengurangan modal
+        $price = $variant->price - $modal;
+        
         dd(
             $variant->price,
-            $total,
-            $adjustment,
+            $totalPercentage,
             $packingPrice,
-            $price,
+            $priceWithoutPacking,
+            $modal,
+            $price
         );
         return view('pages.dashboard.products.variants.edit', compact('variant', 'price'));
     }
