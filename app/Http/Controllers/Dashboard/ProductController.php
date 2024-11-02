@@ -212,7 +212,7 @@ class ProductController extends Controller
     public function productVariantStockDestroy(VariantStock $variantStock)
     {
         $variantStock->delete();
-        return back()->with('success', 'Stok berhasil dihapus');
+        return redirect()->back()->with('success', 'Stok berhasil dihapus');
     }
 
     public function productVariantStockDetail(VariantStock $variantStock)
