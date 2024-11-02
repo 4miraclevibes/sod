@@ -9,9 +9,17 @@ use App\Models\ProductImage;
 use App\Models\ProductVariant;
 use App\Models\VariantStock;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Service\ServiceController;
 
 class ProductController extends Controller
 {
+    protected $serviceController;
+
+    public function __construct(ServiceController $serviceController)
+    {
+        $this->serviceController = $serviceController;
+    }
+
     public function index()
     {
         $products = Product::with('category', 'variants', 'images')->get();
@@ -26,12 +34,24 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $product = Product::create($request->all());
+        if ($request->hasFile('thumbnail')) {
+            $thumbnailUrl = $this->serviceController->uploadImage($request->file('thumbnail'));
+            
+            $product = Product::create([
+                ...$request->except('thumbnail'),
+                'thumbnail' => $thumbnailUrl
+            ]);
+        } else {
+            $product = Product::create($request->except('thumbnail'));
+        }
+
+        // Buat variant default
         $product->variants()->create([
             'name' => 'default',
             'price' => $request->price,
             'is_visible' => true,
         ]);
+
         return redirect()->route('dashboard.product.index');
     }
 
@@ -43,7 +63,17 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        $product->update($request->all());
+        if ($request->hasFile('thumbnail')) {
+            $thumbnailUrl = $this->serviceController->uploadImage($request->file('thumbnail'));
+            
+            $product->update([
+                ...$request->except('thumbnail'),
+                'thumbnail' => $thumbnailUrl
+            ]);
+        } else {
+            $product->update($request->except('thumbnail'));
+        }
+
         return redirect()->route('dashboard.product.index');
     }
 

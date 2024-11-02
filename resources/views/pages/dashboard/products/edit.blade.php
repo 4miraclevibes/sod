@@ -3,7 +3,7 @@
 @section('content')
 <div class="card container p-3">
     <h3 class="mb-3 text-center">Edit Produk</h3>
-    <form action="{{ route('dashboard.product.update', $product->id) }}" method="POST">
+    <form action="{{ route('dashboard.product.update', $product->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="row mb-3">
@@ -30,18 +30,19 @@
                 <input type="number" class="form-control form-control-sm" id="stock" name="stock" value="{{ $product->stock }}" required>
             </div>
             <div class="col-md-6 mt-3">
-                <label for="thumbnail" class="form-label">URL Thumbnail</label>
-                <input type="url" class="form-control form-control-sm" id="thumbnail" name="thumbnail" value="{{ $product->thumbnail }}">
+                <label for="thumbnail" class="form-label">Thumbnail</label>
+                <input type="file" class="form-control form-control-sm" id="thumbnail" name="thumbnail" accept="image/*">
             </div>
+            @if($product->thumbnail)
+            <div class="col-md-12 mt-3">
+                <label class="form-label">Thumbnail Saat Ini:</label>
+                <img src="{{ $product->thumbnail }}" alt="{{ $product->name }}" class="d-block" style="max-width: 200px; max-height: 200px;">
+            </div>
+            @endif
             <div class="col-md-12 mt-3">
                 <label for="description" class="form-label">Deskripsi</label>
                 <textarea class="form-control form-control-sm" id="description" name="description" rows="3">{{ $product->description }}</textarea>
             </div>
-            @if($product->thumbnail)
-            <div class="col-md-12 mt-3">
-                <img src="{{ $product->thumbnail }}" alt="{{ $product->name }}" style="max-width: 200px; max-height: 200px;">
-            </div>
-            @endif
         </div>
         <button type="submit" class="btn btn-sm btn-primary">Simpan</button>
         <a href="{{ route('dashboard.product.index') }}" class="btn btn-sm btn-secondary">Batal</a>

@@ -3,7 +3,7 @@
 @section('content')
 <div class="card container p-3">
     <h3 class="mb-3 text-center">Buat Kategori Baru</h3>
-    <form action="{{ route('dashboard.category.store') }}" method="POST">
+    <form action="{{ route('dashboard.category.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="row mb-3">
             <div class="col-md-6">
@@ -15,8 +15,8 @@
                 <input type="text" class="form-control form-control-sm" id="slug" name="slug" required>
             </div>
             <div class="col-md-12 mt-3">
-                <label for="image" class="form-label">URL Gambar</label>
-                <input type="url" class="form-control form-control-sm" id="image" name="image">
+                <label for="image" class="form-label">Gambar Kategori</label>
+                <input type="file" class="form-control form-control-sm" id="image" name="image" accept="image/*">
             </div>
         </div>
         <button type="submit" class="btn btn-sm btn-primary">Buat</button>

@@ -3,7 +3,7 @@
 @section('content')
 <div class="card container p-3">
     <h3 class="mb-3 text-center">Edit Kategori</h3>
-    <form action="{{ route('dashboard.category.update', $category->id) }}" method="POST">
+    <form action="{{ route('dashboard.category.update', $category->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="row mb-3">
@@ -16,12 +16,13 @@
                 <input type="text" class="form-control form-control-sm" id="slug" name="slug" value="{{ $category->slug }}" required>
             </div>
             <div class="col-md-12 mt-3">
-                <label for="image" class="form-label">URL Gambar</label>
-                <input type="url" class="form-control form-control-sm" id="image" name="image" value="{{ $category->image }}">
+                <label for="image" class="form-label">Gambar Kategori</label>
+                <input type="file" class="form-control form-control-sm" id="image" name="image" accept="image/*">
             </div>
             @if($category->image)
             <div class="col-md-12 mt-3">
-                <img src="{{ $category->image }}" alt="{{ $category->name }}" style="max-width: 200px; max-height: 200px;">
+                <label class="form-label">Gambar Saat Ini:</label>
+                <img src="{{ $category->image }}" alt="{{ $category->name }}" class="d-block" style="max-width: 200px; max-height: 200px;">
             </div>
             @endif
         </div>
