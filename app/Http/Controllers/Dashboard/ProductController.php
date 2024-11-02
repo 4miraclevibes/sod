@@ -139,7 +139,14 @@ class ProductController extends Controller
         $packingPrice = 500;
         $total = $appFee + $profit;
         $adjustment = ($variant->price - $packingPrice) / (1 + $total);
-        $price = $variant->price - $adjustment - $packingPrice;
+        $price = $variant->price - $adjustment;
+        dd(
+            $variant->price,
+            $total,
+            $adjustment,
+            $packingPrice,
+            $price,
+        );
         return view('pages.dashboard.products.variants.edit', compact('variant', 'price'));
     }
 
