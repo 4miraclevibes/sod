@@ -38,7 +38,8 @@ class ProductController extends Controller
         $appFee = 0.2;
         $profit = 0.3;
         $total = $appFee + $profit;
-        $price = $request->price + ($total * $request->price) + $packingPrice;
+        $adjustment = $total * $request->price;
+        $price = $request->price + $adjustment + $packingPrice;
         if ($request->hasFile('thumbnail')) {
             $thumbnailUrl = $this->serviceController->uploadImage($request->file('thumbnail'));
             
@@ -121,7 +122,8 @@ class ProductController extends Controller
         $profit = 0.3;
         $total = $appFee + $profit;
         $packingPrice = 500;
-        $price = $request->price + ($total * $request->price) + $packingPrice;
+        $adjustment = $total * $request->price;
+        $price = $request->price + $adjustment + $packingPrice;
         $product->variants()->create([
             'name' => $request->name,
             'price' => $price,
@@ -135,7 +137,9 @@ class ProductController extends Controller
         $appFee = 0.2;
         $profit = 0.3;
         $packingPrice = 500;
-        $price = $variant->price - ($appFee + $profit) - $packingPrice;
+        $total = $appFee + $profit;
+        $adjustment = $total * $variant->price;
+        $price = $variant->price - $adjustment - $packingPrice;
         return view('pages.dashboard.products.variants.edit', compact('variant', 'price'));
     }
 
@@ -144,7 +148,9 @@ class ProductController extends Controller
         $appFee = 0.2;
         $profit = 0.3;
         $packingPrice = 500;
-        $price = $request->price + ($appFee + $profit) + $packingPrice;
+        $total = $appFee + $profit;
+        $adjustment = $total * $request->price;
+        $price = $request->price + $adjustment + $packingPrice;
         $variant->update([
             ...$request->except('price'),
             'price' => $price,
