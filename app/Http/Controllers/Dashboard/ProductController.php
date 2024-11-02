@@ -20,6 +20,28 @@ class ProductController extends Controller
         $this->serviceController = $serviceController;
     }
 
+    public function priceCalculation($price)
+    {
+        $appFee = 0.2;
+        $profit = 0.3;
+        $packingPrice = 500;
+        $totalPercentage = $appFee + $profit;
+        $adjustment = $totalPercentage * $price;
+        return $price + $adjustment + $packingPrice;
+    }
+
+    public function priceCalculationReverse($price)
+    {
+        $appFee = 0.2;
+        $profit = 0.3;
+        $packingPrice = 500;
+        $totalPercentage = $appFee + $profit;
+        
+        $priceWithoutPacking = $price - $packingPrice;
+        $price = $priceWithoutPacking / (1 + $totalPercentage);
+        return $price;
+    }
+
     public function index()
     {
         $products = Product::with('category', 'variants', 'images')->get();
@@ -34,12 +56,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $packingPrice = 500;
-        $appFee = 0.2;
-        $profit = 0.3;
-        $totalPercentage = $appFee + $profit;
-        $adjustment = $totalPercentage * $request->price;
-        $price = $request->price + $adjustment + $packingPrice;
+        $price = $this->priceCalculation($request->price);
         if ($request->hasFile('thumbnail')) {
             $thumbnailUrl = $this->serviceController->uploadImage($request->file('thumbnail'));
             
@@ -118,12 +135,7 @@ class ProductController extends Controller
 
     public function productVariantStore(Product $product, Request $request)
     {
-        $appFee = 0.2;
-        $profit = 0.3;
-        $totalPercentage = $appFee + $profit;
-        $packingPrice = 500;
-        $adjustment = $totalPercentage * $request->price;
-        $price = $request->price + $adjustment + $packingPrice;
+        $price = $this->priceCalculation($request->price);
         $product->variants()->create([
             'name' => $request->name,
             'price' => $price,
@@ -134,24 +146,13 @@ class ProductController extends Controller
 
     public function productVariantEdit(ProductVariant $variant)
     {
-        $appFee = 0.2;
-        $profit = 0.3;
-        $packingPrice = 500;
-        $totalPercentage = $appFee + $profit;
-        
-        $priceWithoutPacking = $variant->price - $packingPrice;
-        $price = $priceWithoutPacking / (1 + $totalPercentage);
+        $price = $this->priceCalculationReverse($variant->price);
         return view('pages.dashboard.products.variants.edit', compact('variant', 'price'));
     }
 
     public function productVariantUpdate(Request $request, ProductVariant $variant)
     {
-        $appFee = 0.2;
-        $profit = 0.3;
-        $packingPrice = 500;
-        $total = $appFee + $profit;
-        $adjustment = $total * $request->price;
-        $price = $request->price + $adjustment + $packingPrice;
+        $price = $this->priceCalculation($request->price);
         $variant->update([
             ...$request->except('price'),
             'price' => $price,
@@ -173,6 +174,7 @@ class ProductController extends Controller
     public function productVariantStockStore(ProductVariant $variant, Request $request)
     {
         $capitalPrice = $request->capital_price;
+
         $variantStocks = $variant->variantStocks()->create([
             'quantity' => $request->quantity,
             'capital_price' => $capitalPrice,
