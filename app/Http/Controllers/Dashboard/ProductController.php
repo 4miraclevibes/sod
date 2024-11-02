@@ -10,6 +10,7 @@ use App\Models\ProductVariant;
 use App\Models\VariantStock;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Service\ServiceController;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -173,26 +174,39 @@ class ProductController extends Controller
 
     public function productVariantStockStore(ProductVariant $variant, Request $request)
     {
-        $capitalPrice = $request->capital_price;
-        $price = $this->priceCalculation($capitalPrice);
-        $variant->update([
-            'price' => $price,
-        ]);
-        $variantStocks = $variant->variantStocks()->create([
-            'quantity' => $request->quantity,
-            'capital_price' => $capitalPrice,
-        ]);
-
-        for ($i = 0; $i < $variantStocks->quantity; $i++) {
-            $variantStocks->stockDetails()->create([
-                'variant_stock_id' => $variantStocks->id,
-                'capital_price' => $capitalPrice,
-                'price' => 0,
-                'status' => 'ready',
+        try {
+            DB::beginTransaction();
+            
+            $capitalPrice = $request->capital_price;
+            $price = $this->priceCalculation($capitalPrice);
+            
+            $variant->update([
+                'price' => $price,
             ]);
-        }
+            
+            $variantStocks = $variant->variantStocks()->create([
+                'quantity' => $request->quantity,
+                'capital_price' => $capitalPrice,
+            ]);
 
-        return redirect()->route('dashboard.product.variant.stock.index', $variant->id)->with('success', 'Stok berhasil ditambahkan');
+            for ($i = 0; $i < $variantStocks->quantity; $i++) {
+                $variantStocks->stockDetails()->create([
+                    'variant_stock_id' => $variantStocks->id,
+                    'capital_price' => $capitalPrice,
+                    'price' => 0,
+                    'status' => 'ready',
+                ]);
+            }
+            
+            DB::commit();
+            return redirect()->back()->with('success', 'Stok berhasil ditambahkan');
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
+                ->withInput();
+        }
     }
 
     public function productVariantStockDestroy(VariantStock $variantStock)
