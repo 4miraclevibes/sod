@@ -28,10 +28,6 @@
                 <input type="number" class="form-control form-control-sm" id="price" name="price" required>
             </div>
             <div class="col-md-6 mt-3">
-                <label for="stock" class="form-label">Stok</label>
-                <input type="number" class="form-control form-control-sm" id="stock" name="stock" required>
-            </div>
-            <div class="col-md-6 mt-3">
                 <label for="thumbnail" class="form-label">Thumbnail</label>
                 <input type="file" class="form-control form-control-sm" id="thumbnail" name="thumbnail" accept="image/*">
             </div>
