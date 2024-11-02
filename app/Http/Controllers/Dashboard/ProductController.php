@@ -37,8 +37,8 @@ class ProductController extends Controller
         $packingPrice = 500;
         $appFee = 0.2;
         $profit = 0.3;
-        $total = $appFee + $profit;
-        $adjustment = $total * $request->price;
+        $totalPercentage = $appFee + $profit;
+        $adjustment = $totalPercentage * $request->price;
         $price = $request->price + $adjustment + $packingPrice;
         if ($request->hasFile('thumbnail')) {
             $thumbnailUrl = $this->serviceController->uploadImage($request->file('thumbnail'));
@@ -120,9 +120,9 @@ class ProductController extends Controller
     {
         $appFee = 0.2;
         $profit = 0.3;
-        $total = $appFee + $profit;
+        $totalPercentage = $appFee + $profit;
         $packingPrice = 500;
-        $adjustment = $total * $request->price;
+        $adjustment = $totalPercentage * $request->price;
         $price = $request->price + $adjustment + $packingPrice;
         $product->variants()->create([
             'name' => $request->name,
@@ -139,21 +139,8 @@ class ProductController extends Controller
         $packingPrice = 500;
         $totalPercentage = $appFee + $profit;
         
-        // Hitung modal setelah mengurangi biaya packing dan persentase total keuntungan
         $priceWithoutPacking = $variant->price - $packingPrice;
-        $modal = $priceWithoutPacking / (1 + $totalPercentage);
-        
-        // Harga setelah pengurangan modal
-        $price = $variant->price - $modal;
-        
-        dd(
-            $variant->price,
-            $totalPercentage,
-            $packingPrice,
-            $priceWithoutPacking,
-            $modal,
-            $price
-        );
+        $price = $priceWithoutPacking / (1 + $totalPercentage);
         return view('pages.dashboard.products.variants.edit', compact('variant', 'price'));
     }
 
