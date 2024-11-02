@@ -118,7 +118,8 @@ class ProductController extends Controller
     {
         $appFee = $request->price * 0.2;
         $profit = $request->price * 0.3;
-        $price = $request->price + $appFee + $profit;
+        $packingPrice = 500;
+        $price = $request->price + $appFee + $profit + $packingPrice;
         $product->variants()->create([
             'name' => $request->name,
             'price' => $price,
@@ -131,7 +132,8 @@ class ProductController extends Controller
     {
         $appFee = $variant->price * 0.2;
         $profit = $variant->price * 0.3;
-        $price = $variant->price - $appFee - $profit;
+        $packingPrice = 500;
+        $price = $variant->price - $appFee - $profit - $packingPrice;
         return view('pages.dashboard.products.variants.edit', compact('variant', 'price'));
     }
 
@@ -139,7 +141,8 @@ class ProductController extends Controller
     {
         $appFee = $request->price * 0.2;
         $profit = $request->price * 0.3;
-        $price = $request->price + $appFee + $profit;
+        $packingPrice = 500;
+        $price = $request->price + $appFee + $profit + $packingPrice;
         $variant->update([
             ...$request->except('price'),
             'price' => $price,
