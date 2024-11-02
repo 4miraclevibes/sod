@@ -174,7 +174,10 @@ class ProductController extends Controller
     public function productVariantStockStore(ProductVariant $variant, Request $request)
     {
         $capitalPrice = $request->capital_price;
-
+        $price = $this->priceCalculation($capitalPrice);
+        $variant->update([
+            'price' => $price,
+        ]);
         $variantStocks = $variant->variantStocks()->create([
             'quantity' => $request->quantity,
             'capital_price' => $capitalPrice,
