@@ -24,7 +24,7 @@
                 </select>
             </div>
             <div class="col-md-6 mt-3">
-                <label for="price" class="form-label">Harga</label>
+                <label for="price" class="form-label">Harga Modal</label>
                 <input type="number" class="form-control form-control-sm" id="price" name="price" required>
             </div>
             <div class="col-md-6 mt-3">

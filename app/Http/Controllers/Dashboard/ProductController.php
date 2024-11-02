@@ -34,6 +34,10 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        $packingPrice = 500;
+        $appFee = $request->price * 0.2;
+        $profit = $request->price * 0.3;
+        $price = $request->price + $packingPrice + $appFee + $profit;
         if ($request->hasFile('thumbnail')) {
             $thumbnailUrl = $this->serviceController->uploadImage($request->file('thumbnail'));
             
@@ -48,7 +52,7 @@ class ProductController extends Controller
         // Buat variant default
         $product->variants()->create([
             'name' => 'default',
-            'price' => $request->price,
+            'price' => $price,
             'is_visible' => true,
         ]);
 
@@ -112,9 +116,12 @@ class ProductController extends Controller
 
     public function productVariantStore(Product $product, Request $request)
     {
+        $appFee = $request->price * 0.2;
+        $profit = $request->price * 0.3;
+        $price = $request->price + $appFee + $profit;
         $product->variants()->create([
             'name' => $request->name,
-            'price' => $request->price,
+            'price' => $price,
             'is_visible' => 0,
         ]);
         return redirect()->route('dashboard.product.variant.index', $product->id);
@@ -122,12 +129,21 @@ class ProductController extends Controller
 
     public function productVariantEdit(ProductVariant $variant)
     {
-        return view('pages.dashboard.products.variants.edit', compact('variant'));
+        $appFee = $variant->price * 0.2;
+        $profit = $variant->price * 0.3;
+        $price = $variant->price - $appFee - $profit;
+        return view('pages.dashboard.products.variants.edit', compact('variant', 'price'));
     }
 
     public function productVariantUpdate(Request $request, ProductVariant $variant)
     {
-        $variant->update($request->all());
+        $appFee = $request->price * 0.2;
+        $profit = $request->price * 0.3;
+        $price = $request->price + $appFee + $profit;
+        $variant->update([
+            ...$request->except('price'),
+            'price' => $price,
+        ]);
         return redirect()->route('dashboard.product.variant.index', $variant->product_id);
     }
 

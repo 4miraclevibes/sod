@@ -13,8 +13,8 @@
                 <input type="text" class="form-control form-control-sm" id="name" name="name" value="{{ $variant->name }}" required>
             </div>
             <div class="col-md-6">
-                <label for="price" class="form-label">Harga</label>
-                <input type="number" class="form-control form-control-sm" id="price" name="price" value="{{ $variant->price }}" required>
+                <label for="price" class="form-label">Harga Modal</label>
+                <input type="number" class="form-control form-control-sm" id="price" name="price" value="{{ $price }}" required>
             </div>
             <div class="col-md-6 mt-3">
                 <label class="form-label">Status</label>
