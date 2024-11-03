@@ -41,13 +41,14 @@ class TransactionController extends Controller
             }
 
             $statusMapping = [
-                'all' => ['pending', 'processing'],
                 'shipped' => ['shipped', 'delivered'],
                 'delivered' => ['done'],
-                'cancelled' => ['cancelled']
+                'cancelled' => ['cancelled'],
+                'pending' => ['pending'],
+                'processing' => ['processing']
             ];
 
-            if (isset($statusMapping[$status])) {
+            if ($status !== 'all' && isset($statusMapping[$status])) {
                 if (count($statusMapping[$status]) > 1) {
                     $query->whereIn('status', $statusMapping[$status]);
                 } else {
