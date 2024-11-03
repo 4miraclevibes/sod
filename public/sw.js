@@ -1,11 +1,13 @@
 const preLoad = function () {
+    console.log('Service Worker: Pre-loading');
     return caches.open("offline").then(function (cache) {
-        // caching index and important routes
+        console.log('Service Worker: Caching important routes');
         return cache.addAll(filesToCache);
     });
 };
 
 self.addEventListener("install", function (event) {
+    console.log('Service Worker: Installed');
     event.waitUntil(preLoad());
 });
 
@@ -47,7 +49,9 @@ const returnFromCache = function (request) {
 };
 
 self.addEventListener("fetch", function (event) {
+    console.log('Service Worker: Fetching', event.request.url);
     event.respondWith(checkResponse(event.request).catch(function () {
+        console.log('Service Worker: Fetch failed, returning offline page instead.');
         return returnFromCache(event.request);
     }));
     if(!event.request.url.startsWith('http')){
