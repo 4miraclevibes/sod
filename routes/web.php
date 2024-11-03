@@ -122,6 +122,7 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => ['a
 Route::get('/dashboard', [SSOController::class, 'dashboard'])->middleware(['login', 'auth', 'admin'])->name('dashboard');
 // Route untuk melakukan login dengan SSO
 Route::post('/login/sso', [SSOController::class, 'login'])->name('login.sso');
+Route::get('/login/sso', [SSOController::class, 'loginView'])->name('login.sso.view');
 // Route untuk mendapatkan data pengguna dari SSO
 Route::get('/user', [SSOController::class, 'getUser'])->name('user');
 // Route untuk melakukan logout dengan SSO

@@ -104,4 +104,8 @@ class SSOController extends Controller
             return response()->json(['message' => 'Logout failed'], 500);
         }
     }
+
+    public function loginView(){
+        return view('pages.dashboard.auth.login');
+    }
 }
