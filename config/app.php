@@ -123,4 +123,7 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    Illuminate\Support\Facades\Facade::defaultAliases()->merge([
+        'LaravelPwa' => Ladumor\LaravelPwa\LaravelPwa::class,
+    ])->toArray(),
 ];

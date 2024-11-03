@@ -167,6 +167,60 @@
         font-size: 1rem;
         width: 100%;
     }
+
+    .install-button {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        color: #333;
+        border: none;
+        border-radius: 16px;
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1),
+                    0 1px 3px rgba(0,0,0,0.08);
+        z-index: 999;
+        display: none;
+        gap: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .install-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    }
+
+    .install-button i.bi-google-play {
+        color: #4CAF50;
+        font-size: 18px;
+    }
+
+    .install-button i.bi-apple {
+        color: #333;
+        font-size: 20px;
+    }
+
+    .install-button::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 16px;
+        padding: 1px;
+        background: linear-gradient(135deg, rgba(76,175,80,0.2), rgba(0,0,0,0.05));
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, 
+                     linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, 
+              linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+    }
 </style>
 @endsection
 
@@ -279,6 +333,11 @@
         </div>
     </div>
 </div>
+<button id="installButton" class="install-button">
+    <i class="bi bi-google-play"></i>
+    <i class="bi bi-apple"></i>
+    Install App
+</button>
 @endsection
 
 @section('script')
@@ -381,6 +440,35 @@
                 this.submit();
             }
         });
+    });
+
+    let deferredPrompt;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt
+        e.preventDefault();
+        // Stash the event so it can be triggered later.
+        deferredPrompt = e;
+        // Show the install button
+        document.getElementById('installButton').style.display = 'flex';
+    });
+
+    document.getElementById('installButton').addEventListener('click', async () => {
+        if (deferredPrompt) {
+            // Show the install prompt
+            deferredPrompt.prompt();
+            // Wait for the user to respond to the prompt
+            const { outcome } = await deferredPrompt.userChoice;
+            // We no longer need the prompt. Clear it up.
+            deferredPrompt = null;
+            // Hide the install button
+            document.getElementById('installButton').style.display = 'none';
+        }
+    });
+
+    // Hide the install button if app is already installed
+    window.addEventListener('appinstalled', () => {
+        document.getElementById('installButton').style.display = 'none';
     });
 </script>
 @endsection
