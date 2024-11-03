@@ -30,6 +30,7 @@ class TransactionController extends Controller
             $status = $request->query('status', $defaultStatus);
 
             if (Auth::user()->role->name == 'user') {
+                $status = $request->query('status', 'all');
                 $query = Transaction::where('user_id', Auth::user()->id)
                     ->with('details.variant.product', 'payment', 'user', 'payment.user');
             } else {
@@ -39,19 +40,19 @@ class TransactionController extends Controller
                     });
             }
 
-            switch ($status) {
-                case 'all':
-                    $query->whereIn('status', ['pending', 'processing']);
-                    break;
-                case 'shipped':
-                    $query->whereIn('status', ['shipped', 'delivered']);
-                    break;
-                case 'delivered':
-                    $query->whereIn('status', ['done']);
-                    break;
-                case 'cancelled':
-                    $query->where('status', 'cancelled');
-                    break;
+            $statusMapping = [
+                'all' => ['pending', 'processing'],
+                'shipped' => ['shipped', 'delivered'],
+                'delivered' => ['done'],
+                'cancelled' => ['cancelled']
+            ];
+
+            if (isset($statusMapping[$status])) {
+                if (count($statusMapping[$status]) > 1) {
+                    $query->whereIn('status', $statusMapping[$status]);
+                } else {
+                    $query->where('status', $statusMapping[$status][0]);
+                }
             }
 
             $transactions = $query->latest()->get();
