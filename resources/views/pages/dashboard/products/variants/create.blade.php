@@ -13,7 +13,7 @@
             </div>
             <div class="col-md-6" id="capital_price_container">
                 <label for="price" class="form-label">Harga Modal</label>
-                <input type="number" class="form-control form-control-sm" id="price" name="price" required>
+                <input type="number" class="form-control form-control-sm" id="price" name="price">
             </div>
             <div id="sell_price_container" class="col-md-6">
                 <label for="sell_price" class="form-label">Harga Jual</label>
