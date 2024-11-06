@@ -57,7 +57,11 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $price = $this->priceCalculation($request->price);
+        if($request->is_sayur) {
+            $price = $this->priceCalculation($request->price);
+        } else {
+            $price = $request->sell_price;
+        }
         if ($request->hasFile('thumbnail')) {
             $thumbnailUrl = $this->serviceController->uploadImage($request->file('thumbnail'));
             
@@ -74,6 +78,7 @@ class ProductController extends Controller
             'name' => 'default',
             'price' => $price,
             'is_visible' => true,
+            'is_sayur' => $request->is_sayur ?? false,
         ]);
 
         return redirect()->route('dashboard.product.index');
