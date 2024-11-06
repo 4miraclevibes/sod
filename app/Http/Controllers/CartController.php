@@ -18,7 +18,7 @@ class CartController extends Controller
             $app_fee = 0;
         }else{
             $shipping_price = Auth::user()->userAddress->where('status', 'active')->first()->subDistrict->fee;
-            $app_fee = 1000;
+            $app_fee = 0;
         }
         if ($carts->isEmpty()) {
             return view('pages.landing.cartEmpty');
