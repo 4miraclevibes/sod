@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 class ProductVariant extends Model
 {
     use HasFactory;
-    protected $fillable = ['product_id', 'name', 'price', 'is_visible'];
+    protected $fillable = ['product_id', 'name', 'price', 'is_visible', 'is_sayur'];
     protected $appends = ['available_stock_count'];
 
     public function product()
