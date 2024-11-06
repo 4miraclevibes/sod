@@ -59,8 +59,10 @@ class ProductController extends Controller
     {
         if($request->is_sayur) {
             $price = $this->priceCalculation($request->price);
+            $isSayur = true;
         } else {
             $price = $request->sell_price;
+            $isSayur = false;
         }
         if ($request->hasFile('thumbnail')) {
             $thumbnailUrl = $this->serviceController->uploadImage($request->file('thumbnail'));
@@ -78,7 +80,7 @@ class ProductController extends Controller
             'name' => 'default',
             'price' => $price,
             'is_visible' => true,
-            'is_sayur' => $request->is_sayur ?? false,
+            'is_sayur' => $isSayur,
         ]);
 
         return redirect()->route('dashboard.product.index');
@@ -143,13 +145,15 @@ class ProductController extends Controller
     {
         if($request->is_sayur) {
             $price = $this->priceCalculation($request->price);
+            $isSayur = true;
         } else {
             $price = $request->sell_price;
+            $isSayur = false;
         }
         $product->variants()->create([
             'name' => $request->name,
             'price' => $price,
-            'is_sayur' => $request->is_sayur ?? false,
+            'is_sayur' => $isSayur,
             'is_visible' => 0,
         ]);
         return redirect()->route('dashboard.product.variant.index', $product->id);
@@ -169,13 +173,15 @@ class ProductController extends Controller
     {
         if($request->is_sayur) {
             $price = $this->priceCalculation($request->price);
+            $isSayur = true;
         } else {
             $price = $request->sell_price;
+            $isSayur = false;
         }
         $variant->update([
             ...$request->except('price'),
             'price' => $price,
-            'is_sayur' => $request->is_sayur ?? false,
+            'is_sayur' => $isSayur,
         ]);
         return redirect()->route('dashboard.product.variant.index', $variant->product_id);
     }
