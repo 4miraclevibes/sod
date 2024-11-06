@@ -136,10 +136,15 @@ class ProductController extends Controller
 
     public function productVariantStore(Product $product, Request $request)
     {
-        $price = $this->priceCalculation($request->price);
+        if($request->is_sayur) {
+            $price = $this->priceCalculation($request->price);
+        } else {
+            $price = $request->sell_price;
+        }
         $product->variants()->create([
             'name' => $request->name,
             'price' => $price,
+            'is_sayur' => $request->is_sayur ?? false,
             'is_visible' => 0,
         ]);
         return redirect()->route('dashboard.product.variant.index', $product->id);
@@ -147,16 +152,25 @@ class ProductController extends Controller
 
     public function productVariantEdit(ProductVariant $variant)
     {
-        $price = $this->priceCalculationReverse($variant->price);
+        if($variant->is_sayur) {
+            $price = $this->priceCalculationReverse($variant->price);
+        } else {
+            $price = $variant->price;
+        }
         return view('pages.dashboard.products.variants.edit', compact('variant', 'price'));
     }
 
     public function productVariantUpdate(Request $request, ProductVariant $variant)
     {
-        $price = $this->priceCalculation($request->price);
+        if($request->is_sayur) {
+            $price = $this->priceCalculation($request->price);
+        } else {
+            $price = $request->sell_price;
+        }
         $variant->update([
             ...$request->except('price'),
             'price' => $price,
+            'is_sayur' => $request->is_sayur ?? false,
         ]);
         return redirect()->route('dashboard.product.variant.index', $variant->product_id);
     }
