@@ -199,6 +199,11 @@ class ProductController extends Controller
             $capitalPrice = $request->capital_price;
             $price = $this->priceCalculation($capitalPrice);
             
+            if($variant->is_sayur) {
+                $price = $this->priceCalculation($capitalPrice);
+            } else {
+                $price = $variant->price;
+            }   
             $variant->update([
                 'price' => $price,
             ]);
