@@ -89,8 +89,8 @@ class TransactionController extends Controller
             $total += $quantity * $price;
         }
 
-        if($total < 15000){
-            return back()->with('error', 'Minimal pembelian Rp. 15.000');
+        if($total < 5000){
+            return back()->with('error', 'Minimal pembelian Rp. 5.000');
         }
         
         $totalWithFees = $total + $request->shipping_price;
