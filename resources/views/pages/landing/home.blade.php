@@ -183,13 +183,12 @@
         box-shadow: 0 4px 15px rgba(0,0,0,0.1),
                     0 1px 3px rgba(0,0,0,0.08);
         z-index: 999;
-        display: none;
         gap: 10px;
         font-size: 15px;
         font-weight: 600;
         transition: all 0.3s ease;
         border: 1px solid rgba(0,0,0,0.05);
-    }
+}
 
     .install-button:hover {
         transform: translateY(-2px);
@@ -333,7 +332,7 @@
         </div>
     </div>
 </div>
-<button id="installButton" class="install-button">
+<button id="installButton" class="install-button" style="display: flex;">
     <i class="bi bi-google-play"></i>
     <i class="bi bi-apple"></i>
     Install App
@@ -442,40 +441,19 @@
         });
     });
 
-    let deferredPrompt;
-
-    // Fungsi untuk menampilkan tombol install
-    function showInstallButton() {
-        const installButton = document.getElementById('installButton');
-        const ua = window.navigator.userAgent;
-        const iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
-        
+    let installButton = document.getElementById('installButton');
+    const ua = window.navigator.userAgent;
+    const iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
+    
+    // Langsung tampilkan tombol dengan menghapus style display:none
+    installButton.style.display = 'flex';
+    
+    installButton.addEventListener('click', () => {
         if (iOS) {
-            // Untuk perangkat iOS
-            installButton.addEventListener('click', () => {
-                alert('Untuk menginstal aplikasi:\n1. Ketuk tombol Share/Bagikan\n2. Gulir ke bawah dan ketuk "Tambahkan ke Layar Utama"');
-            });
-        } else if (deferredPrompt) {
-            // Untuk Android/Chrome yang mendukung PWA
-            installButton.addEventListener('click', async () => {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                deferredPrompt = null;
-            });
+            alert('Untuk menginstal aplikasi:\n1. Ketuk tombol Share/Bagikan\n2. Gulir ke bawah dan ketuk "Tambahkan ke Layar Utama"');
+        } else {
+            alert('Untuk menginstal aplikasi:\n1. Buka di browser Chrome\n2. Ketuk menu 3 titik di pojok kanan atas\n3. Pilih "Tambahkan ke Layar Utama"');
         }
-        
-        // Selalu tampilkan tombol
-        installButton.style.display = 'flex';
-    }
-
-    // Panggil fungsi saat halaman dimuat
-    document.addEventListener('DOMContentLoaded', showInstallButton);
-
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        showInstallButton();
     });
 </script>
 @endsection
