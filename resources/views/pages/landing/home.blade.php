@@ -444,51 +444,38 @@
 
     let deferredPrompt;
 
-    // Deteksi iOS Safari
-    function isIOSSafari() {
-        const ua = window.navigator.userAgent;
-        const iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
-        const webkit = !!ua.match(/WebKit/i);
-        const standalone = window.navigator.standalone;
-        const iOSSafari = iOS && webkit && !ua.match(/CriOS/i) && !standalone;
-        
-        return iOSSafari;
-    }
-
     // Fungsi untuk menampilkan tombol install
     function showInstallButton() {
         const installButton = document.getElementById('installButton');
+        const ua = window.navigator.userAgent;
+        const iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
         
-        if (isIOSSafari()) {
-            // Jika iOS Safari, tampilkan tombol
-            installButton.style.display = 'flex';
-            // Hapus event listener yang lama
-            installButton.removeEventListener('click', handleInstallClick);
-            // Tambahkan pesan untuk iOS
+        if (iOS) {
+            // Untuk perangkat iOS
             installButton.addEventListener('click', () => {
                 alert('Untuk menginstal aplikasi:\n1. Ketuk tombol Share/Bagikan\n2. Gulir ke bawah dan ketuk "Tambahkan ke Layar Utama"');
             });
         } else if (deferredPrompt) {
-            // Untuk Android/Chrome, gunakan PWA prompt
-            installButton.style.display = 'flex';
-        } else {
-            installButton.style.display = 'none';
+            // Untuk Android/Chrome yang mendukung PWA
+            installButton.addEventListener('click', async () => {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+            });
         }
+        
+        // Selalu tampilkan tombol
+        installButton.style.display = 'flex';
     }
 
     // Panggil fungsi saat halaman dimuat
     document.addEventListener('DOMContentLoaded', showInstallButton);
 
-    // Update event listener yang ada
+    let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
         showInstallButton();
-    });
-
-    // Hide the install button if app is already installed
-    window.addEventListener('appinstalled', () => {
-        document.getElementById('installButton').style.display = 'none';
     });
 </script>
 @endsection
