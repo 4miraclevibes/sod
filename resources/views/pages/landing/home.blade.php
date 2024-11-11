@@ -441,38 +441,34 @@
             }
         });
     });
-</script>
-<script>
+
     let deferredPrompt;
-    const installButton = document.getElementById('installButton');
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-    // Tampilkan tombol untuk iOS
-    if (isIOS) {
-        installButton.style.display = 'flex';
-        installButton.addEventListener('click', () => {
-            alert('Untuk menginstal aplikasi:\n1. Ketuk tombol Share/Bagikan\n2. Gulir ke bawah dan ketuk "Tambahkan ke Layar Utama"');
-        });
-    }
-
-    // Untuk Android/Chrome
     window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt
         e.preventDefault();
+        // Stash the event so it can be triggered later.
         deferredPrompt = e;
-        installButton.style.display = 'flex';
+        // Show the install button
+        document.getElementById('installButton').style.display = 'flex';
     });
 
-    installButton.addEventListener('click', async () => {
+    document.getElementById('installButton').addEventListener('click', async () => {
         if (deferredPrompt) {
+            // Show the install prompt
             deferredPrompt.prompt();
+            // Wait for the user to respond to the prompt
             const { outcome } = await deferredPrompt.userChoice;
+            // We no longer need the prompt. Clear it up.
             deferredPrompt = null;
-            installButton.style.display = 'none';
+            // Hide the install button
+            document.getElementById('installButton').style.display = 'none';
         }
     });
 
+    // Hide the install button if app is already installed
     window.addEventListener('appinstalled', () => {
-        installButton.style.display = 'none';
+        document.getElementById('installButton').style.display = 'none';
     });
 </script>
 @endsection
