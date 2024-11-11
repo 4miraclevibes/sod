@@ -108,11 +108,11 @@ class TransactionController extends Controller
                 $total += $quantity * $price;
             }
             
-            if($total <= 25000){
+            if($total <= 5000){
                 return response()->json([
                     'code' => 400,
                     'status' => 'error',
-                    'message' => 'Minimal pembelian Rp. 25.000'
+                    'message' => 'Minimal pembelian Rp. 5.000'
                 ], 400);
             }
 
