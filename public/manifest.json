@@ -2,10 +2,10 @@
     "name": "Sayur On Delivery",
     "short_name": "SOD",
     "start_url": "/index.php",
-    "background_color": "#6777ef",
+    "background_color": "#ffffff",
     "description": "Aplikasi Pemesanan Sayur Online",
     "display": "fullscreen",
-    "theme_color": "#6777ef",
+    "theme_color": "#ffffff",
     "icons": [
         {
             "src": "logo.png",
