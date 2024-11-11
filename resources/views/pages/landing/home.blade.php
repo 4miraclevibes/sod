@@ -183,12 +183,13 @@
         box-shadow: 0 4px 15px rgba(0,0,0,0.1),
                     0 1px 3px rgba(0,0,0,0.08);
         z-index: 999;
+        display: none;
         gap: 10px;
         font-size: 15px;
         font-weight: 600;
         transition: all 0.3s ease;
         border: 1px solid rgba(0,0,0,0.05);
-}
+    }
 
     .install-button:hover {
         transform: translateY(-2px);
@@ -332,7 +333,7 @@
         </div>
     </div>
 </div>
-<button id="installButton" class="install-button" style="display: flex;">
+<button id="installButton" class="install-button">
     <i class="bi bi-google-play"></i>
     <i class="bi bi-apple"></i>
     Install App
@@ -440,20 +441,35 @@
             }
         });
     });
+</script>
+<script>
+    let deferredPrompt;
 
-    let installButton = document.getElementById('installButton');
-    const ua = window.navigator.userAgent;
-    const iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
-    
-    // Langsung tampilkan tombol dengan menghapus style display:none
-    installButton.style.display = 'flex';
-    
-    installButton.addEventListener('click', () => {
-        if (iOS) {
-            alert('Untuk menginstal aplikasi:\n1. Ketuk tombol Share/Bagikan\n2. Gulir ke bawah dan ketuk "Tambahkan ke Layar Utama"');
-        } else {
-            alert('Untuk menginstal aplikasi:\n1. Buka di browser Chrome\n2. Ketuk menu 3 titik di pojok kanan atas\n3. Pilih "Tambahkan ke Layar Utama"');
-        }
-    });
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent Chrome 67 and earlier from automatically showing the prompt
+    e.preventDefault();
+    // Stash the event so it can be triggered later.
+    deferredPrompt = e;
+    // Show the install button
+    document.getElementById('installButton').style.display = 'flex';
+});
+
+document.getElementById('installButton').addEventListener('click', async () => {
+    if (deferredPrompt) {
+        // Show the install prompt
+        deferredPrompt.prompt();
+        // Wait for the user to respond to the prompt
+        const { outcome } = await deferredPrompt.userChoice;
+        // We no longer need the prompt. Clear it up.
+        deferredPrompt = null;
+        // Hide the install button
+        document.getElementById('installButton').style.display = 'none';
+    }
+});
+
+// Hide the install button if app is already installed
+window.addEventListener('appinstalled', () => {
+    document.getElementById('installButton').style.display = 'none';
+});
 </script>
 @endsection
