@@ -154,7 +154,7 @@
         background-color: transparent;
         border: none;
         text-align: center;
-        width: 3rem;
+        width: 2rem;
         font-size: 1rem;
     }
 
