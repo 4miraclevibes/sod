@@ -140,7 +140,7 @@
         background-color: #f0f0f0;
         border-radius: 0.5rem;
         padding: 0.5rem 0.5rem;
-        width: 10rem;
+        width: 8rem    ;
     }
 
     .quantity-control button {
