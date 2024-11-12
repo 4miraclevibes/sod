@@ -14,7 +14,11 @@
             </div>
             <div class="col-md-6" id="capital_price_container">
                 <label for="price" class="form-label">Harga Modal</label>
-                <input type="number" class="form-control form-control-sm" id="price" name="price" value="{{ $variant->variantStocks->first()->stockDetails->first()->capital_price ?? 0 }}" required>
+                @if($variant->variantStocks->first()->stockDetails->first())
+                    <input type="number" class="form-control form-control-sm" id="price" name="price" value="{{ $variant->variantStocks->first()->stockDetails->first()->capital_price ?? 0 }}" required>
+                @else
+                    <input type="number" class="form-control form-control-sm" id="price" name="price" value="0" required>
+                @endif
             </div>
             <div id="sell_price_container" class="col-md-6">
                 <label for="sell_price" class="form-label">Harga Jual</label>
