@@ -219,6 +219,10 @@
         <img src="{{ $banners->first()->image }}" alt="Banner" class="w-100 rounded">
     </section>
 
+    <section class="search mb-3">
+        <input type="text" class="form-control" id="searchInput" placeholder="Cari produk..." oninput="searchProducts(this.value)">
+    </section>
+
     <section class="categories mb-4">
         <h6 class="mb-3">Kategori</h6>
         <div class="categories-wrapper">
@@ -460,6 +464,47 @@
         document.getElementById('installButton').style.display = 'none';
     });
 
+    function searchProducts(keyword) {
+        keyword = keyword.toLowerCase().trim();
+        const products = document.querySelectorAll('.product-item');
+        
+        products.forEach(product => {
+            const productName = product.querySelector('.card-title').textContent.toLowerCase();
+            const productDesc = product.querySelector('.card-text').textContent.toLowerCase();
+            
+            // Cek apakah produk sesuai dengan kategori yang aktif
+            const categoryId = document.querySelector('.category-filter.border-success').dataset.category;
+            const matchCategory = categoryId === 'all' || product.dataset.category === categoryId;
+            
+            // Cek apakah produk sesuai dengan keyword pencarian
+            const matchSearch = productName.includes(keyword) || productDesc.includes(keyword);
+            
+            // Tampilkan produk jika sesuai dengan kategori dan keyword
+            if (matchCategory && matchSearch) {
+                product.style.display = '';
+            } else {
+                product.style.display = 'none';
+            }
+        });
+    }
+
+    // Tambahkan debounce untuk mengurangi frekuensi pencarian
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // Gunakan debounce pada fungsi pencarian
+    const debouncedSearch = debounce(searchProducts, 300);
+
+    // Update fungsi filterProducts untuk mempertahankan hasil pencarian
     function filterProducts(categoryId) {
         // Update active state pada kategori
         document.querySelectorAll('.category-filter').forEach(el => {
@@ -496,6 +541,10 @@
                 product.style.display = 'none';
             }
         });
+
+        // Jalankan pencarian ulang dengan keyword yang ada
+        const keyword = document.getElementById('searchInput').value;
+        searchProducts(keyword);
     }
 
     // Set kategori default saat halaman dimuat

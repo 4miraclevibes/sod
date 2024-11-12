@@ -4,7 +4,7 @@
             <div class="app-brand demo d-flex justify-content-center align-items-center">
               <a href="{{ route('home') }}" class="app-brand-link">
                 <span class="app-brand-logo demo">
-                  <img src="{{ asset('assets/landing/images/logo.png') }}" style="max-width: 200px; height: auto;" alt="Logo">
+                  <img src="{{ asset('assets/landing/images/logo-balian.png') }}" style="max-width: 200px; height: auto;" alt="Logo">
                 </span>
               </a>
   

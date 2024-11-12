@@ -21,7 +21,7 @@
                     <a class="nav-link bg-success text-white rounded-pill px-3 py-2" href="{{ route('logout') }}"
                        onclick="event.preventDefault();
                                  document.getElementById('logout-form').submit();">
-                        Keluar
+                        Logout
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                         @csrf
