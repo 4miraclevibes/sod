@@ -67,14 +67,14 @@
                 <option value="other">Lainnya</option>
             </select>
         </div>
-        <div class="form-group">
+        {{-- <div class="form-group">
             <label for="latitude">Latitude</label>
             <input type="text" class="form-control" id="latitude" name="latitude">
         </div>
         <div class="form-group">
             <label for="longitude">Longitude</label>
             <input type="text" class="form-control" id="longitude" name="longitude">
-        </div>
+        </div> --}}
         <div class="form-group">
             <label for="status">Status Alamat</label>
             <select class="form-control" id="status" name="status" required>
