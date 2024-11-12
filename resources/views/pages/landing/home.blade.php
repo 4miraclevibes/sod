@@ -146,7 +146,7 @@
     .quantity-control button {
         background-color: transparent;
         border: none;
-        font-size: 1.2rem;
+        font-size: 1rem;
         color: #4CAF50;
     }
 
