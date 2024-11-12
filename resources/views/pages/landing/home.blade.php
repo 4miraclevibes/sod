@@ -224,18 +224,18 @@
         <div class="categories-wrapper">
             <div class="d-flex">
                 <div class="category-item me-3">
-                    <a href="{{ route('home') }}" class="text-decoration-none">
-                        <div class="icon-wrapper card {{ !$activeCategory ? 'border border-success border-2' : 'border border-white border-2' }}">
+                    <a href="javascript:void(0)" onclick="filterProducts('all')" class="text-decoration-none no-loading">
+                        <div class="icon-wrapper card category-filter active" data-category="all">
                             <img src="{{ asset('assets/landing/images/LogoSod.png') }}" alt="Semua Kategori" class="w-100">
                         </div>
-                        <p class="mb-0 {{ !$activeCategory ? 'text-success' : 'text-dark' }}">Semua</p>
+                        <p class="mb-0 category-text" data-category="all">Semua</p>
                     </a>
                 </div>
                 @foreach($categories as $category)
                 <div class="category-item me-3">
-                    <a href="{{ route('home', ['category' => $category->slug]) }}" class="text-decoration-none">
-                        <img src="{{ $category->image }}" alt="{{ $category->name }}" class="w-100 card {{ $activeCategory && $activeCategory->id == $category->id ? 'border border-success border-2' : 'border border-white border-2' }}">
-                        <p class="mb-0 {{ $activeCategory && $activeCategory->id == $category->id ? 'text-success' : 'text-dark' }}">{{ $category->name }}</p>
+                    <a href="javascript:void(0)" onclick="filterProducts('{{ $category->id }}')" class="text-decoration-none no-loading">
+                        <img src="{{ $category->image }}" alt="{{ $category->name }}" class="w-100 card category-filter" data-category="{{ $category->id }}">
+                        <p class="mb-0 category-text" data-category="{{ $category->id }}">{{ $category->name }}</p>
                     </a>
                 </div>
                 @endforeach
@@ -244,10 +244,10 @@
     </section>
 
     <section class="products">
-        <h6 class="mb-3">Produk <span class="text-success">{{ $activeCategory ? $activeCategory->name : 'Semua Kategori' }}</span></h6>
-        <div class="row g-3">
+        <h6 class="mb-3">Produk <span id="categoryName" class="text-success">Semua Kategori</span></h6>
+        <div class="row g-3" id="productsContainer">
             @foreach($products as $product)
-            <div class="col-6">
+            <div class="col-6 product-item" data-category="{{ $product->category_id }}">
                 <div class="card h-100">
                     <a href="{{ route('product.detail', $product->slug) }}">
                         <img src="{{ $product->thumbnail }}" class="card-img-top product-thumbnail" alt="{{ $product->name }}">
@@ -458,6 +458,49 @@
     // Hide the install button if app is already installed
     window.addEventListener('appinstalled', () => {
         document.getElementById('installButton').style.display = 'none';
+    });
+
+    function filterProducts(categoryId) {
+        // Update active state pada kategori
+        document.querySelectorAll('.category-filter').forEach(el => {
+            el.classList.remove('border', 'border-success', 'border-2');
+            el.classList.add('border', 'border-white', 'border-2');
+        });
+        document.querySelectorAll('.category-text').forEach(el => {
+            el.classList.remove('text-success');
+            el.classList.add('text-dark');
+        });
+
+        // Aktifkan kategori yang dipilih
+        const selectedFilter = document.querySelector(`.category-filter[data-category="${categoryId}"]`);
+        const selectedText = document.querySelector(`.category-text[data-category="${categoryId}"]`);
+        if (selectedFilter) {
+            selectedFilter.classList.remove('border-white');
+            selectedFilter.classList.add('border', 'border-success', 'border-2');
+        }
+        if (selectedText) {
+            selectedText.classList.remove('text-dark');
+            selectedText.classList.add('text-success');
+        }
+
+        // Update nama kategori
+        const categoryName = categoryId === 'all' ? 'Semua Kategori' : selectedText.textContent;
+        document.getElementById('categoryName').textContent = categoryName;
+
+        // Filter produk
+        const products = document.querySelectorAll('.product-item');
+        products.forEach(product => {
+            if (categoryId === 'all' || product.dataset.category === categoryId) {
+                product.style.display = '';
+            } else {
+                product.style.display = 'none';
+            }
+        });
+    }
+
+    // Set kategori default saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', () => {
+        filterProducts('all');
     });
 </script>
 @endsection

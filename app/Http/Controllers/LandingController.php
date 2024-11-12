@@ -11,33 +11,17 @@ class LandingController extends Controller
 {
     public function home(Request $request)
     {
-        $categorySlug = $request->query('category');
         $categories = Category::all();
         $banners = Banner::where('is_active', true)->get();
+        $products = Product::whereHas('variants', function($query) {
+                $query->where('is_visible', true);
+            })
+            ->with(['variants' => function($query) {
+                $query->where('is_visible', true);
+            }])
+            ->get();
 
-        if ($categorySlug) {
-            $category = Category::where('slug', $categorySlug)->firstOrFail();
-            $products = Product::where('category_id', $category->id)
-                ->whereHas('variants', function($query) {
-                    $query->where('is_visible', true);
-                })
-                ->with(['variants' => function($query) {
-                    $query->where('is_visible', true);
-                }])
-                ->get();
-            $activeCategory = $category;
-        } else {
-            $products = Product::whereHas('variants', function($query) {
-                    $query->where('is_visible', true);
-                })
-                ->with(['variants' => function($query) {
-                    $query->where('is_visible', true);
-                }])
-                ->get();
-            $activeCategory = null;
-        }
-
-        return view('pages.landing.home', compact('products', 'categories', 'activeCategory', 'banners'));
+        return view('pages.landing.home', compact('products', 'categories', 'banners'));
     }
 
     public function productDetail($slug)
