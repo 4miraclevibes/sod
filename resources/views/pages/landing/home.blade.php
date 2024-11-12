@@ -22,7 +22,7 @@
     .category-item img {
         background-color: white;
         border-radius: 10%;
-        /* padding: 0.1rem; */
+        padding: 0.2rem;
     }
 
     .category-item p {
