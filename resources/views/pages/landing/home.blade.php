@@ -22,7 +22,7 @@
     .category-item img {
         background-color: white;
         border-radius: 10%;
-        padding: 5px;
+        /* padding: 0.1rem; */
     }
 
     .category-item p {
@@ -82,17 +82,6 @@
         margin: 0 auto;
         background-color: white;
         padding-bottom: 60px;
-    }
-
-    footer {
-        position: fixed;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100%;
-        max-width: 480px;
-        background-color: white;
-        z-index: 1000;
     }
 
     .modal.fade .modal-dialog {
@@ -235,18 +224,18 @@
         <div class="categories-wrapper">
             <div class="d-flex">
                 <div class="category-item me-3">
-                    <a href="{{ route('home') }}" class="text-decoration-none {{ !$activeCategory ? 'fw-bold' : '' }}">
-                        <div class="icon-wrapper card">
+                    <a href="{{ route('home') }}" class="text-decoration-none">
+                        <div class="icon-wrapper card {{ !$activeCategory ? 'border border-success border-2' : 'border border-white border-2' }}">
                             <img src="{{ asset('assets/landing/images/LogoSod.png') }}" alt="Semua Kategori" class="w-100">
                         </div>
-                        <p class="mb-0 text-dark">Semua</p>
+                        <p class="mb-0 {{ !$activeCategory ? 'text-success' : 'text-dark' }}">Semua</p>
                     </a>
                 </div>
                 @foreach($categories as $category)
                 <div class="category-item me-3">
-                    <a href="{{ route('home', ['category' => $category->slug]) }}" class="text-decoration-none {{ $activeCategory && $activeCategory->id == $category->id ? 'fw-bold' : '' }}">
-                        <img src="{{ $category->image }}" alt="{{ $category->name }}" class="w-100 card">
-                        <p class="mb-0 text-dark">{{ $category->name }}</p>
+                    <a href="{{ route('home', ['category' => $category->slug]) }}" class="text-decoration-none">
+                        <img src="{{ $category->image }}" alt="{{ $category->name }}" class="w-100 card {{ $activeCategory && $activeCategory->id == $category->id ? 'border border-success border-2' : 'border border-white border-2' }}">
+                        <p class="mb-0 {{ $activeCategory && $activeCategory->id == $category->id ? 'text-success' : 'text-dark' }}">{{ $category->name }}</p>
                     </a>
                 </div>
                 @endforeach
