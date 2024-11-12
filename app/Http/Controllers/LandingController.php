@@ -18,13 +18,19 @@ class LandingController extends Controller
         if ($categorySlug) {
             $category = Category::where('slug', $categorySlug)->firstOrFail();
             $products = Product::where('category_id', $category->id)
+                ->whereHas('variants', function($query) {
+                    $query->where('is_visible', true);
+                })
                 ->with(['variants' => function($query) {
                     $query->where('is_visible', true);
                 }])
                 ->get();
             $activeCategory = $category;
         } else {
-            $products = Product::with(['variants' => function($query) {
+            $products = Product::whereHas('variants', function($query) {
+                    $query->where('is_visible', true);
+                })
+                ->with(['variants' => function($query) {
                     $query->where('is_visible', true);
                 }])
                 ->get();
