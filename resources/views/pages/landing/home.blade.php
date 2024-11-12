@@ -244,7 +244,7 @@
     </section>
 
     <section class="products">
-        <h6 class="mb-3">Produk <span class="text-muted">{{ $activeCategory ? $activeCategory->name : 'Semua Kategori' }}</span></h6>
+        <h6 class="mb-3">Produk <span class="text-success">{{ $activeCategory ? $activeCategory->name : 'Semua Kategori' }}</span></h6>
         <div class="row g-3">
             @foreach($products as $product)
             <div class="col-6">
