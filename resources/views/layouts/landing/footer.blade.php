@@ -8,7 +8,14 @@
                 </a>
             </div>
             <div class="col-3 text-center">
-                <a href="{{ route('cart') }}" class="text-decoration-none @auth {{ Auth::user()->role->name == 'driver' ? 'disabled' : '' }} @endauth {{ Route::is('cart*') ? 'active' : '' }}">
+                <a href="{{ route('cart') }}" class="text-decoration-none position-relative @auth {{ Auth::user()->role->name == 'driver' ? 'disabled' : '' }} @endauth {{ Route::is('cart*') ? 'active' : '' }}">
+                    @auth
+                        @if(Auth::user()->carts->count() > 0)
+                            <span class="position-absolute top-0 start-75 translate-middle badge rounded-pill bg-danger">
+                                {{ Auth::user()->carts->count() }}
+                            </span>
+                        @endif
+                    @endauth
                     <i class="bi bi-cart{{ Route::is('cart*') ? '-fill' : '' }} fs-5 {{ Route::is('cart*') ? 'text-success' : 'text-secondary' }}"></i>
                     <p class="mb-0 small {{ Route::is('cart*') ? 'text-success' : 'text-secondary' }}">Keranjang</p>
                 </a>
