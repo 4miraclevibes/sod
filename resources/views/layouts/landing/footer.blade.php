@@ -11,7 +11,7 @@
                 <a href="{{ route('cart') }}" class="text-decoration-none position-relative @auth {{ Auth::user()->role->name == 'driver' ? 'disabled' : '' }} @endauth {{ Route::is('cart*') ? 'active' : '' }}">
                     @auth
                         @if(Auth::user()->carts->count() > 0)
-                            <span class="position-absolute top-0 start-100 translate-middle-x badge rounded-pill bg-success" style="font-size: 10px">
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success" style="font-size: 10px; margin-left: -15px; margin-top: -2px">
                                 {{ Auth::user()->carts->count() }}
                             </span>
                         @endif
