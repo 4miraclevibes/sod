@@ -17,12 +17,12 @@
     />
 
     <title>Sayur On Delivery</title>
-    <link rel="icon" href="{{ asset('assets/landing/images/LogoSod.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('assets/landing/images/logo-balian.png') }}" type="image/x-icon">
 
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('frontend/assets/images/logo-white.svg') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/landing/images/logo-balian.png') }}" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -23,7 +23,7 @@ class CartController extends Controller
             $app_fee = 0;
         }
         if ($carts->isEmpty()) {
-            return view('pages.landing.cartEmpty');
+            return view('pages.landing.cartEmpty', compact('assets'));
         }
         if (Auth::user()->role->name == 'driver') {
             return view('pages.landing.home');
