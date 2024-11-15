@@ -27,8 +27,9 @@ class LandingController extends Controller
 
     public function productDetail($slug)
     {
+        $assets = Asset::where('is_active', true)->get();
         $product = Product::where('slug', $slug)->with('variants')->firstOrFail();
-        return view('pages.landing.productDetail', compact('product'));
+        return view('pages.landing.productDetail', compact('product', 'assets'));
     }
 
     public function userDetail()
