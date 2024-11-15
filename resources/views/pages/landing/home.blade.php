@@ -250,7 +250,7 @@
                 <div class="category-item me-3">
                     <a href="javascript:void(0)" onclick="filterProducts('all')" class="text-decoration-none no-loading">
                         <div class="icon-wrapper card category-filter active" data-category="all">
-                            <img src="{{ asset('assets/landing/images/logo-balian.png') }}" alt="Semua Kategori" class="w-100">
+                            <img src="{{ asset('logo.png') }}" alt="Semua Kategori" class="w-100">
                         </div>
                         <p class="mb-0 category-text" data-category="all">Semua</p>
                     </a>
