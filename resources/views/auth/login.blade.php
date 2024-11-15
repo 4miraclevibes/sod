@@ -15,11 +15,19 @@
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+            
+            <div class="relative">
+                <x-text-input id="password" class="block mt-1 w-full pr-10"
+                    type="password"
+                    name="password"
+                    required autocomplete="current-password" 
+                    style="background: #1a1d21; border: 1px solid #2d3339; color: white;" />
+                <button type="button" 
+                    class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300" 
+                    onclick="togglePassword('password')">
+                    <i id="password-icon" class="fa-regular fa-eye"></i>
+                </button>
+            </div>
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
@@ -52,4 +60,21 @@
             </div>
         @endif
     </form>
+
+    <script>
+        function togglePassword(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const icon = document.getElementById(inputId + '-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
 </x-guest-layout>

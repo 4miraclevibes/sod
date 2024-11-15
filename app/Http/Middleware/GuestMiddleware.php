@@ -18,7 +18,7 @@ class GuestMiddleware
         if(session('user') == null){
             return $next($request);
         } else{
-            return redirect()->route('dashboard');
+            return redirect()->route('home');
         }
     }
 }

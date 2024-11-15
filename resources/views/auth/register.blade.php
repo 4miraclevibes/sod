@@ -20,13 +20,17 @@
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
+            <div class="relative">
+                <x-text-input id="password" class="block mt-1 w-full pr-10"
+                    type="password"
+                    name="password"
+                    required autocomplete="new-password" />
+                <button type="button" class="absolute right-2 top-2 text-gray-500" onclick="togglePassword('password')">
+                    <i id="password-icon" class="fa-regular fa-eye"></i>
+                </button>
+            </div>
 
             <p class="text-sm text-gray-600 mt-1">{{ __('Minimal 8 karakter') }}</p>
-
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
@@ -34,9 +38,14 @@
         <div class="mt-4">
             <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
+            <div class="relative">
+                <x-text-input id="password_confirmation" class="block mt-1 w-full pr-10"
+                    type="password"
+                    name="password_confirmation" required autocomplete="new-password" />
+                <button type="button" class="absolute right-2 top-2 text-gray-500" onclick="togglePassword('password_confirmation')">
+                    <i id="password_confirmation-icon" class="fa-regular fa-eye"></i>
+                </button>
+            </div>
 
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
@@ -51,4 +60,21 @@
             </x-primary-button>
         </div>
     </form>
+
+    <script>
+        function togglePassword(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const icon = document.getElementById(inputId + '-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
 </x-guest-layout>

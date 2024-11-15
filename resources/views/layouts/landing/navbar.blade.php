@@ -6,10 +6,10 @@
         <ul class="navbar-nav d-flex flex-row">
             @guest
                 <li class="nav-item me-3">
-                    <a class="nav-link" href="{{ route('login') }}">Masuk</a>
+                    <a class="nav-link" href="{{ route('landing.auth.login') }}">Masuk</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link bg-success text-white rounded-pill px-3 py-2" href="{{ route('register') }}">Daftar</a>
+                    <a class="nav-link bg-success text-white rounded-pill px-3 py-2" href="{{ route('landing.auth.register') }}">Daftar</a>
                 </li>
             @else
                 @if(Auth::user()->role->name === 'admin')
