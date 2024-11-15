@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\UserAddress;
 use App\Models\District;
 use App\Models\SubDistrict;
+use App\Models\Asset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -13,8 +14,9 @@ class UserAddressController extends Controller
 {
     public function index()
     {
+        $assets = Asset::where('is_active', true)->get();
         $userAddresses = UserAddress::where('user_id', Auth::id())->with('subDistrict.district')->get();
-        return view('pages.landing.userAddress', compact('userAddresses'));
+        return view('pages.landing.userAddress', compact('userAddresses', 'assets'));
     }
 
     public function create()
@@ -51,9 +53,10 @@ class UserAddressController extends Controller
 
     public function edit($id)
     {
+        $assets = Asset::where('is_active', true)->get();
         $address = UserAddress::findOrFail($id);
         $districts = District::with('subdistricts')->get();
-        return view('pages.landing.userAddressEdit', compact('address', 'districts'));
+        return view('pages.landing.userAddressEdit', compact('address', 'districts', 'assets'));
     }
 
     public function update(Request $request, $id)

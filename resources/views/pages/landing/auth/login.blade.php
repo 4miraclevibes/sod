@@ -90,7 +90,7 @@
 </head>
 <body>
     <div class="login-container">
-        <img src="{{ asset('assets/landing/images/logo-balian.png') }}" alt="Logo" class="logo">
+        <img src="{{ $assets->where('name', 'logo-mark')->first()->image ?? asset('assets/landing/images/logo-balian.png') }}" alt="Logo" class="logo">
         
         <form method="POST" action="{{ route('login') }}">
             @csrf

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-
+use App\Models\Asset;
 class SSOController extends Controller
 {
     protected $ssoUrl;
@@ -16,6 +16,7 @@ class SSOController extends Controller
     }
 
     public function dashboard(){
+        $assets = Asset::where('is_active', true)->get();
         if(session('sso_token')){
             $data = session('user');
             $walletResponse = $this->getUser();
@@ -30,6 +31,7 @@ class SSOController extends Controller
         return view('dashboard', [
             'data' => $data,
             'wallet' => $wallet,
+            'assets' => $assets
             ]);
     }
 

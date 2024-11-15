@@ -72,6 +72,13 @@
                   <div data-i18n="Analytics">Banners</div>
                 </a>
               </li>
+              {{-- Assets --}}
+              <li class="menu-item {{ Route::is('dashboard.asset*') ? 'active' : '' }}">
+                <a href="{{ route('dashboard.asset.index') }}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-image"></i>
+                  <div data-i18n="Analytics">Assets</div>
+                </a>
+              </li>
             </ul>
           </aside>
           <!-- / Menu -->

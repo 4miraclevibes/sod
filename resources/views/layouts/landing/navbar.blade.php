@@ -1,7 +1,7 @@
 <nav class="navbar">
     <div class="container">
         <a class="navbar-brand" href="{{ url('/') }}">
-            <img src="{{ asset('assets/landing/images/logo-navbar.png') }}" alt="Logo" height="30">
+            <img src="{{ $assets->where('name', 'combination-mark')->first()->image ?? asset('assets/landing/images/logo-navbar.png') }}" alt="Logo" height="30">
         </a>
         <ul class="navbar-nav d-flex flex-row">
             @guest

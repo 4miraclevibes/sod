@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asset;
 use App\Models\Cart;
 use App\Models\Payment;
 use App\Models\StockDetail;
@@ -28,6 +29,7 @@ class TransactionController extends Controller
     
     public function index(Request $request)
     {
+        $assets = Asset::where('is_active', true)->get();
         // Tentukan status default berdasarkan role
         $defaultStatus = Auth::user()->role->name == 'driver' ? 'shipped' : 'all';
         $status = $request->query('status', $defaultStatus);
@@ -59,7 +61,7 @@ class TransactionController extends Controller
 
         $transactions = $query->latest()->get();
 
-        return view('pages.landing.transaction', compact('transactions', 'status'));
+        return view('pages.landing.transaction', compact('transactions', 'status', 'assets'));
     }
 
     public function store(Request $request)

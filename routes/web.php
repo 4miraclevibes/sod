@@ -9,6 +9,7 @@ use App\Http\Controllers\Dashboard\TransactionController as DashboardTransaction
 use App\Http\Controllers\Dashboard\PaymentController as DashboardPaymentController;
 use App\Http\Controllers\Dashboard\DistrictController;
 use App\Http\Controllers\Dashboard\BannerController;
+use App\Http\Controllers\Dashboard\AssetController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\UserAddressController;
 use App\Http\Controllers\ProfileController;
@@ -25,6 +26,7 @@ Route::get('/', [LandingController::class, 'home'])->name('home');
 Route::get('/product/{slug}', [LandingController::class, 'productDetail'])->name('product.detail');
 Route::get('/landing/login', [AuthController::class, 'login'])->middleware('guest')->name('landing.auth.login');
 Route::get('/landing/register', [AuthController::class, 'register'])->middleware('guest')->name('landing.auth.register');
+Route::get('/landing/user-detail', [LandingController::class, 'userDetail'])->middleware('auth')->name('user.details');
 
 Route::get('/cart', [CartController::class, 'index'])->middleware('auth')->name('cart');
 Route::post('/cart/store', [CartController::class, 'store'])->middleware('auth')->name('cart.store');
@@ -44,10 +46,6 @@ Route::delete('/user/addresses/destroy/{id}', [UserAddressController::class, 'de
 Route::get('/checkout', function () {
     return view('pages.landing.checkout');
 })->name('checkout');
-
-Route::get('/user/details', function () {
-    return view('pages.landing.userDetails');
-})->middleware('auth')->name('user.details');
 
 // Cart Success
 Route::get('/cart/success', function () {
@@ -124,6 +122,11 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => ['a
     Route::post('banner/store', [BannerController::class, 'store'])->name('banner.store');
     Route::delete('banner/destroy/{banner}', [BannerController::class, 'destroy'])->name('banner.destroy');
     Route::put('banner/update/{banner}', [BannerController::class, 'update'])->name('banner.update');
+    // Asset
+    Route::get('asset/index', [AssetController::class, 'index'])->name('asset.index');
+    Route::post('asset/store', [AssetController::class, 'store'])->name('asset.store');
+    Route::delete('asset/destroy/{asset}', [AssetController::class, 'destroy'])->name('asset.destroy');
+    Route::put('asset/update/{asset}', [AssetController::class, 'update'])->name('asset.update');
 });
 
 Route::get('/dashboard', [SSOController::class, 'dashboard'])->middleware(['login', 'auth', 'admin'])->name('dashboard');
