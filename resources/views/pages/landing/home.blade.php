@@ -15,14 +15,19 @@
 
     .category-item {
         flex: 0 0 auto;
-        width: 60px;
+        width: 3.5rem;
         text-align: center;
     }
 
     .category-item img {
         background-color: white;
         border-radius: 10%;
-        padding: 0.2rem;
+        padding: 1px;
+        width: 3.5rem;
+        height: 3.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .category-item p {
@@ -34,8 +39,8 @@
         background-color: white;
         border-radius: 10%;
         padding: 5px;
-        width: 60px;
-        height: 60px;
+        width: 3.5rem;
+        height: 3.5rem;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -210,17 +215,32 @@
         -webkit-mask-composite: xor;
         mask-composite: exclude;
     }
+
+    .search-wrapper {
+        position: relative;
+    }
+    
+    .search-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+    }
 </style>
 @endsection
 
 @section('content')
 <div class="container">
     <section class="banner mb-3">
-        <img src="{{ $banners->first()->image }}" alt="Banner" class="w-100 rounded">
+        <img src="{{ $banners->first()->image ?? 'https://filemanager.layananberhentikuliah.com/storage/files/3QRbmUXtT8qvsBjD1ctUYFQT3H2iCzK1xKUVSv32.png' }}" alt="Banner" class="w-100 rounded">
     </section>
 
     <section class="search mb-3">
-        <input type="text" class="form-control" id="searchInput" placeholder="Cari produk..." oninput="searchProducts(this.value)">
+        <div class="search-wrapper">
+            <input type="text" class="form-control" id="searchInput" placeholder="Cari produk..." oninput="searchProducts(this.value)">
+            <i class="bi bi-search search-icon"></i>
+        </div>
     </section>
 
     <section class="categories mb-4">
@@ -230,7 +250,7 @@
                 <div class="category-item me-3">
                     <a href="javascript:void(0)" onclick="filterProducts('all')" class="text-decoration-none no-loading">
                         <div class="icon-wrapper card category-filter active" data-category="all">
-                            <img src="{{ asset('assets/landing/images/LogoSod.png') }}" alt="Semua Kategori" class="w-100">
+                            <img src="{{ asset('assets/landing/images/logo-balian.png') }}" alt="Semua Kategori" class="w-100">
                         </div>
                         <p class="mb-0 category-text" data-category="all">Semua</p>
                     </a>

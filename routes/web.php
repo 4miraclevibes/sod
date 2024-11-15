@@ -7,14 +7,14 @@ use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\TransactionController as DashboardTransactionController;
 use App\Http\Controllers\Dashboard\PaymentController as DashboardPaymentController;
+use App\Http\Controllers\Dashboard\DistrictController;
+use App\Http\Controllers\Dashboard\BannerController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\UserAddressController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SSOController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Dashboard\DistrictController;
-
 
 Route::get('/privacy-policy', function () {
     return view('privacyPolicy');
@@ -117,6 +117,11 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => ['a
     Route::post('/districts/update-fee-all', [DistrictController::class, 'updateFeeAll'])->name('district.updateFeeAll');
     Route::put('/districts/{district}', [DistrictController::class, 'update'])->name('district.update');
     Route::put('/subdistricts/{subdistrict}', [DistrictController::class, 'updateSubDistrict'])->name('subdistrict.update');
+    // Banner
+    Route::get('banner/index', [BannerController::class, 'index'])->name('banner.index');
+    Route::post('banner/store', [BannerController::class, 'store'])->name('banner.store');
+    Route::delete('banner/destroy/{banner}', [BannerController::class, 'destroy'])->name('banner.destroy');
+    Route::put('banner/update/{banner}', [BannerController::class, 'update'])->name('banner.update');
 });
 
 Route::get('/dashboard', [SSOController::class, 'dashboard'])->middleware(['login', 'auth', 'admin'])->name('dashboard');

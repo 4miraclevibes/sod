@@ -4,7 +4,7 @@
             <div class="app-brand demo d-flex justify-content-center align-items-center">
               <a href="{{ route('home') }}" class="app-brand-link">
                 <span class="app-brand-logo demo">
-                  <img src="{{ asset('assets/landing/images/logo-balian.png') }}" style="max-width: 200px; height: auto;" alt="Logo">
+                  <img src="{{ asset('assets/landing/images/logo-navbar.png') }}" style="max-width: 200px; height: auto;" alt="Logo">
                 </span>
               </a>
   
@@ -63,6 +63,13 @@
                 <a href="{{ route('dashboard.district.index') }}" class="menu-link">
                   <i class="menu-icon tf-icons bx bxs-map"></i>
                   <div data-i18n="Analytics">Districts</div>
+                </a>
+              </li>
+              {{-- Banners --}}
+              <li class="menu-item {{ Route::is('dashboard.banner*') ? 'active' : '' }}">
+                <a href="{{ route('dashboard.banner.index') }}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-image"></i>
+                  <div data-i18n="Analytics">Banners</div>
                 </a>
               </li>
             </ul>
