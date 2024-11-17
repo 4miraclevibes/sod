@@ -26,7 +26,7 @@ class CartController extends Controller
             return view('pages.landing.cartEmpty', compact('assets'));
         }
         if (Auth::user()->role->name == 'driver') {
-            return view('pages.landing.home');
+            return view('pages.landing.home', compact('assets'));
         }
         return view('pages.landing.cart', compact('carts', 'shipping_price', 'app_fee', 'assets'));
     }
