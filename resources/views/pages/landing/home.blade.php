@@ -232,7 +232,7 @@
 @section('content')
 <div class="container">
     <section class="banner mb-3">
-        <img src="{{ $banners->first()->image ?? 'https://filemanager.layananberhentikuliah.com/storage/files/3QRbmUXtT8qvsBjD1ctUYFQT3H2iCzK1xKUVSv32.png' }}" alt="Banner" class="w-100 rounded">
+        <img src="{{ $banners->first()->image }}" alt="Banner" class="w-100 rounded" id="categoryBanner">
     </section>
 
     <section class="search mb-3">
@@ -564,6 +564,22 @@
         // Jalankan pencarian ulang dengan keyword yang ada
         const keyword = document.getElementById('searchInput').value;
         searchProducts(keyword);
+
+        // Update banner sesuai kategori
+        const categories = @json($categories->keyBy('id'));
+        const banners = @json($banners->keyBy('id'));
+        const banner = document.getElementById('categoryBanner');
+        
+        if (categoryId === 'all') {
+            banner.src = @json($banners->first()->image);
+        } else {
+            const selectedCategory = categories[categoryId];
+            if (selectedCategory && selectedCategory.banner) {
+                banner.src = selectedCategory.banner;
+            } else {
+                banner.src = @json($banners->first()->image);
+            }
+        }
     }
 
     // Set kategori default saat halaman dimuat

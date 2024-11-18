@@ -29,17 +29,23 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
+        ]);
+
+        $data = $request->except(['image', 'banner']);
+
         if ($request->hasFile('image')) {
-            $imageUrl = $this->serviceController->uploadImage($request->file('image'));
-            
-            $category = Category::create([
-                ...$request->except('image'),
-                'image' => $imageUrl
-            ]);
-        } else {
-            $category = Category::create($request->except('image'));
+            $data['image'] = $this->serviceController->uploadImage($request->file('image'));
         }
 
+        if ($request->hasFile('banner')) {
+            $data['banner'] = $this->serviceController->uploadImage($request->file('banner'));
+        }
+
+        Category::create($data);
         return redirect()->route('dashboard.category.index');
     }
 
@@ -50,17 +56,22 @@ class CategoryController extends Controller
 
     public function update(Request $request, Category $category)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
+        ]);
+
+        $data = $request->except(['image', 'banner']);
+
         if ($request->hasFile('image')) {
-            $imageUrl = $this->serviceController->uploadImage($request->file('image'));
-            
-            $category->update([
-                ...$request->except('image'),
-                'image' => $imageUrl
-            ]);
-        } else {
-            $category->update($request->except('image'));
+            $data['image'] = $this->serviceController->uploadImage($request->file('image'));
         }
 
+        if ($request->hasFile('banner')) {
+            $data['banner'] = $this->serviceController->uploadImage($request->file('banner'));
+        }
+        $category->update($data);
         return redirect()->route('dashboard.category.index');
     }
 

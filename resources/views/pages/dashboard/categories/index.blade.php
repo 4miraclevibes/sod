@@ -18,6 +18,7 @@
             <th class="text-white">Nama</th>
             <th class="text-white">Slug</th>
             <th class="text-white">Gambar</th>
+            <th class="text-white">Banner</th>
             <th class="text-white">Jumlah Produk</th>
             <th class="text-white">Aksi</th>
           </tr>
@@ -33,6 +34,13 @@
                 <img src="{{ $category->image }}" alt="{{ $category->name }}" style="max-width: 50px; max-height: 50px;">
               @else
                 Tidak ada gambar
+              @endif
+            </td>
+            <td>
+              @if($category->banner)
+                <img src="{{ $category->banner }}" alt="{{ $category->name }} banner" style="max-width: 50px; max-height: 50px;">
+              @else
+                Tidak ada banner
               @endif
             </td>
             <td>{{ $category->products->count() }}</td>

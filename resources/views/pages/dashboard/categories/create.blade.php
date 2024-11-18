@@ -14,9 +14,13 @@
                 <label for="slug" class="form-label">Slug</label>
                 <input type="text" class="form-control form-control-sm" id="slug" name="slug" required>
             </div>
-            <div class="col-md-12 mt-3">
+            <div class="col-md-6 mt-3">
                 <label for="image" class="form-label">Gambar Kategori</label>
                 <input type="file" class="form-control form-control-sm" id="image" name="image" accept="image/*">
+            </div>
+            <div class="col-md-6 mt-3">
+                <label for="banner" class="form-label">Banner Kategori</label>
+                <input type="file" class="form-control form-control-sm" id="banner" name="banner" accept="image/*">
             </div>
         </div>
         <button type="submit" class="btn btn-sm btn-primary">Buat</button>

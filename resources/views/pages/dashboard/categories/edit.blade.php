@@ -15,16 +15,26 @@
                 <label for="slug" class="form-label">Slug</label>
                 <input type="text" class="form-control form-control-sm" id="slug" name="slug" value="{{ $category->slug }}" required>
             </div>
-            <div class="col-md-12 mt-3">
+            <div class="col-md-6 mt-3">
                 <label for="image" class="form-label">Gambar Kategori</label>
                 <input type="file" class="form-control form-control-sm" id="image" name="image" accept="image/*">
+                @if($category->image)
+                <div class="mt-2">
+                    <label class="form-label">Gambar Saat Ini:</label>
+                    <img src="{{ $category->image }}" alt="{{ $category->name }}" class="d-block" style="max-width: 200px; max-height: 200px;">
+                </div>
+                @endif
             </div>
-            @if($category->image)
-            <div class="col-md-12 mt-3">
-                <label class="form-label">Gambar Saat Ini:</label>
-                <img src="{{ $category->image }}" alt="{{ $category->name }}" class="d-block" style="max-width: 200px; max-height: 200px;">
+            <div class="col-md-6 mt-3">
+                <label for="banner" class="form-label">Banner Kategori</label>
+                <input type="file" class="form-control form-control-sm" id="banner" name="banner" accept="image/*">
+                @if($category->banner)
+                <div class="mt-2">
+                    <label class="form-label">Banner Saat Ini:</label>
+                    <img src="{{ $category->banner }}" alt="{{ $category->name }} banner" class="d-block" style="max-width: 200px; max-height: 200px;">
+                </div>
+                @endif
             </div>
-            @endif
         </div>
         <button type="submit" class="btn btn-sm btn-primary">Simpan</button>
         <a href="{{ route('dashboard.category.index') }}" class="btn btn-sm btn-secondary">Batal</a>
