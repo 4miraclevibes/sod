@@ -16,6 +16,8 @@ class Transaction extends Model
         'code',
         'app_fee',
         'address',
+        'notes',
+        'additional_cost',
     ];
 
     public function user()

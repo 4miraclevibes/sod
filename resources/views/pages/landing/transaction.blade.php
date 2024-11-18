@@ -76,6 +76,70 @@
         font-size: 0.9em;
         color: #666;
     }
+    .info-item {
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .info-label {
+        font-weight: bold;
+    }
+    .info-value {
+        margin-left: 10px;
+    }
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    
+    .info-item {
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    
+    .info-label {
+        color: #666;
+    }
+    
+    .info-value {
+        color: #333;
+    }
+    
+    .text-warning {
+        color: #ff9800 !important;
+    }
+    
+    .text-success {
+        color: #4caf50 !important;
+    }
+    
+    .text-danger {
+        color: #f44336 !important;
+    }
+    
+    .text-secondary {
+        color: #666 !important;
+    }
+
+    // Tambahan style untuk memperbaiki tampilan
+    .transaction-info {
+        background-color: #fff;
+        border-radius: 8px;
+    }
+    
+    .customer-info {
+        padding: 12px 0;
+    }
+    
+    .info-label span {
+        font-size: 14px;
+    }
+    
+    .info-value span {
+        font-size: 14px;
+    }
 </style>
 @endsection
 
@@ -132,44 +196,103 @@
                     <i class="bi bi-clipboard copy-icon" onclick="copyTransactionCode('{{ $transaction->id }}')"></i>
                 </span>
             </div>
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <div class="order-status">
-                        <span class="fw-bold text-dark">Pemesan: </span>
-                        <span>{{ $transaction->user->name }}</span> <br>
-                        <span class="fw-bold text-dark">Alamat: </span>
-                        <span>{{ $transaction->address ?? '***' }}</span> <br>
-                        @if($transaction->payment)
-                            <span class="fw-bold text-dark">Driver: </span>
-                            <span>{{ $transaction->payment->user->name }}</span>
+            
+            @if($transaction->notes)
+            <div class="card bg-light mb-3">
+                <div class="card-body">
+                    <h6 class="card-title fw-bold text-dark mb-2">Catatan Pesanan:</h6>
+                    <p class="card-text mb-0">{{ $transaction->notes }}</p>
+                </div>
+            </div>
+            @endif
+
+            <div class="card bg-light mb-3">
+                <div class="card-body">
+                    <h6 class="card-title fw-bold text-dark mb-2">Alamat Pengiriman:</h6>
+                    <p class="card-text mb-0">{{ $transaction->address }}</p>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-start">
+                <div class="transaction-info w-100">
+                    <!-- Info Pelanggan -->
+                    <div class="customer-info mb-3">
+                        <div class="info-item d-flex mb-2">
+                            <div class="info-label" style="width: 140px;">
+                                <span class="fw-bold text-dark">Pemesan</span>
+                            </div>
+                            <div class="info-value flex-grow-1">
+                                <span class="text-secondary">{{ $transaction->user->name }}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Status -->
+                        <div class="info-item d-flex mb-2">
+                            <div class="info-label" style="width: 140px;">
+                                <span class="fw-bold text-dark">Status Transaksi</span>
+                            </div>
+                            <div class="info-value">
+                                <span class="text-warning">
+                                    @if($transaction->status == 'pending' || $transaction->status == 'processing')
+                                        Diproses
+                                    @elseif($transaction->status == 'shipped')
+                                        Dikirim
+                                    @elseif($transaction->status == 'delivered')
+                                        Diterima
+                                    @elseif($transaction->status == 'done')
+                                        Selesai
+                                    @elseif($transaction->status == 'cancelled')
+                                        Dibatalkan
+                                    @else
+                                        {{ ucfirst($transaction->status) }}
+                                    @endif
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="info-item d-flex mb-2">
+                            <div class="info-label" style="width: 140px;">
+                                <span class="fw-bold text-dark">Status Pembayaran</span>
+                            </div>
+                            <div class="info-value">
+                                @if($transaction->payment && $transaction->payment->status == 'success')
+                                    <span class="text-success">Sudah Lunas</span>
+                                @else
+                                    <span class="text-danger">Belum Lunas</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Rincian Biaya -->
+                        <div class="info-item d-flex mb-2">
+                            <div class="info-label" style="width: 140px;">
+                                <span class="fw-bold text-dark">Ongkir</span>
+                            </div>
+                            <div class="info-value">
+                                <span class="text-secondary">Rp {{ number_format($transaction->shipping_price, 0, ',', '.') }}</span>
+                            </div>
+                        </div>
+
+                        @if($transaction->additional_cost > 0)
+                        <div class="info-item d-flex mb-2">
+                            <div class="info-label" style="width: 140px;">
+                                <span class="fw-bold text-dark">Biaya Tambahan</span>
+                            </div>
+                            <div class="info-value">
+                                <span class="text-secondary">Rp {{ number_format($transaction->additional_cost, 0, ',', '.') }}</span>
+                            </div>
+                        </div>
                         @endif
+
+                        <div class="info-item d-flex mb-2">
+                            <div class="info-label" style="width: 140px;">
+                                <span class="fw-bold text-dark">Total Bill</span>
+                            </div>
+                            <div class="info-value">
+                                <span class="fw-bold text-success">Rp {{ number_format($transaction->total_price + $transaction->shipping_price + $transaction->additional_cost, 0, ',', '.') }}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="order-status">
-                        <span class="fw-bold text-dark">Status Transaksi:</span>
-                        @if($transaction->status == 'pending' || $transaction->status == 'processing')
-                            Diproses
-                        @elseif($transaction->status == 'shipped')
-                            Dikirim
-                        @elseif($transaction->status == 'delivered')
-                            Diterima
-                        @elseif($transaction->status == 'done')
-                            Selesai
-                        @elseif($transaction->status == 'cancelled')
-                            Dibatalkan
-                        @else
-                            {{ ucfirst($transaction->status) }}
-                        @endif
-                    </div>
-                    <div class="order-status">
-                        <span class="fw-bold text-dark">Status Pembayaran: </span>
-                        @if($transaction->payment && $transaction->payment->status == 'success')
-                            <span class="text-success">Sudah Lunas</span>
-                        @else
-                            <span class="text-danger">Belum Lunas</span>
-                        @endif
-                    </div>
-                    <div><span></span>Ongkir: Rp {{ number_format($transaction->shipping_price, 0, ',', '.') }}</div>
-                    <div>Total Bill: Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</div>
                 </div>
             </div>
             <div class="product-list border-top pt-2">

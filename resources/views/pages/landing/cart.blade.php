@@ -43,6 +43,14 @@
         border-radius: 10px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+    textarea#orderNotes {
+        resize: none;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+    textarea#orderNotes:focus {
+        box-shadow: 0 0 0 0.2rem rgba(255,255,255,0.25);
+    }
 </style>
 @endsection
 
@@ -85,6 +93,22 @@
                 </div>
             </div>
             @endforeach
+        </div>
+
+        <div class="mb-3">
+            <label for="orderNotes" class="form-label" style="color: #4caf50;">Catatan Pesanan</label>
+            <textarea 
+                class="form-control" 
+                id="orderNotes" 
+                name="notes" 
+                rows="8" 
+                placeholder="Contoh: Tolong pilihkan sayur yang masih segar, Mohon pisahkan sayur dan bumbu, Pilih telur yang utuh, dll."
+                style="background-color: #f8f9fa; border: 1px solid #e0e0e0;"
+            ></textarea>
+            <small class="text-muted mt-2 d-block">
+                <i class="bi bi-info-circle"></i> 
+                Catatan: Apabila ada permintaan khusus yang memerlukan biaya tambahan, akan diinformasikan oleh admin dan tidak termasuk dalam total pembayaran saat ini.
+            </small>
         </div>
 
         <div class="order-info mt-4 mb-3">

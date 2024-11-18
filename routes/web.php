@@ -48,9 +48,7 @@ Route::get('/checkout', function () {
 })->name('checkout');
 
 // Cart Success
-Route::get('/cart/success', function () {
-    return view('pages.landing.cartSuccess');
-})->name('cart.success');
+Route::get('/cart/success', [CartController::class, 'cartSuccess'])->name('cart.success');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -104,6 +102,7 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => ['a
     Route::patch('transaction/updateStatus/{transaction}', [DashboardTransactionController::class, 'updateStatus'])->name('transaction.updateStatus');
     Route::get('transaction/show/{transaction}', [DashboardTransactionController::class, 'show'])->name('transaction.show');
     Route::get('transaction/fresh', [DashboardTransactionController::class, 'fresh'])->name('transaction.fresh');
+    Route::patch('transaction/{transaction}/additional-cost', [TransactionController::class, 'updateAdditionalCost'])->name('transaction.updateAdditionalCost');
     // Deliveries
     Route::get('transaction/deliveries', [DashboardTransactionController::class, 'deliveries'])->name('transaction.deliveries');
     // Payment
@@ -141,5 +140,6 @@ Route::post('/logout/sso', [SSOController::class, 'logout'])->name('logout.sso')
 Route::get('/refresh-csrf', function() {
     return csrf_token();
 });
+
 
 require __DIR__.'/auth.php';

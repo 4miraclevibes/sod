@@ -85,4 +85,10 @@ class CartController extends Controller
 
         return back()->with('success', 'Item yang dipilih telah dihapus dari keranjang');
     }
+
+    public function cartSuccess()
+    {
+        $assets = Asset::where('is_active', true)->get();
+        return view('pages.landing.cartSuccess', compact('assets'));
+    }
 }

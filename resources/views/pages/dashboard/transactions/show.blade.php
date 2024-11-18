@@ -17,6 +17,7 @@
           <p><strong>Status:</strong> {{ ucfirst($transaction->status) }}</p>
           <p><strong>Total Harga:</strong> Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</p>
           <p><strong>Ongkos Kirim:</strong> Rp {{ number_format($transaction->shipping_price, 0, ',', '.') }}</p>
+          <p><strong>Biaya Tambahan:</strong> Rp {{ number_format($transaction->additional_cost, 0, ',', '.') }}</p>
         </div>
         <div class="col-md-6">
           <h6>Informasi Pelanggan</h6>
@@ -24,6 +25,36 @@
           <p><strong>Email:</strong> {{ $transaction->user->email }}</p>
           <p><strong>Alamat:</strong> {{ $transaction->address ?? '***' }}</p>
           <!-- Tambahkan informasi pelanggan lainnya jika ada -->
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-12">
+          <h6>Catatan Pesanan</h6>
+          <div class="card bg-light">
+            <div class="card-body">
+              <p class="mb-0">{{ $transaction->notes ?? 'Tidak ada catatan' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-12">
+          <h6>Update Biaya Tambahan</h6>
+          <form action="{{ route('dashboard.transaction.updateAdditionalCost', $transaction->id) }}" method="POST" class="d-flex align-items-center">
+            @csrf
+            @method('PATCH')
+            <div class="input-group" style="width: 300px;">
+              <span class="input-group-text">Rp</span>
+              <input type="number" class="form-control" name="additional_cost" value="{{ $transaction->additional_cost }}" min="0">
+            </div>
+            <button type="submit" class="btn btn-primary ms-2">Update Biaya</button>
+          </form>
+          <small class="text-muted mt-2 d-block">
+            <i class="bi bi-info-circle"></i> 
+            Biaya tambahan akan ditambahkan ke total transaksi dan akan diinformasikan ke pelanggan.
+          </small>
         </div>
       </div>
 
@@ -57,15 +88,19 @@
             </tr>
             <tr>
               <td colspan="4" class="text-end"><strong>Total</strong></td>
-              <td><strong>Rp {{ number_format($transaction->total_price - $transaction->shipping_price, 0, ',', '.') }}</strong></td>
+              <td><strong>Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</strong></td>
             </tr>
             <tr>
               <td colspan="4" class="text-end"><strong>Ongkos Kirim</strong></td>
               <td><strong>Rp {{ number_format($transaction->shipping_price, 0, ',', '.') }}</strong></td>
             </tr>
             <tr>
+              <td colspan="4" class="text-end"><strong>Biaya Tambahan</strong></td>
+              <td><strong>Rp {{ number_format($transaction->additional_cost, 0, ',', '.') }}</strong></td>
+            </tr>
+            <tr>
               <td colspan="4" class="text-end"><strong>Total Keseluruhan</strong></td>
-              <td><strong>Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</strong></td>
+              <td><strong>Rp {{ number_format($transaction->total_price + $transaction->shipping_price + $transaction->additional_cost, 0, ',', '.') }}</strong></td>
             </tr>
           </tfoot>
         </table>

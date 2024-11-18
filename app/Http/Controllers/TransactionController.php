@@ -77,6 +77,7 @@ class TransactionController extends Controller
             'quantities.*' => 'integer|min:1',
             'shipping_price' => 'required|numeric|min:0',
             'app_fee' => 'required|numeric|min:0',
+            'notes' => 'nullable|string',
         ]);
 
         $checkedCarts = Cart::whereIn('id', $request->checked_items)
@@ -120,7 +121,8 @@ class TransactionController extends Controller
                 'status' => 'pending',
                 'shipping_price' => $request->shipping_price,
                 'app_fee' => $request->app_fee,
-                'address' => $transactionAddress->subDistrict->name . ' | ' . $transactionAddress->address. ' | ' . $transactionAddress->receiver_name . ' | ' . $transactionAddress->receiver_phone . ' | ' . $transactionAddress->longitude . ' | ' . $transactionAddress->latitude
+                'address' => $transactionAddress->subDistrict->name . ' - ' . $transactionAddress->address. ' - ' . $transactionAddress->receiver_name . ' - ' . $transactionAddress->receiver_phone . ' - ' . $transactionAddress->longitude . ' - ' . $transactionAddress->latitude,
+                'notes' => $request->notes,
             ]);
     
             foreach($checkedCarts as $cart) {
@@ -245,5 +247,18 @@ class TransactionController extends Controller
             return back()->with('error', 'Hanya transaksi dengan status "Diterima" yang dapat ditandai selesai.');
         }
         return redirect()->away('https://m.edupay.cloud/dashboard');
+    }
+
+    public function updateAdditionalCost(Request $request, Transaction $transaction)
+    {
+        $request->validate([
+            'additional_cost' => 'required|numeric|min:0'
+        ]);
+
+        $transaction->update([
+            'additional_cost' => $request->additional_cost
+        ]);
+
+        return redirect()->back()->with('success', 'Biaya tambahan berhasil diperbarui');
     }
 }
