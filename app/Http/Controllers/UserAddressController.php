@@ -21,8 +21,9 @@ class UserAddressController extends Controller
 
     public function create()
     {
+        $assets = Asset::where('is_active', true)->get();
         $districts = District::with('subdistricts')->get();
-        return view('pages.landing.userAddressAdd', compact('districts'));
+        return view('pages.landing.userAddressAdd', compact('districts', 'assets'));
     }
 
     public function store(Request $request)
