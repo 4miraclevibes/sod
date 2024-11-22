@@ -99,17 +99,19 @@
 
                         <!-- Kolom 2: Badge dan Quantity -->
                         <div class="col-5">
-                            <div class="d-flex flex-column align-items-end">
-                                @if($cart->variant->product->delivery_type == 'instant')
-                                    <span class="badge bg-success mb-2" style="font-size: 0.65rem; padding: 0.35em 0.8em;">
-                                        <i class="bi bi-lightning-fill"></i> Instant
-                                    </span>
-                                @else
-                                    <span class="badge bg-warning mb-2" style="font-size: 0.65rem; padding: 0.35em 0.8em;">
-                                        <i class="bi bi-clock-history"></i> Proses
-                                    </span>
-                                @endif
-                                <div class="quantity-control">
+                            <div class="d-flex flex-column justify-content-between" style="height: 100%; min-height: 80px;">
+                                <div class="text-end">
+                                    @if($cart->variant->product->delivery_type == 'instant')
+                                        <span class="badge bg-success" style="font-size: 0.65rem; padding: 0.35em 0.8em;">
+                                            <i class="bi bi-lightning-fill"></i> Instant
+                                        </span>
+                                    @else
+                                        <span class="badge bg-warning" style="font-size: 0.65rem; padding: 0.35em 0.8em;">
+                                            <i class="bi bi-clock-history"></i> Proses
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="quantity-control align-self-end">
                                     <button type="button" class="quantity-btn minus" data-index="{{ $index }}">-</button>
                                     <input type="text" class="quantity-input" name="quantities[{{ $cart->id }}]" value="{{ $cart->quantity }}" readonly>
                                     <button type="button" class="quantity-btn plus" data-index="{{ $index }}">+</button>
