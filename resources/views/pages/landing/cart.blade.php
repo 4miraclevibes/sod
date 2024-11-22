@@ -6,22 +6,28 @@
         display: flex;
         align-items: center;
         background-color: #e8f5e9;
-        border-radius: 20px;
-        padding: 2px;
+        border-radius: 25px;
+        padding: 4px 8px;
     }
     .quantity-btn {
         background: none;
         border: none;
-        font-size: 1.2rem;
+        font-size: 1.5rem;
         color: #4caf50;
-        padding: 0 8px;
+        padding: 0 12px;
         cursor: pointer;
+        height: 38px;
+        width: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .quantity-input {
         background: none;
         border: none;
         text-align: center;
-        width: 30px;
+        width: 40px;
+        font-size: 1.1rem;
         font-weight: bold;
     }
     .order-info {
