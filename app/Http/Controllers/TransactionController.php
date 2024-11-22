@@ -158,22 +158,27 @@ class TransactionController extends Controller
 
     private function generateTransactionCode()
     {
-        $latestTransaction = Transaction::latest()->first();
-        $transactionId = $latestTransaction ? $latestTransaction->id + 1 : 1;
+        $prefix = 'TRX';
+        $timestamp = Carbon::now()->format('ymd'); // Format: 240319 (tahun-bulan-tanggal)
+        $userId = str_pad(Auth::id(), 3, '0', STR_PAD_LEFT); // Format: 001
         
-        $now = Carbon::now();
-        $userId = Auth::id();
+        // Dapatkan counter harian
+        $dailyCounter = Transaction::whereDate('created_at', Carbon::today())
+            ->count() + 1;
         
+        // Format counter dengan padding 4 digit
+        $counter = str_pad($dailyCounter, 4, '0', STR_PAD_LEFT); // Format: 0001
+        
+        // Gabungkan semua komponen
         $code = sprintf(
-            "TRX - %d%d%02d%02d%02d",
-            $userId,
-            $transactionId,
-            $now->day,
-            $now->month,
-            $now->year % 100
+            '%s%s%s%s',
+            $prefix,      // TRX
+            $timestamp,   // 240319
+            $userId,      // 001
+            $counter     // 0001
         );
         
-        return $code;
+        return $code; // Hasil: TRX2403190010001
     }
 
     public function updateStatus(Request $request, Transaction $transaction)
