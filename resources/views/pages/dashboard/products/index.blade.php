@@ -20,6 +20,7 @@
             <th class="text-white">Stok</th>
             <th class="text-white">Varian</th>
             <th class="text-white">Thumbnail</th>
+            <th class="text-white">Tipe Pengiriman</th>
             <th class="text-white">Aksi</th>
           </tr>
         </thead>
@@ -45,6 +46,19 @@
                 <img src="{{ $product->thumbnail }}" alt="{{ $product->name }}" style="max-width: 50px; max-height: 50px;">
               @else
                 Tidak ada gambar
+              @endif
+            </td>
+            <td>
+              @if($product->delivery_type == 'instant')
+                <span class="badge bg-success">
+                  <i class="bx bx-package me-1"></i>
+                  Instant
+                </span>
+              @else
+                <span class="badge bg-warning">
+                  <i class="bx bx-time-five me-1"></i>
+                  Proses Dulu
+                </span>
               @endif
             </td>
             <td>
