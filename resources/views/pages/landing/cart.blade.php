@@ -8,6 +8,7 @@
         background-color: #e8f5e9;
         border-radius: 25px;
         padding: 4px 8px;
+        margin-left: auto;
     }
     .quantity-btn {
         background: none;
@@ -16,8 +17,8 @@
         color: #4caf50;
         padding: 0 12px;
         cursor: pointer;
-        height: 38px;
-        width: 38px;
+        height: 42px;
+        width: 42px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -26,8 +27,8 @@
         background: none;
         border: none;
         text-align: center;
-        width: 40px;
-        font-size: 1.1rem;
+        width: 45px;
+        font-size: 1.2rem;
         font-weight: bold;
     }
     .order-info {
@@ -79,32 +80,41 @@
             @foreach($carts as $index => $cart)
             <div class="card mb-3">
                 <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="form-check">
-                            <input class="form-check-input item-checkbox" type="checkbox" name="checked_items[]" value="{{ $cart->id }}" data-index="{{ $index }}" checked>
+                    <div class="row align-items-center">
+                        <!-- Kolom 1: Checkbox, Gambar, dan Info Produk -->
+                        <div class="col-7">
+                            <div class="d-flex align-items-center">
+                                <div class="form-check">
+                                    <input class="form-check-input item-checkbox" type="checkbox" name="checked_items[]" value="{{ $cart->id }}" data-index="{{ $index }}" checked>
+                                </div>
+                                <img src="{{ $cart->variant->product->thumbnail }}" alt="{{ $cart->variant->product->name }}" class="img-fluid ms-2" style="width: 60px; height: 60px; object-fit: cover;">
+                                <div class="ms-3">
+                                    <h6 class="mb-0">{{ $cart->variant->product->name }}</h6>
+                                    <small class="text-muted">{{ $cart->variant->name }}</small> <br>
+                                    <small class="text-muted">Stok: {{ $cart->variant->getAvailableStockCount() }}</small>
+                                    <p class="mb-0 fw-bold">Rp {{ number_format($cart->variant->price, 0, ',', '.') }}</p>
+                                </div>
+                            </div>
                         </div>
-                        <img src="{{ $cart->variant->product->thumbnail }}" alt="{{ $cart->variant->product->name }}" class="img-fluid ms-2" style="width: 60px; height: 60px; object-fit: cover;">
-                        <div class="ms-3 flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0">{{ $cart->variant->product->name }}</h6>
+
+                        <!-- Kolom 2: Badge dan Quantity -->
+                        <div class="col-5">
+                            <div class="d-flex flex-column align-items-end">
                                 @if($cart->variant->product->delivery_type == 'instant')
-                                    <span class="badge bg-success" style="font-size: 0.65rem; padding: 0.35em 0.8em;">
+                                    <span class="badge bg-success mb-2" style="font-size: 0.65rem; padding: 0.35em 0.8em;">
                                         <i class="bi bi-lightning-fill"></i> Instant
                                     </span>
                                 @else
-                                    <span class="badge bg-warning" style="font-size: 0.65rem; padding: 0.35em 0.8em;">
+                                    <span class="badge bg-warning mb-2" style="font-size: 0.65rem; padding: 0.35em 0.8em;">
                                         <i class="bi bi-clock-history"></i> Proses
                                     </span>
                                 @endif
+                                <div class="quantity-control">
+                                    <button type="button" class="quantity-btn minus" data-index="{{ $index }}">-</button>
+                                    <input type="text" class="quantity-input" name="quantities[{{ $cart->id }}]" value="{{ $cart->quantity }}" readonly>
+                                    <button type="button" class="quantity-btn plus" data-index="{{ $index }}">+</button>
+                                </div>
                             </div>
-                            <small class="text-muted">{{ $cart->variant->name }}</small> <br>
-                            <small class="text-muted">Stok: {{ $cart->variant->getAvailableStockCount() }}</small>
-                            <p class="mb-0 fw-bold">Rp {{ number_format($cart->variant->price, 0, ',', '.') }}</p>
-                        </div>
-                        <div class="quantity-control">
-                            <button type="button" class="quantity-btn minus" data-index="{{ $index }}">-</button>
-                            <input type="text" class="quantity-input" name="quantities[{{ $cart->id }}]" value="{{ $cart->quantity }}" readonly>
-                            <button type="button" class="quantity-btn plus" data-index="{{ $index }}">+</button>
                         </div>
                     </div>
                 </div>
