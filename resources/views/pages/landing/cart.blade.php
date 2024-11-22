@@ -79,7 +79,18 @@
                         </div>
                         <img src="{{ $cart->variant->product->thumbnail }}" alt="{{ $cart->variant->product->name }}" class="img-fluid ms-2" style="width: 60px; height: 60px; object-fit: cover;">
                         <div class="ms-3 flex-grow-1">
-                            <h6 class="mb-0">{{ $cart->variant->product->name }}</h6>
+                            <div class="d-flex align-items-center gap-2">
+                                <h6 class="mb-0">{{ $cart->variant->product->name }}</h6>
+                                @if($cart->variant->product->delivery_type == 'instant')
+                                    <span class="badge rounded-pill bg-success" style="font-size: 0.65rem; padding: 0.35em 0.8em;">
+                                        <i class="bi bi-lightning-fill"></i> Instant
+                                    </span>
+                                @else
+                                    <span class="badge rounded-pill bg-warning" style="font-size: 0.65rem; padding: 0.35em 0.8em;">
+                                        <i class="bi bi-clock-history"></i> Proses
+                                    </span>
+                                @endif
+                            </div>
                             <small class="text-muted">{{ $cart->variant->name }}</small> <br>
                             <small class="text-muted">Stok: {{ $cart->variant->getAvailableStockCount() }}</small>
                             <p class="mb-0 fw-bold">Rp {{ number_format($cart->variant->price, 0, ',', '.') }}</p>
