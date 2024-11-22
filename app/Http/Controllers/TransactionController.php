@@ -179,7 +179,7 @@ class TransactionController extends Controller
     public function updateStatus(Request $request, Transaction $transaction)
     {
         if ($transaction->user_id !== Auth::id() && $transaction->payment->user_id !== Auth::id()) {
-            return back()->with('error', 'Anda tidak memiliki izin untuk mengubah status transaksi ini.');
+            return back()->with('error', 'INDAK BISA CANCEL DO ANJIANG.');
         }
         $request->validate([
             'status' => 'required|in:pending,processing,shipped,delivered,done,cancelled',
