@@ -18,7 +18,7 @@
             <th class="text-white">Nama</th>
             <th class="text-white">Kategori</th>
             <th class="text-white">Stok</th>
-            <th class="text-white">Varian</th>
+            {{-- <th class="text-white">Varian</th> --}}
             <th class="text-white">Thumbnail</th>
             <th class="text-white">Aksi</th>
           </tr>
@@ -37,11 +37,11 @@
               @endphp
               {{ $totalStock }}
             </td>
-            <td>
+            {{-- <td>
               @foreach($product->variants as $variant)
                 {{ $variant->name }} / Rp {{ number_format($variant->price, 0, ',', '.') }}
               @endforeach
-            </td>
+            </td> --}}
             <td>
               @if($product->thumbnail)
                 <img src="{{ $product->thumbnail }}" alt="{{ $product->name }}" style="max-width: 50px; max-height: 50px;">
