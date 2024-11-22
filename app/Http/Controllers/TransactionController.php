@@ -187,7 +187,7 @@ class TransactionController extends Controller
 
         if($request->status == 'cancelled'){
             if($transaction->status !== 'pending'){
-                return back()->with('error', 'INDAK BISA CANCEL DO ANJIANG');
+                return back()->with('error', 'Hanya transaksi dengan status "Pending" yang dapat dibatalkan.');
             }
             foreach ($transaction->details as $detail) {
                 $quantity = $detail->quantity;
