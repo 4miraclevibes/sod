@@ -177,29 +177,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let appFee = {!! json_encode($app_fee) !!};
     const orderButton = document.getElementById('orderButton');
 
-    console.log('Items:', items);
-    console.log('Shipping Cost:', shippingCost);
-    console.log('App Fee:', appFee);
-
-    // Fungsi untuk memperbarui kuantitas
-    function updateQuantity(index, change) {
-        if (items[index] && items[index].quantity !== undefined) {
-            let newQuantity = Math.max(1, items[index].quantity + change);
-            let availableStock = items[index].variant.stock;
-            
-            if (newQuantity <= availableStock) {
-                items[index].quantity = newQuantity;
-                let quantityInput = document.querySelectorAll('.quantity-input')[index];
-                if (quantityInput) {
-                    quantityInput.value = items[index].quantity;
-                }
-                updateTotal();
-            } else {
-                alert('Jumlah melebihi stok yang tersedia');
-            }
-        }
-    }
-
     // Fungsi untuk memperbarui total
     function updateTotal() {
         let subtotal = 0;
