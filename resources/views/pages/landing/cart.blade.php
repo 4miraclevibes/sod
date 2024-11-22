@@ -79,14 +79,14 @@
                         </div>
                         <img src="{{ $cart->variant->product->thumbnail }}" alt="{{ $cart->variant->product->name }}" class="img-fluid ms-2" style="width: 60px; height: 60px; object-fit: cover;">
                         <div class="ms-3 flex-grow-1">
-                            <div class="d-flex align-items-center gap-2">
+                            <div class="d-flex justify-content-between align-items-center">
                                 <h6 class="mb-0">{{ $cart->variant->product->name }}</h6>
                                 @if($cart->variant->product->delivery_type == 'instant')
-                                    <span class="badge rounded-pill bg-success" style="font-size: 0.65rem; padding: 0.35em 0.8em;">
+                                    <span class="badge bg-success" style="font-size: 0.65rem; padding: 0.35em 0.8em;">
                                         <i class="bi bi-lightning-fill"></i> Instant
                                     </span>
                                 @else
-                                    <span class="badge rounded-pill bg-warning" style="font-size: 0.65rem; padding: 0.35em 0.8em;">
+                                    <span class="badge bg-warning" style="font-size: 0.65rem; padding: 0.35em 0.8em;">
                                         <i class="bi bi-clock-history"></i> Proses
                                     </span>
                                 @endif
@@ -121,7 +121,7 @@
                 Catatan: Apabila ada permintaan khusus yang memerlukan biaya tambahan, akan diinformasikan oleh admin dan tidak termasuk dalam total pembayaran saat ini.
             </small>
 
-            <div class="alert alert-light border mt-2">
+            <div class="border rounded p-3 mt-2 bg-light">
                 <i class="bi bi-info-circle text-primary"></i>
                 <small>
                     <strong>Info Waktu Pengiriman (Khusus Pesanan Proses):</strong><br>
