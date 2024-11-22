@@ -39,6 +39,13 @@
                 <label for="sell_price" class="form-label">Harga Jual</label>
                 <input type="number" class="form-control form-control-sm" id="sell_price" name="sell_price">
             </div>
+            <div class="col-md-6 mt-3">
+                <label for="delivery_type" class="form-label">Tipe Pengiriman</label>
+                <select class="form-select form-select-sm" id="delivery_type" name="delivery_type" required>
+                    <option value="instant">Instant</option>
+                    <option value="process">Proses Dulu</option>
+                </select>
+            </div>
             <div class="col-md-12 mt-3">
                 <label for="description" class="form-label">Deskripsi</label>
                 <textarea class="form-control form-control-sm" id="description" name="description" rows="3"></textarea>

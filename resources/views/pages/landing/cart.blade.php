@@ -109,6 +109,13 @@
                 <i class="bi bi-info-circle"></i> 
                 Catatan: Apabila ada permintaan khusus yang memerlukan biaya tambahan, akan diinformasikan oleh admin dan tidak termasuk dalam total pembayaran saat ini.
             </small>
+
+            <div class="alert alert-info mt-2" id="processNote" style="display: none;">
+                <i class="bi bi-clock-history"></i>
+                <strong>Info Waktu Pengiriman (Khusus Pesanan Proses):</strong><br>
+                • Pesan jam 00:00 - 12:00 → Diantar besok pagi<br>
+                • Pesan jam 12:00 - 24:00 → Diantar besok siang
+            </div>
         </div>
 
         <div class="order-info mt-4 mb-3">
@@ -151,7 +158,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 'id' => $cart->variant->id,
                 'price' => $cart->variant->price,
                 'stock' => $cart->variant->getAvailableStockCount()
-            ]
+            ],
+            'delivery_type' => $cart->variant->product->delivery_type
         ];
     })) !!};
     let shippingCost = {!! json_encode($shipping_price) !!};
@@ -221,7 +229,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.querySelectorAll('.item-checkbox').forEach((checkbox) => {
-        checkbox.addEventListener('change', updateTotal);
+        checkbox.addEventListener('change', function() {
+            updateTotal();
+            checkProcessProducts();
+        });
     });
 
     document.getElementById('selectAll').addEventListener('change', function() {
@@ -256,6 +267,23 @@ document.addEventListener('DOMContentLoaded', function() {
             form.submit();
         }
     });
+
+    // Fungsi untuk mengecek apakah ada produk dengan tipe process
+    function checkProcessProducts() {
+        let hasProcessProduct = false;
+        items.forEach((item, index) => {
+            let checkbox = document.querySelectorAll('.item-checkbox')[index];
+            if (checkbox && checkbox.checked && item.delivery_type === 'process') {
+                hasProcessProduct = true;
+            }
+        });
+        
+        // Tampilkan/sembunyikan catatan process
+        document.getElementById('processNote').style.display = hasProcessProduct ? 'block' : 'none';
+    }
+
+    // Panggil saat halaman dimuat
+    checkProcessProducts();
 });
 </script>
 @endsection

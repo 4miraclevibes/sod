@@ -29,6 +29,13 @@
                 <label for="thumbnail" class="form-label">Thumbnail</label>
                 <input type="file" class="form-control form-control-sm" id="thumbnail" name="thumbnail" accept="image/*">
             </div>
+            <div class="col-md-6 mt-3">
+                <label for="delivery_type" class="form-label">Tipe Pengiriman</label>
+                <select class="form-select form-select-sm" id="delivery_type" name="delivery_type" required>
+                    <option value="instant" {{ $product->delivery_type == 'instant' ? 'selected' : '' }}>Instant</option>
+                    <option value="process" {{ $product->delivery_type == 'process' ? 'selected' : '' }}>Proses Dulu</option>
+                </select>
+            </div>
             @if($product->thumbnail)
             <div class="col-md-12 mt-3">
                 <label class="form-label">Thumbnail Saat Ini:</label>
