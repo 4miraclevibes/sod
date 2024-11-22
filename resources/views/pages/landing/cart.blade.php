@@ -242,7 +242,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.item-checkbox').forEach((checkbox) => {
         checkbox.addEventListener('change', function() {
             updateTotal();
-            checkProcessProducts();
         });
     });
 
@@ -278,23 +277,6 @@ document.addEventListener('DOMContentLoaded', function() {
             form.submit();
         }
     });
-
-    // Fungsi untuk mengecek apakah ada produk dengan tipe process
-    function checkProcessProducts() {
-        let hasProcessProduct = false;
-        items.forEach((item, index) => {
-            let checkbox = document.querySelectorAll('.item-checkbox')[index];
-            if (checkbox && checkbox.checked && item.delivery_type === 'process') {
-                hasProcessProduct = true;
-            }
-        });
-        
-        // Tampilkan/sembunyikan catatan process
-        document.getElementById('processNote').style.display = hasProcessProduct ? 'block' : 'none';
-    }
-
-    // Panggil saat halaman dimuat
-    checkProcessProducts();
 });
 </script>
 @endsection
