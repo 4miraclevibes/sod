@@ -6,19 +6,19 @@
         display: flex;
         align-items: center;
         background-color: #e8f5e9;
-        border-radius: 25px;
-        padding: 4px 8px;
+        border-radius: 20px;
+        padding: 2px 4px;
         margin-left: auto;
     }
     .quantity-btn {
         background: none;
         border: none;
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         color: #4caf50;
-        padding: 0 12px;
+        padding: 0 8px;
         cursor: pointer;
-        height: 42px;
-        width: 42px;
+        height: 32px;
+        width: 32px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -27,8 +27,8 @@
         background: none;
         border: none;
         text-align: center;
-        width: 45px;
-        font-size: 1.2rem;
+        width: 35px;
+        font-size: 1rem;
         font-weight: bold;
     }
     .order-info {
