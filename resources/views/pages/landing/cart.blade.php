@@ -82,15 +82,6 @@
                             <h6 class="mb-0">{{ $cart->variant->product->name }}</h6>
                             <small class="text-muted">{{ $cart->variant->name }}</small> <br>
                             <small class="text-muted">Stok: {{ $cart->variant->getAvailableStockCount() }}</small>
-                            @if($cart->variant->product->delivery_type == 'instant')
-                                <span class="badge bg-success" style="font-size: 0.7rem;">
-                                    <i class="bi bi-lightning-fill"></i> Instant
-                                </span>
-                            @else
-                                <span class="badge bg-warning" style="font-size: 0.7rem;">
-                                    <i class="bi bi-clock-history"></i> Proses Dulu
-                                </span>
-                            @endif
                             <p class="mb-0 fw-bold">Rp {{ number_format($cart->variant->price, 0, ',', '.') }}</p>
                         </div>
                         <div class="quantity-control">
@@ -118,15 +109,6 @@
                 <i class="bi bi-info-circle"></i> 
                 Catatan: Apabila ada permintaan khusus yang memerlukan biaya tambahan, akan diinformasikan oleh admin dan tidak termasuk dalam total pembayaran saat ini.
             </small>
-
-            <div class="alert alert-light border mt-2" id="processNote">
-                <i class="bi bi-info-circle text-primary"></i>
-                <small>
-                    <strong>Info Waktu Pengiriman (Khusus Pesanan Proses):</strong><br>
-                    • Pesan jam 00:00 - 12:00 → Diantar besok pagi<br>
-                    • Pesan jam 12:00 - 24:00 → Diantar besok siang
-                </small>
-            </div>
         </div>
 
         <div class="order-info mt-4 mb-3">
@@ -169,13 +151,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 'id' => $cart->variant->id,
                 'price' => $cart->variant->price,
                 'stock' => $cart->variant->getAvailableStockCount()
-            ],
-            'delivery_type' => $cart->variant->product->delivery_type
+            ]
         ];
     })) !!};
     let shippingCost = {!! json_encode($shipping_price) !!};
     let appFee = {!! json_encode($app_fee) !!};
     const orderButton = document.getElementById('orderButton');
+
+    console.log('Items:', items);
+    console.log('Shipping Cost:', shippingCost);
+    console.log('App Fee:', appFee);
+
+    // Fungsi untuk memperbarui kuantitas
+    function updateQuantity(index, change) {
+        if (items[index] && items[index].quantity !== undefined) {
+            let newQuantity = Math.max(1, items[index].quantity + change);
+            let availableStock = items[index].variant.stock;
+            
+            if (newQuantity <= availableStock) {
+                items[index].quantity = newQuantity;
+                let quantityInput = document.querySelectorAll('.quantity-input')[index];
+                if (quantityInput) {
+                    quantityInput.value = items[index].quantity;
+                }
+                updateTotal();
+            } else {
+                alert('Jumlah melebihi stok yang tersedia');
+            }
+        }
+    }
 
     // Fungsi untuk memperbarui total
     function updateTotal() {
@@ -217,9 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.querySelectorAll('.item-checkbox').forEach((checkbox) => {
-        checkbox.addEventListener('change', function() {
-            updateTotal();
-        });
+        checkbox.addEventListener('change', updateTotal);
     });
 
     document.getElementById('selectAll').addEventListener('change', function() {
