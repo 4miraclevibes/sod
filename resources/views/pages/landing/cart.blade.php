@@ -116,10 +116,15 @@
                 placeholder="Contoh: Tolong pilihkan sayur yang masih segar, Mohon pisahkan sayur dan bumbu, Pilih telur yang utuh, dll."
                 style="background-color: #f8f9fa; border: 1px solid #e0e0e0;"
             ></textarea>
-            <small class="text-muted mt-2 d-block">
-                <i class="bi bi-info-circle"></i> 
-                Catatan: Apabila ada permintaan khusus yang memerlukan biaya tambahan, akan diinformasikan oleh admin dan tidak termasuk dalam total pembayaran saat ini.
-            </small>
+
+            <div class="border rounded p-3 mt-2 bg-light">
+                <i class="bi bi-info-circle text-primary"></i>
+                <small>
+                    <strong>Catatan:</strong><br>
+                    • Anda dapat menambahkan permintaan produk yang tidak tersedia di katalog kami<br>
+                    • Apabila ada permintaan khusus yang memerlukan biaya tambahan, akan diinformasikan oleh admin dan tidak termasuk dalam total pembayaran saat ini
+                </small>
+            </div>
 
             <div class="border rounded p-3 mt-2 bg-light">
                 <i class="bi bi-info-circle text-primary"></i>
