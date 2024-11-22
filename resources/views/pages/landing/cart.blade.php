@@ -109,6 +109,15 @@
                 <i class="bi bi-info-circle"></i> 
                 Catatan: Apabila ada permintaan khusus yang memerlukan biaya tambahan, akan diinformasikan oleh admin dan tidak termasuk dalam total pembayaran saat ini.
             </small>
+
+            <div class="alert alert-light border mt-2">
+                <i class="bi bi-info-circle text-primary"></i>
+                <small>
+                    <strong>Info Waktu Pengiriman (Khusus Pesanan Proses):</strong><br>
+                    • Pesan jam 00:00 - 12:00 → Diantar besok pagi<br>
+                    • Pesan jam 12:00 - 24:00 → Diantar besok siang
+                </small>
+            </div>
         </div>
 
         <div class="order-info mt-4 mb-3">
