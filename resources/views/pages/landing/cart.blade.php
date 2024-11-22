@@ -82,6 +82,15 @@
                             <h6 class="mb-0">{{ $cart->variant->product->name }}</h6>
                             <small class="text-muted">{{ $cart->variant->name }}</small> <br>
                             <small class="text-muted">Stok: {{ $cart->variant->getAvailableStockCount() }}</small>
+                            @if($cart->variant->product->delivery_type == 'instant')
+                                <span class="badge bg-success" style="font-size: 0.7rem;">
+                                    <i class="bi bi-lightning-fill"></i> Instant
+                                </span>
+                            @else
+                                <span class="badge bg-warning" style="font-size: 0.7rem;">
+                                    <i class="bi bi-clock-history"></i> Proses Dulu
+                                </span>
+                            @endif
                             <p class="mb-0 fw-bold">Rp {{ number_format($cart->variant->price, 0, ',', '.') }}</p>
                         </div>
                         <div class="quantity-control">
@@ -110,11 +119,13 @@
                 Catatan: Apabila ada permintaan khusus yang memerlukan biaya tambahan, akan diinformasikan oleh admin dan tidak termasuk dalam total pembayaran saat ini.
             </small>
 
-            <div class="alert alert-info mt-2" id="processNote" style="display: none;">
-                <i class="bi bi-clock-history"></i>
-                <strong>Info Waktu Pengiriman (Khusus Pesanan Proses):</strong><br>
-                • Pesan jam 00:00 - 12:00 → Diantar besok pagi<br>
-                • Pesan jam 12:00 - 24:00 → Diantar besok siang
+            <div class="alert alert-light border mt-2" id="processNote">
+                <i class="bi bi-info-circle text-primary"></i>
+                <small>
+                    <strong>Info Waktu Pengiriman (Khusus Pesanan Proses):</strong><br>
+                    • Pesan jam 00:00 - 12:00 → Diantar besok pagi<br>
+                    • Pesan jam 12:00 - 24:00 → Diantar besok siang
+                </small>
             </div>
         </div>
 
