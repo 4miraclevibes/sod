@@ -2,124 +2,163 @@
 
 @section('style')
 <style>
-    .faq-section {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-    
+    /* Header Section */
     .faq-header {
-        text-align: center;
-        margin-bottom: 40px;
+        background: #28a745;
+        padding: 20px;
+        color: white;
+        border-radius: 0 0 20px 20px;
+    }
+
+    .faq-header h1 {
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+    .faq-header p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        margin: 0;
+    }
+
+    /* FAQ Section */
+    .faq-container {
+        padding: 16px;
     }
     
     .faq-item {
-        margin-bottom: 20px;
+        background: white;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         border: 1px solid #eee;
-        border-radius: 8px;
-        overflow: hidden;
     }
     
     .faq-question {
-        padding: 15px 20px;
-        background-color: #f8f9fa;
-        cursor: pointer;
+        padding: 16px;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        cursor: pointer;
         font-weight: 500;
+        color: #333;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+    
+    /* Style untuk pertanyaan yang aktif */
+    .faq-question.active {
+        background-color: #28a745;
+        color: white;
+        border-radius: 12px 12px 0 0;
+        font-weight: 600;
+    }
+
+    /* Style untuk icon saat aktif */
+    .faq-question.active .faq-icon {
+        transform: rotate(180deg);
+        color: white;
     }
     
     .faq-answer {
-        padding: 15px 20px;
         display: none;
-        border-top: 1px solid #eee;
+        padding: 16px;
+        color: #666;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        background-color: #f8f9fa;
+        border-radius: 0 0 12px 12px;
     }
     
     .faq-question.active + .faq-answer {
         display: block;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     .faq-icon {
         transition: transform 0.3s ease;
+        font-size: 1.2rem;
+        color: #28a745;
     }
-    
-    .faq-question.active .faq-icon {
-        transform: rotate(180deg);
-    }
-    
-    /* Tambahan style untuk WhatsApp section */
+
+    /* WhatsApp Section */
     .whatsapp-section {
-        margin-top: 40px;
-        padding: 20px 0;
+        margin: 24px 16px;
+        padding: 20px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        text-align: center;
     }
     
-    .whatsapp-section .card {
-        border-radius: 15px;
-        border: none;
+    .whatsapp-icon {
+        color: #25d366;
+        font-size: 2rem;
+        margin-bottom: 12px;
     }
-    
+
+    .whatsapp-section h4 {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+    }
+
+    .whatsapp-section p {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 16px;
+    }
+
     .whatsapp-section .btn-success {
-        padding: 12px 30px;
-        border-radius: 10px;
-        font-weight: 500;
+        background: #25d366;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        width: 100%;
+        max-width: 250px;
     }
-    
-    .whatsapp-section .btn-success:hover {
-        transform: translateY(-2px);
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+
+    .phone-number {
+        margin-top: 12px;
+        font-size: 0.9rem;
+        color: #666;
     }
 </style>
 @endsection
 
 @section('content')
-<div class="container mt-3">
-    <div class="bg-white mb-3">
-        <div class="d-flex align-items-center">
-            <a href="{{ route('home') }}" class="text-success bg-success bg-opacity-10 rounded-circle p-2 d-inline-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                <i class="bi bi-chevron-left"></i>
-            </a>
-            <p class="fs-3 m-auto mb-0">FAQ</p>
+<div class="faq-header text-center">
+    <h1>Pusat Bantuan</h1>
+    <p>Temukan jawaban untuk pertanyaan Anda di sini</p>
+</div>
+
+<div class="faq-container">
+    @foreach($faqs as $faq)
+    <div class="faq-item">
+        <div class="faq-question">
+            <span>{{ $faq->question }}</span>
+            <i class="bi bi-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+            {!! nl2br(e($faq->answer)) !!}
         </div>
     </div>
+    @endforeach
 
-    <div class="faq-section">
-        <div class="faq-header">
-            <h2>Pertanyaan yang Sering Diajukan</h2>
-            <p class="text-muted">Temukan jawaban untuk pertanyaan umum Anda di sini</p>
-        </div>
-
-        @foreach($faqs as $faq)
-        <div class="faq-item">
-            <div class="faq-question">
-                {{ $faq->question }}
-                <i class="bi bi-chevron-down faq-icon"></i>
-            </div>
-            <div class="faq-answer">
-                {!! nl2br(e($faq->answer)) !!}
-            </div>
-        </div>
-        @endforeach
-
-        <!-- Tambahan WhatsApp Section -->
-        <div class="whatsapp-section text-center mt-5">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h4 class="mb-3">Masih Punya Pertanyaan?</h4>
-                    <p class="text-muted mb-3">Hubungi kami melalui WhatsApp untuk bantuan lebih lanjut</p>
-                    <a href="https://wa.me/6285171742037" 
-                       target="_blank" 
-                       class="btn btn-success btn-lg">
-                        <i class="bi bi-whatsapp me-2"></i>
-                        Hubungi Kami di WhatsApp
-                    </a>
-                    <p class="mt-2 text-muted">
-                        <i class="bi bi-telephone me-1"></i>
-                        0851-7174-2037
-                    </p>
-                </div>
-            </div>
+    <div class="whatsapp-section">
+        <i class="bi bi-whatsapp whatsapp-icon"></i>
+        <h4>Masih Butuh Bantuan?</h4>
+        <p>Tim kami siap membantu Anda</p>
+        <a href="https://wa.me/6285171742037" 
+           target="_blank" 
+           class="btn btn-success">
+            <i class="bi bi-whatsapp me-2"></i>
+            Hubungi Kami
+        </a>
+        <div class="phone-number">
+            <i class="bi bi-telephone-fill me-2"></i>
+            0851-7174-2037
         </div>
     </div>
 </div>
@@ -132,15 +171,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     faqQuestions.forEach(question => {
         question.addEventListener('click', () => {
-            // Toggle active class
-            question.classList.toggle('active');
+            const isActive = question.classList.contains('active');
             
-            // Close other open FAQs
-            faqQuestions.forEach(otherQuestion => {
-                if(otherQuestion !== question && otherQuestion.classList.contains('active')) {
-                    otherQuestion.classList.remove('active');
-                }
+            faqQuestions.forEach(q => {
+                q.classList.remove('active');
             });
+            
+            if (!isActive) {
+                question.classList.add('active');
+            }
         });
     });
 });
