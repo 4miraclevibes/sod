@@ -109,7 +109,7 @@
             <i class="bi bi-shield-lock"></i>
             <span>Privasi dan Keamanan</span>
         </a>
-        <a href="#" class="profile-menu-item text-decoration-none text-dark">
+        <a href="{{ route('faq') }}" class="profile-menu-item text-decoration-none text-dark">
             <i class="bi bi-question-circle"></i>
             <span>Bantuan</span>
         </a>

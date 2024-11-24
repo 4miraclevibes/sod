@@ -79,6 +79,13 @@
                   <div data-i18n="Analytics">Assets</div>
                 </a>
               </li>
+              {{-- FAQ --}}
+              <li class="menu-item {{ Route::is('dashboard.faq*') ? 'active' : '' }}">
+                <a href="{{ route('dashboard.faq.index') }}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-help-circle"></i>
+                  <div data-i18n="Analytics">FAQ</div>
+                </a>
+              </li>
             </ul>
           </aside>
           <!-- / Menu -->

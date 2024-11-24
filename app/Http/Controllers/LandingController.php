@@ -7,6 +7,8 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Banner;
 use App\Models\Asset;
+use App\Models\Faq;
+
 class LandingController extends Controller
 {
     public function home(Request $request)
@@ -36,5 +38,12 @@ class LandingController extends Controller
     {
         $assets = Asset::where('is_active', true)->get();
         return view('pages.landing.userDetails', compact('assets'));
+    }
+
+    public function faq()
+    {
+        $assets = Asset::where('is_active', true)->get();
+        $faqs = Faq::all();
+        return view('pages.landing.faq', compact('assets', 'faqs'));
     }
 }

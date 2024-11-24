@@ -16,6 +16,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SSOController;
 use App\Http\Controllers\Landing\AuthController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\Dashboard\FaqController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/privacy-policy', function () {
@@ -42,6 +43,7 @@ Route::post('/user/addresses/store', [UserAddressController::class, 'store'])->m
 Route::get('/user/addresses/{id}/edit', [UserAddressController::class, 'edit'])->middleware('auth')->name('user.addresses.edit');
 Route::put('/user/addresses/{id}', [UserAddressController::class, 'update'])->middleware('auth')->name('user.addresses.update');
 Route::delete('/user/addresses/destroy/{id}', [UserAddressController::class, 'destroy'])->middleware('auth')->name('user.addresses.destroy');
+Route::get('/faq', [LandingController::class, 'faq'])->name('faq');
 
 Route::get('/checkout', function () {
     return view('pages.landing.checkout');
@@ -126,6 +128,11 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => ['a
     Route::post('asset/store', [AssetController::class, 'store'])->name('asset.store');
     Route::delete('asset/destroy/{asset}', [AssetController::class, 'destroy'])->name('asset.destroy');
     Route::put('asset/update/{asset}', [AssetController::class, 'update'])->name('asset.update');
+    // FAQ Routes
+    Route::get('faq/index', [FaqController::class, 'index'])->name('faq.index');
+    Route::post('faq/store', [FaqController::class, 'store'])->name('faq.store');
+    Route::put('faq/update/{faq}', [FaqController::class, 'update'])->name('faq.update');
+    Route::delete('faq/destroy/{faq}', [FaqController::class, 'destroy'])->name('faq.destroy');
 });
 
 Route::get('/dashboard', [SSOController::class, 'dashboard'])->middleware(['login', 'auth', 'admin'])->name('dashboard');
