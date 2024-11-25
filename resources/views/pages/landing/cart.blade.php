@@ -148,8 +148,8 @@
                 <i class="bi bi-info-circle text-primary"></i>
                 <small>
                     <strong>Info Waktu Pengiriman (Khusus Pesanan Proses):</strong><br>
-                    • Pesan jam 00:00 - 12:00 → Diantar besok pagi (5:30 - 10:00)<br>
-                    • Pesan jam 12:00 - 24:00 → Diantar besok siang (15:30 - 18:00)
+                    • Pesan 00:00 - 12:00 → Diantar besok pagi (5:30 - 10:00)<br>
+                    • Pesan 12:00 - 24:00 → Diantar besok siang (15:30 - 18:00)
                 </small>
             </div>
         </div>
