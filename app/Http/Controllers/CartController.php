@@ -37,7 +37,7 @@ class CartController extends Controller
             return back()->with('error', 'Driver tidak dapat menambahkan produk ke keranjang');
         }
         if(Auth::user()->userAddress->where('status', 'active')->first() == null){
-            return back()->with('error', 'User tidak memiliki alamat');
+            return redirect()->route('user.addresses.add')->with('error', 'User tidak memiliki alamat');
         }
         $request->validate([
             'variant_id' => 'required',
