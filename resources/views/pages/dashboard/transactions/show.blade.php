@@ -52,7 +52,7 @@
             <button type="submit" class="btn btn-primary ms-2">Update Biaya</button>
           </form>
           <small class="text-muted mt-2 d-block">
-            <i class="bi bi-info-circle"></i> 
+            <i class="bi bi-info-circle"></i>
             Biaya tambahan akan ditambahkan ke total transaksi dan akan diinformasikan ke pelanggan.
           </small>
         </div>
@@ -64,6 +64,7 @@
           <thead>
             <tr>
               <th>Produk</th>
+              <th>Variant</th>
               <th>Harga</th>
               <th>Jumlah</th>
               <th>Harga Modal</th>
@@ -74,6 +75,7 @@
             @foreach($transaction->details as $detail)
             <tr>
               <td>{{ $detail->variant->product->name }}</td>
+              <td>{{ $detail->variant->name }}</td>
               <td>Rp {{ number_format($detail->price, 0, ',', '.') }}</td>
               <td>{{ $detail->quantity }}</td>
               <td>Rp {{ number_format($detail->capital_price, 0, ',', '.') }}</td>
@@ -83,23 +85,23 @@
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="4" class="text-end"><strong>Biaya Layanan</strong></td>
+              <td colspan="5" class="text-end"><strong>Biaya Layanan</strong></td>
               <td><strong>Rp {{ number_format($transaction->app_fee, 0, ',', '.') }}</strong></td>
             </tr>
             <tr>
-              <td colspan="4" class="text-end"><strong>Total</strong></td>
+              <td colspan="5" class="text-end"><strong>Total</strong></td>
               <td><strong>Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</strong></td>
             </tr>
             <tr>
-              <td colspan="4" class="text-end"><strong>Ongkos Kirim</strong></td>
+              <td colspan="5" class="text-end"><strong>Ongkos Kirim</strong></td>
               <td><strong>Rp {{ number_format($transaction->shipping_price, 0, ',', '.') }}</strong></td>
             </tr>
             <tr>
-              <td colspan="4" class="text-end"><strong>Biaya Tambahan</strong></td>
+              <td colspan="5" class="text-end"><strong>Biaya Tambahan</strong></td>
               <td><strong>Rp {{ number_format($transaction->additional_cost, 0, ',', '.') }}</strong></td>
             </tr>
             <tr>
-              <td colspan="4" class="text-end"><strong>Total Keseluruhan</strong></td>
+              <td colspan="5" class="text-end"><strong>Total Keseluruhan</strong></td>
               <td><strong>Rp {{ number_format($transaction->total_price + $transaction->shipping_price + $transaction->additional_cost, 0, ',', '.') }}</strong></td>
             </tr>
           </tfoot>
