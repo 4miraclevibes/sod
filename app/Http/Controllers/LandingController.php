@@ -16,7 +16,7 @@ class LandingController extends Controller
         $categories = Category::all();
         $banners = Banner::where('is_active', true)->get();
         $assets = Asset::where('is_active', true)->get();
-        $products = Product::whereHas('variants', function($query) {
+        $products = Product::orderBy('name', 'asc')->whereHas('variants', function($query) {
                 $query->where('is_visible', true);
             })
             ->with(['variants' => function($query) {

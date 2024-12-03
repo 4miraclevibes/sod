@@ -10,6 +10,7 @@
         <thead>
           <tr class="text-nowrap table-dark">
             <th class="text-white">No</th>
+            <th class="text-white">Aksi</th>
             <th class="text-white">Kode Transaksi</th>
             <th class="text-white">Nama Pengguna</th>
             <th class="text-white">Alamat</th>
@@ -19,13 +20,18 @@
             <th class="text-white">Status</th>
             <th class="text-white">Status Pembayaran</th>
             <th class="text-white">Tanggal</th>
-            <th class="text-white">Aksi</th>
           </tr>
         </thead>
         <tbody>
           @foreach ($transactions as $transaction)
           <tr>
             <th scope="row">{{ $loop->iteration }}</th>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm" {{ $transaction->status == 'delivered' ? 'disabled' : '' }} data-bs-toggle="modal" data-bs-target="#updateStatusModal{{ $transaction->id }}">
+                Update Status
+              </button>
+              <a href="{{ route('dashboard.transaction.show', $transaction->id) }}" class="btn btn-info btn-sm">Detail</a>
+            </td>
             <td>{{ $transaction->code }}</td>
             <td>{{ $transaction->user->name }}</td>
             <td>{{ $transaction->address ?? '***' }}</td>
@@ -35,12 +41,6 @@
             <td>{{ $transaction->status }}</td>
             <td>{{ $transaction->payment->status ?? '***' }}</td>
             <td>{{ $transaction->created_at->format('d M Y H:i') }}</td>
-            <td>
-              <button type="button" class="btn btn-primary btn-sm" {{ $transaction->status == 'delivered' ? 'disabled' : '' }} data-bs-toggle="modal" data-bs-target="#updateStatusModal{{ $transaction->id }}">
-                Update Status
-              </button>
-              <a href="{{ route('dashboard.transaction.show', $transaction->id) }}" class="btn btn-info btn-sm">Detail</a>
-            </td>
           </tr>
 
           <!-- Modal for updating status -->
