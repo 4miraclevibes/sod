@@ -149,7 +149,7 @@
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
-        @include('layouts.dashboard.navbar');
+        @include('layouts.dashboard.navbar')
 
         <!-- Layout container -->
         <div class="layout-page">
