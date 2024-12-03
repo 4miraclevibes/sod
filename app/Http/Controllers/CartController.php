@@ -34,39 +34,55 @@ class CartController extends Controller
     public function store(Request $request)
     {
         if (Auth::user()->role->name == 'driver') {
+            if ($request->ajax()) {
+                return response()->json(['error' => 'Driver tidak dapat menambahkan produk ke keranjang']);
+            }
             return back()->with('error', 'Driver tidak dapat menambahkan produk ke keranjang');
         }
+
         if(Auth::user()->userAddress->where('status', 'active')->first() == null){
+            if ($request->ajax()) {
+                return response()->json(['redirect' => route('user.addresses.add'),
+                                      'message' => 'Tambahkan alamat terlebih dahulu']);
+            }
             return redirect()->route('user.addresses.add')->with('success', 'Tambahkan alamat terlebih dahulu');
         }
+
         $request->validate([
             'variant_id' => 'required',
             'quantity' => 'required|numeric|min:1',
         ]);
 
         $userId = Auth::user()->id;
-
-        //Apabila quantity melebihi stok yang tersedia
         $variant = ProductVariant::find($request->variant_id);
+
         if ($request->quantity > $variant->getAvailableStockCount()) {
+            if ($request->ajax()) {
+                return response()->json(['error' => 'Jumlah yang dipilih melebihi stok yang tersedia']);
+            }
             return back()->with('error', 'Jumlah yang dipilih melebihi stok yang tersedia');
         }
 
-        // Cek apakah item dengan variant_id yang sama sudah ada di keranjang
         $existingCart = Cart::where('user_id', $userId)
                             ->where('variant_id', $request->variant_id)
                             ->first();
 
         if ($existingCart) {
-            // Jika sudah ada, tambahkan kuantitasnya
             $existingCart->quantity += $request->quantity;
             $existingCart->save();
         } else {
-            // Jika belum ada, buat item baru
             Cart::create([
                 'variant_id' => $request->variant_id,
                 'quantity' => $request->quantity,
                 'user_id' => $userId,
+            ]);
+        }
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Produk berhasil ditambahkan ke keranjang',
+                'count' => Auth::user()->carts->count()
             ]);
         }
 
@@ -76,7 +92,7 @@ class CartController extends Controller
     public function destroy(Request $request)
     {
         $items = $request->input('items', []);
-        
+
         if (empty($items)) {
             return back()->with('error', 'Tidak ada item yang dipilih untuk dihapus');
         }

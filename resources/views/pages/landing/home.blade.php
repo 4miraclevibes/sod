@@ -207,9 +207,9 @@
         border-radius: 16px;
         padding: 1px;
         background: linear-gradient(135deg, rgba(76,175,80,0.2), rgba(0,0,0,0.05));
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, 
+        -webkit-mask: linear-gradient(#fff 0 0) content-box,
                      linear-gradient(#fff 0 0);
-        mask: linear-gradient(#fff 0 0) content-box, 
+        mask: linear-gradient(#fff 0 0) content-box,
               linear-gradient(#fff 0 0);
         -webkit-mask-composite: xor;
         mask-composite: exclude;
@@ -218,13 +218,71 @@
     .search-wrapper {
         position: relative;
     }
-    
+
     .search-icon {
         position: absolute;
         right: 12px;
         top: 50%;
         transform: translateY(-50%);
         color: #6c757d;
+    }
+
+    .home-alert {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        max-width: 300px;
+        padding: 12px 15px;
+        border-radius: 4px;
+        font-weight: 500;
+        z-index: 9999;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: all 0.3s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        background-color: #d4edda;
+        color: #155724;
+        border-left: 4px solid #28a745;
+    }
+
+    .home-alert.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .home-alert-content {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        margin-right: 10px;
+    }
+
+    .home-alert-icon {
+        margin-right: 10px;
+        font-size: 1.2em;
+    }
+
+    .home-alert-message {
+        line-height: 1.4;
+        font-size: 14px;
+    }
+
+    .home-alert-close {
+        font-size: 1.2em;
+        font-weight: 700;
+        line-height: 1;
+        color: #000;
+        text-shadow: 0 1px 0 #fff;
+        opacity: .5;
+        cursor: pointer;
+        padding-left: 10px;
+    }
+
+    .home-alert-close:hover {
+        opacity: .75;
     }
 </style>
 @endsection
@@ -281,7 +339,7 @@
                         <div class="mt-auto">
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="fw-bold">Rp {{ number_format($product->variants->first()->price ?? 0, 0, ',', '.') }}</span>
-                                <a href="#" class="btn-add text-decoration-none no-loading @auth {{ Auth::user()->role->name == 'user' ? '' : 'disabled' }} @endauth" 
+                                <a href="#" class="btn-add text-decoration-none no-loading @auth {{ Auth::user()->role->name == 'user' ? '' : 'disabled' }} @endauth"
                                    data-product-id="{{ $product->id }}"
                                    data-product-name="{{ $product->name }}"
                                    data-product-price="{{ number_format($product->variants->first()->price ?? 0, 0, ',', '.') }}"
@@ -315,16 +373,16 @@
                             <p id="productPrice" class="fw-bold mb-0"></p>
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <p class="mb-2">Pilih Varian</p>
                         <div id="variantButtons" class="d-flex flex-wrap gap-2">
                             <!-- Varian buttons akan ditambahkan secara dinamis menggunakan JavaScript -->
                         </div>
                     </div>
-                    
+
                     <p class="mb-2">Stok: <span id="productStock"></span></p>
-                    
+
                     <div class="mb-3">
                         <p class="mb-2">Pilih Jumlah</p>
                         <div class="quantity-control">
@@ -333,7 +391,7 @@
                             <button id="increaseQuantity">+</button>
                         </div>
                     </div>
-                    
+
                     <form id="addToCartForm" action="{{ route('cart.store') }}" method="POST">
                         @csrf
                         <input type="hidden" name="variant_id" id="variantId">
@@ -441,17 +499,79 @@
             }
         });
 
-        document.getElementById('addToCartForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const quantity = parseInt(quantityInput.value);
-            const stock = selectedVariant ? selectedVariant.stock : 0;
-            if (quantity > stock) {
-                alert('Jumlah yang dipilih melebihi stok yang tersedia.');
-            } else {
-                document.getElementById('formQuantity').value = quantity;
-                this.submit();
-            }
-        });
+        // Pastikan form ada sebelum menambahkan event listener
+        const addToCartForm = document.getElementById('addToCartForm');
+        if (addToCartForm) {
+            addToCartForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                // Periksa apakah CSRF token ada
+                const csrfToken = document.querySelector('meta[name="csrf-token"]');
+                if (!csrfToken) {
+                    console.error('CSRF token tidak ditemukan');
+                    showHomeAlert('Terjadi kesalahan sistem');
+                    return;
+                }
+
+                // Set quantity ke form sebelum submit
+                const formQuantity = document.getElementById('formQuantity');
+                const quantity = document.getElementById('quantity');
+                if (formQuantity && quantity) {
+                    formQuantity.value = quantity.value;
+                }
+
+                const formData = new FormData(this);
+                try {
+                    const response = await fetch(this.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': csrfToken.getAttribute('content')
+                        },
+                        credentials: 'same-origin'
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        const modal = document.getElementById('addToCartModal');
+                        if (modal) {
+                            const modalInstance = bootstrap.Modal.getInstance(modal);
+                            if (modalInstance) modalInstance.hide();
+                        }
+
+                        // Update cart badge
+                        const cartBadge = document.querySelector('.cart-badge');
+                        const cartCount = document.querySelector('.cart-count');
+
+                        if (result.count > 0) {
+                            if (!cartBadge) {
+                                // Buat badge baru jika belum ada
+                                const newBadge = document.createElement('span');
+                                newBadge.className = 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge';
+                                newBadge.style.cssText = 'font-size: 0.5rem; margin-left: -1.5rem; margin-top: -0.2rem';
+
+                                const countSpan = document.createElement('span');
+                                countSpan.className = 'cart-count';
+                                countSpan.textContent = result.count;
+
+                                newBadge.appendChild(countSpan);
+                                document.querySelector('.cart-link').appendChild(newBadge);
+                            } else {
+                                cartCount.textContent = result.count;
+                            }
+                        }
+                        showHomeAlert(result.message || 'Produk berhasil ditambahkan ke keranjang');
+                    } else {
+                        showHomeAlert(result.message || 'Terjadi kesalahan, silakan coba lagi');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showHomeAlert('Terjadi kesalahan pada sistem');
+                }
+            });
+        }
     });
 
     let deferredPrompt;
@@ -486,18 +606,18 @@
     function searchProducts(keyword) {
         keyword = keyword.toLowerCase().trim();
         const products = document.querySelectorAll('.product-item');
-        
+
         products.forEach(product => {
             const productName = product.querySelector('.card-title').textContent.toLowerCase();
             const productDesc = product.querySelector('.card-text').textContent.toLowerCase();
-            
+
             // Cek apakah produk sesuai dengan kategori yang aktif
             const categoryId = document.querySelector('.category-filter.border-success').dataset.category;
             const matchCategory = categoryId === 'all' || product.dataset.category === categoryId;
-            
+
             // Cek apakah produk sesuai dengan keyword pencarian
             const matchSearch = productName.includes(keyword) || productDesc.includes(keyword);
-            
+
             // Tampilkan produk jika sesuai dengan kategori dan keyword
             if (matchCategory && matchSearch) {
                 product.style.display = '';
@@ -569,7 +689,7 @@
         const categories = @json($categories->keyBy('id'));
         const banners = @json($banners->keyBy('id'));
         const banner = document.getElementById('categoryBanner');
-        
+
         if (categoryId === 'all') {
             banner.src = @json($banners->first()->image);
         } else {
@@ -586,5 +706,48 @@
     document.addEventListener('DOMContentLoaded', () => {
         filterProducts('all');
     });
+
+    function showHomeAlert(message, type = 'success') {
+        const existingAlert = document.querySelector('.home-alert');
+        if (existingAlert) {
+            existingAlert.remove();
+        }
+
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'home-alert';
+
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'home-alert-content';
+
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'home-alert-icon bi ' + (type === 'success' ? 'bi-check-circle' : 'bi-exclamation-circle');
+
+        const messageSpan = document.createElement('span');
+        messageSpan.className = 'home-alert-message';
+        messageSpan.textContent = message;
+
+        const closeButton = document.createElement('span');
+        closeButton.className = 'home-alert-close';
+        closeButton.innerHTML = '&times;';
+        closeButton.onclick = () => alertDiv.remove();
+
+        contentDiv.appendChild(iconSpan);
+        contentDiv.appendChild(messageSpan);
+        alertDiv.appendChild(contentDiv);
+        alertDiv.appendChild(closeButton);
+
+        document.body.appendChild(alertDiv);
+
+        setTimeout(() => {
+            alertDiv.classList.add('show');
+        }, 100);
+
+        setTimeout(() => {
+            alertDiv.classList.remove('show');
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 300);
+        }, 3000);
+    }
 </script>
 @endsection

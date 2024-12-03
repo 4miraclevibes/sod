@@ -8,6 +8,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Balian">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="apple-touch-icon" href="{{ asset('logo-green-mark.png') }}">
     <link rel="icon" href="{{ asset('logo-green-mark.png') }}" type="image/x-icon">
     <link rel="manifest" href="{{ asset('manifest.json') }}">
@@ -210,7 +211,7 @@
                 loadingElement.style.display = 'flex';
                 document.body.classList.add('disabled');
                 isLoading = true;
-                
+
                 // Set timer untuk force hide loading jika terlalu lama
                 loadingTimer = setTimeout(forceHideLoading, loadingTimeout);
             }
@@ -221,7 +222,7 @@
                 loadingElement.style.display = 'none';
                 document.body.classList.remove('disabled');
                 isLoading = false;
-                
+
                 if (loadingTimer) {
                     clearTimeout(loadingTimer);
                 }
@@ -257,7 +258,7 @@
         window.addEventListener('load', forceHideLoading);
 
         // Tangani kasus ketika halaman di-refresh atau navigasi kembali
-        if (performance.navigation && (performance.navigation.type === performance.navigation.TYPE_RELOAD || 
+        if (performance.navigation && (performance.navigation.type === performance.navigation.TYPE_RELOAD ||
             performance.navigation.type === performance.navigation.TYPE_BACK_FORWARD)) {
             forceHideLoading();
         }

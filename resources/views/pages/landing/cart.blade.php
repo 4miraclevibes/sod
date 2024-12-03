@@ -126,11 +126,11 @@
 
         <div class="mb-3">
             <label for="orderNotes" class="form-label" style="color: #4caf50;">Catatan Pesanan</label>
-            <textarea 
-                class="form-control" 
-                id="orderNotes" 
-                name="notes" 
-                rows="8" 
+            <textarea
+                class="form-control"
+                id="orderNotes"
+                name="notes"
+                rows="8"
                 placeholder="Contoh: Tolong pilihkan sayur yang masih segar, Mohon pisahkan sayur dan bumbu, Pilih telur yang utuh, dll."
                 style="background-color: #f8f9fa; border: 1px solid #e0e0e0;"
             ></textarea>
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (items[index] && items[index].quantity !== undefined) {
             let newQuantity = Math.max(1, items[index].quantity + change);
             let availableStock = items[index].variant.stock;
-            
+
             if (newQuantity <= availableStock) {
                 items[index].quantity = newQuantity;
                 let quantityInput = document.querySelectorAll('.quantity-input')[index];
