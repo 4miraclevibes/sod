@@ -26,7 +26,7 @@ class TransactionController extends Controller
         // Mengambil URL SSO dari environment variables
         $this->ssoUrl = env('SSO_API_URL');
     }
-    
+
     public function index(Request $request)
     {
         $assets = Asset::where('is_active', true)->get();
@@ -95,20 +95,20 @@ class TransactionController extends Controller
         if($total < 5000){
             return back()->with('error', 'Minimal pembelian Rp. 5.000');
         }
-        
+
         $totalWithFees = $total + $request->shipping_price;
         if($totalWithFees !== (int)$request->total_price){
             return back()->with('error', 'Ada update harga');
         }
-        
-        
+
+
         DB::beginTransaction();
         try {
             foreach($checkedCarts as $cart) {
                 $productVariant = $cart->variant;
                 $quantityToUpdate = $request->quantities[$cart->id];
                 $availableStockDetails = $productVariant->getAvailableStockDetails();
-                
+
                 if ($availableStockDetails->count() < $quantityToUpdate) {
                     throw new \Exception("Stok tidak cukup untuk produk {$productVariant->product->name} - {$productVariant->name}");
                 }
@@ -124,7 +124,7 @@ class TransactionController extends Controller
                 'address' => $transactionAddress->subDistrict->name . ' - ' . $transactionAddress->address. ' - ' . $transactionAddress->receiver_name . ' - ' . $transactionAddress->receiver_phone . ' - ' . $transactionAddress->longitude . ' - ' . $transactionAddress->latitude,
                 'notes' => $request->notes,
             ]);
-    
+
             foreach($checkedCarts as $cart) {
                 $transactionDetail = TransactionDetail::create([
                     'transaction_id' => $transaction->id,
@@ -135,14 +135,14 @@ class TransactionController extends Controller
                 ]);
             }
             $updateIds = $availableStockDetails->take($quantityToUpdate)->pluck('id')->toArray();
-                
+
             $updatedCount = StockDetail::whereIn('id', $updateIds)
                 ->where('status', 'ready')
                 ->update([
                     'status' => 'sold',
                     'price' => $transactionDetail->price,
                 ]);
-            
+
             if ($updatedCount != $quantityToUpdate) {
                 throw new \Exception("Terjadi perubahan stok untuk produk {$productVariant->product->name} - {$productVariant->name}");
             }
@@ -161,14 +161,14 @@ class TransactionController extends Controller
         $prefix = 'TRX';
         $timestamp = Carbon::now()->format('ymd'); // Format: 240319 (tahun-bulan-tanggal)
         $userId = str_pad(Auth::id(), 3, '0', STR_PAD_LEFT); // Format: 001
-        
+
         // Dapatkan counter harian
         $dailyCounter = Transaction::whereDate('created_at', Carbon::today())
             ->count() + 1;
-        
+
         // Format counter dengan padding 4 digit
         $counter = str_pad($dailyCounter, 4, '0', STR_PAD_LEFT); // Format: 0001
-        
+
         // Gabungkan semua komponen
         $code = sprintf(
             '%s%s%s%s',
@@ -177,7 +177,7 @@ class TransactionController extends Controller
             $userId,      // 001
             $counter     // 0001
         );
-        
+
         return $code; // Hasil: TRX2403190010001
     }
 
@@ -196,6 +196,12 @@ class TransactionController extends Controller
             }
             foreach ($transaction->details as $detail) {
                 $quantity = $detail->quantity;
+
+                Cart::create([
+                    'user_id' => Auth::user()->id,
+                    'variant_id' => $detail->variant_id,
+                    'quantity' => $quantity,
+                ]);
 
                 $stockDetails = StockDetail::whereHas('variantStock', function ($query) use ($detail) {
                     $query->where('product_variant_id', $detail->variant_id);
