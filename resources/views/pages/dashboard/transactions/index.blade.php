@@ -13,13 +13,13 @@
             <th class="text-white">Aksi</th>
             <th class="text-white">Kode Transaksi</th>
             <th class="text-white">Nama Pengguna</th>
-            <th class="text-white">Alamat</th>
             <th class="text-white">Total Harga</th>
+            <th class="text-white">Status</th>
+            <th class="text-white">Tanggal</th>
             <th class="text-white">Ongkos Kirim</th>
             <th class="text-white">Biaya Layanan</th>
-            <th class="text-white">Status</th>
             <th class="text-white">Status Pembayaran</th>
-            <th class="text-white">Tanggal</th>
+            <th class="text-white">Alamat</th>
           </tr>
         </thead>
         <tbody>
@@ -34,13 +34,13 @@
             </td>
             <td>{{ $transaction->code }}</td>
             <td>{{ $transaction->user->name }}</td>
-            <td>{{ $transaction->address ?? '***' }}</td>
             <td>Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</td>
+            <td>{{ $transaction->status }}</td>
+            <td>{{ $transaction->created_at->format('d M Y H:i') }}</td>
             <td>Rp {{ number_format($transaction->shipping_price, 0, ',', '.') }}</td>
             <td>Rp {{ number_format($transaction->app_fee, 0, ',', '.') }}</td>
-            <td>{{ $transaction->status }}</td>
             <td>{{ $transaction->payment->status ?? '***' }}</td>
-            <td>{{ $transaction->created_at->format('d M Y H:i') }}</td>
+            <td>{{ $transaction->address ?? '***' }}</td>
           </tr>
 
           <!-- Modal for updating status -->
