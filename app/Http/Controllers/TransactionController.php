@@ -279,8 +279,30 @@ class TransactionController extends Controller
 
     private function sendWhatsappNotification($transaction)
     {
+        // Daftar petugas
+        $petugas = [
+            "NANDA",
+            "RIAN",
+            "MUSTAFA",
+            "DIKONT"
+        ];
+
+        // Kata-kata intro
+        $intro = [
+            "Mohon bantuannya",
+            "Tolong diproses ya",
+            "Mohon ditindaklanjuti",
+            "Tolong dicek ya",
+            "Mohon dihandle"
+        ];
+
+        // Pilih secara random
+        $selectedPetugas = $petugas[array_rand($petugas)];
+        $selectedIntro = $intro[array_rand($intro)];
+
         // Format pesan WhatsApp
         $message = "🛍️ *PESANAN BARU!*\n\n"
+            . "*{$selectedIntro} {$selectedPetugas}!*\n\n"
             . "Kode Transaksi: *{$transaction->code}*\n"
             . "Pembeli: *{$transaction->user->name}*\n"
             . "Total Pembayaran: *Rp " . number_format($transaction->total_price, 0, ',', '.') . "*\n\n"
@@ -307,7 +329,7 @@ class TransactionController extends Controller
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => array(
-                'target' => '6285171742037',
+                'target' => '6285171742037, 6282286260693, 6285157950330, 6282287444224, 6281337703252',
                 'message' => $message
             ),
             CURLOPT_HTTPHEADER => array(
