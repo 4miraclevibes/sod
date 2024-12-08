@@ -136,6 +136,7 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => ['a
 });
 
 Route::get('/dashboard', [SSOController::class, 'dashboard'])->middleware(['login', 'auth', 'admin'])->name('dashboard');
+Route::post('/dashboard/send-whatsapp-notification', [DashboardController::class, 'sendWhatsappNotification'])->name('dashboard.send-whatsapp-notification');
 // Route untuk melakukan login dengan SSO
 Route::post('/login/sso', [SSOController::class, 'login'])->name('login.sso');
 Route::get('/login/sso', [SSOController::class, 'loginView'])->name('login.sso.view');

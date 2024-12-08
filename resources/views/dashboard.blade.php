@@ -8,6 +8,12 @@
 <h1>Selamat datang {{ Auth::user()->name }}</h1>
 </div>
 
+{{-- <form action="{{ route('dashboard.send-whatsapp-notification') }}" method="post">
+    @csrf
+    <input type="text" name="message">
+    <button type="submit">Send</button>
+</form> --}}
+
 <!-- / Content -->
 
 

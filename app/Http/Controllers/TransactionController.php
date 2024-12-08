@@ -147,6 +147,7 @@ class TransactionController extends Controller
                 throw new \Exception("Terjadi perubahan stok untuk produk {$productVariant->product->name} - {$productVariant->name}");
             }
             $checkedCarts->each->delete();
+            $this->sendWhatsappNotification($transaction);
             DB::commit();
             return redirect()->route('cart.success')->with('success', 'Transaksi berhasil dibuat');
         } catch (\Exception $e) {
@@ -274,5 +275,48 @@ class TransactionController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Biaya tambahan berhasil diperbarui');
+    }
+
+    private function sendWhatsappNotification($transaction)
+    {
+        // Format pesan WhatsApp
+        $message = "🛍️ *PESANAN BARU!*\n\n"
+            . "Kode Transaksi: *{$transaction->code}*\n"
+            . "Pembeli: *{$transaction->user->name}*\n"
+            . "Total Pembayaran: *Rp " . number_format($transaction->total_price, 0, ',', '.') . "*\n\n"
+            . "*Detail Pesanan:*\n";
+
+        // Tambahkan detail produk
+        foreach ($transaction->details as $detail) {
+            $message .= "- {$detail->variant->product->name} ({$detail->variant->name})\n"
+                . "  Jumlah: {$detail->quantity} x Rp " . number_format($detail->price, 0, ',', '.') . "\n";
+        }
+
+        $message .= "\n*Alamat Pengiriman:*\n{$transaction->address}\n\n"
+            . "Catatan: " . ($transaction->notes ?? '-');
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.fonnte.com/send',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array(
+                'target' => '6281261686210',
+                'message' => $message
+            ),
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: BehwfEMKPuLsQByWe138'
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+        return $response;
     }
 }
